@@ -1,0 +1,15 @@
+---
+name: Run renovate-config-validator
+
+on:
+  pull_request:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - name: Validate config 
+        run: |
+          docker run --entrypoint=renovate-config-validator --volume "$(pwd):/tmp" renovate/renovate:slim /tmp/default.json
