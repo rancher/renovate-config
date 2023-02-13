@@ -6,20 +6,26 @@
   "regexManagers": [
     {
       "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": ["ENV KUSTOMIZE_VERSION (?<currentValue>.*?)\\n"],
+      "matchStrings": ["ENV KUSTOMIZE_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
       "depNameTemplate": "kubernetes-sigs/kustomize",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
+      "matchStrings": ["ENV K9S_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
+      "depNameTemplate": "derailed/k9s",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
+      "matchStrings": ["ENV HELM_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
+      "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
       "matchStrings": [".*?https:\/\/raw.githubusercontent.com\/golangci\/golangci-lint\/master\/install.sh.*?sh -s (?<currentValue>.*?);"],
       "depNameTemplate": "golangci/golangci-lint",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": ["ENV HELM_VERSION (?<currentValue>.*?)\\n"],
-      "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases"
     }
   ],
@@ -60,6 +66,11 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "pinDigests": true,
+      "schedule": ["every weekend after 4am"]
+    },
+    {
+      "matchPackagePatterns": ["derailed/k9s"],
+      "automerge": true,
       "schedule": ["every weekend after 4am"]
     }
   ]
