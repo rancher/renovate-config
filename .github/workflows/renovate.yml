@@ -24,6 +24,8 @@ on:
         required: false
         default: "false"
         type: string
+  schedule:
+    - cron: '30 4,6 * * 6,0'
 concurrency: renovate
 jobs:
   renovate:
