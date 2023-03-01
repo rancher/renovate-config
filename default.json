@@ -39,38 +39,32 @@
       "matchManagers": ["dockerfile", "helm-values"],
       "matchPackagePatterns": ["registry.suse.com/"],
       "matchUpdateTypes": ["patch", "pin", "digest"],
-      "automerge": true,
       "schedule": ["every weekend after 4am"]
     },
     {
       "matchPackagePatterns": ["rancher/dapper"],
       "allowedVersions": "<1.0.0",
-      "automerge": true,
       "schedule": ["every weekend after 4am"]
     },
     {
       "matchPackagePatterns": ["golangci/golangci-lint"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
       "schedule": ["every weekend after 4am"]
     },
     {
       "matchManagers": ["droneci"],
       "matchPackagePatterns": ["plugins/"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
       "schedule": ["every weekend after 4am"]
     },
     {
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true,
       "pinDigests": true,
       "schedule": ["every weekend after 4am"]
     },
     {
       "matchPackagePatterns": ["derailed/k9s"],
-      "automerge": true,
       "schedule": ["every weekend after 4am"]
     }
   ]
