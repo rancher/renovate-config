@@ -16,6 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - name: Create PR
-        run: gh pr create --title "Release week \#$(date +%V)" --body "Automatically created PR to merge main into release" --base release --head main
+        run: gh pr create --title "Release week $(date +%V)" --body "Automatically created PR to merge main into release" --base release --head main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
