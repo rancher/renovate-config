@@ -36,10 +36,8 @@
       "groupName": "kustomize"
     },
     {
-      "matchManagers": ["dockerfile", "helm-values"],
-      "matchPackagePatterns": ["registry.suse.com/"],
-      "matchUpdateTypes": ["patch", "pin", "digest"],
-      "schedule": ["every weekend after 4am"]
+      "matchPackagePatterns": ["registry.suse.com/bci/bci"],
+      "allowedVersions": "<15.5.0"
     },
     {
       "matchPackagePatterns": ["rancher/dapper"],
