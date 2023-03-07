@@ -47,29 +47,12 @@
     },
     {
       "matchPackagePatterns": ["rancher/dapper"],
-      "allowedVersions": "<1.0.0",
-      "schedule": ["every weekend after 4am"]
-    },
-    {
-      "matchPackagePatterns": ["golangci/golangci-lint"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "schedule": ["every weekend after 4am"]
-    },
-    {
-      "matchManagers": ["droneci"],
-      "matchPackagePatterns": ["plugins/"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "schedule": ["every weekend after 4am"]
+      "allowedVersions": "<1.0.0"
     },
     {
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch"],
-      "pinDigests": true,
-      "schedule": ["every weekend after 4am"]
-    },
-    {
-      "matchPackagePatterns": ["derailed/k9s"],
-      "schedule": ["every weekend after 4am"]
+      "pinDigests": true
     },
     {
       "matchDepNames": ["kubernetes/kubernetes"],
