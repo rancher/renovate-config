@@ -33,6 +33,16 @@
       "matchStrings": [".*?https:\/\/raw.githubusercontent.com\/golangci\/golangci-lint\/master\/install.sh.*?sh -s (?<currentValue>.*?);"],
       "depNameTemplate": "golangci/golangci-lint",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "values.yaml$"
+      ],
+      "matchStrings": [
+        "global:[\\s\\S]*?kubectl:[\\s\\S]*?repository:\\s(?<depName>.*?)\\n[\\s\\S]*?tag:\\s(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "docker",
+      "description": "usage of rancher/kubectl in global.kubectl in Helm chart"
     }
   ],
   "packageRules": [
@@ -55,8 +65,13 @@
       "pinDigests": true
     },
     {
-      "matchDepNames": ["kubernetes/kubernetes"],
+      "matchPackagePatterns": ["kubernetes/kubernetes"],
       "allowedVersions": "<1.26.0"
+    },
+    {
+      "matchPackagePatterns": ["rancher/kubectl"],
+      "allowedVersions": "<1.25.0",
+      "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
     }
   ]
 }
