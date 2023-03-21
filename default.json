@@ -93,6 +93,18 @@
     },
     {
       "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "RUN git -C / clone --branch release-(?<currentValue>.*?) --depth=1 https://github.com/rancher/helm\\n"
+      ],
+      "depNameTemplate": "rancher/helm",
+      "packageNameTemplate": "https://github.com/rancher/helm",
+      "datasourceTemplate": "git-refs"
+    },
+    {
+      "fileMatch": [
         "values.yaml$"
       ],
       "matchStrings": [
@@ -195,6 +207,12 @@
         "patch"
       ],
       "pinDigests": true
+    },
+    {
+      "matchPackagePatterns": [
+        "rancher/helm"
+      ],
+      "extractVersion": "^release-(?<version>.*)$"
     },
     {
       "matchPackagePatterns": [
