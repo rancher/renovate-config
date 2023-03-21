@@ -74,6 +74,17 @@
         "(^|/)Dockerfile[^/]*$"
       ],
       "matchStrings": [
+        "ENV YQ_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "mikefarah/yq",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
         ".*?https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh.*?sh -s (?<currentValue>.*?);"
       ],
       "depNameTemplate": "golangci/golangci-lint",
