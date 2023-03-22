@@ -1,38 +1,107 @@
 {
-  "baseBranches": ["main"],
+  "baseBranches": [
+    "main"
+  ],
   "rebaseWhen": "conflicted",
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "automergeStrategy": "merge-commit",
+  "prConcurrentLimit": 0,
+  "constraints": {
+    "go": "1.19"
+  },
+  "postUpdateOptions": [
+    "gomodTidy"
+  ],
   "regexManagers": [
     {
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": ["ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
+      "fileMatch": [
+        "\\.github/workflows/renovate.yml"
+      ],
+      "matchStrings": [
+        ".*?RENOVATE_VERSION:\\s(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "renovate/renovate",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": ["ENV KUSTOMIZE_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "ENV KUSTOMIZE_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
       "depNameTemplate": "kubernetes-sigs/kustomize",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": ["ENV K9S_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "ENV K9S_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
       "depNameTemplate": "derailed/k9s",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": ["ENV HELM_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"],
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "ENV HELM_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
       "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile[^/]*$"],
-      "matchStrings": [".*?https:\/\/raw.githubusercontent.com\/golangci\/golangci-lint\/master\/install.sh.*?sh -s (?<currentValue>.*?);"],
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "ENV YQ_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "mikefarah/yq",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        ".*?https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh.*?sh -s (?<currentValue>.*?);"
+      ],
       "depNameTemplate": "golangci/golangci-lint",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "RUN git -C / clone --branch release-(?<currentValue>.*?) --depth=1 https://github.com/rancher/helm\\n"
+      ],
+      "depNameTemplate": "rancher/helm",
+      "packageNameTemplate": "https://github.com/rancher/helm",
+      "datasourceTemplate": "git-refs"
     },
     {
       "fileMatch": [
@@ -47,29 +116,114 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["kustomize"],
-      "extractVersion": "^kustomize\/(?<version>.*)$",
+      "matchPackagePatterns": [
+        "renovate/renovate"
+      ],
+      "extractVersion": "(?<version>.*)-slim$"
+    },
+    {
+      "matchPackagePatterns": [
+        "kustomize"
+      ],
+      "extractVersion": "^kustomize/(?<version>.*)$",
       "groupName": "kustomize"
     },
     {
-      "matchPackagePatterns": ["registry.suse.com/bci/bci"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackagePatterns": [
+        "^sigs.k8s.io"
+      ],
+      "groupName": "gomod-sigsk8sio-dependencies"
+    },
+    {
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "k8s.io/api",
+        "k8s.io/apiextensions-apiserver",
+        "k8s.io/apimachinery",
+        "k8s.io/apiserver",
+        "k8s.io/cli-runtime",
+        "k8s.io/cloud-provider",
+        "k8s.io/cluster-bootstrap",
+        "k8s.io/code-generator",
+        "k8s.io/component-base",
+        "k8s.io/component-helpers",
+        "k8s.io/controller-manager",
+        "k8s.io/cri-api",
+        "k8s.io/csi-translation-lib",
+        "k8s.io/kube-aggregator",
+        "k8s.io/kube-controller-manager",
+        "k8s.io/kube-openapi",
+        "k8s.io/kube-proxy",
+        "k8s.io/kube-scheduler",
+        "k8s.io/kubectl",
+        "k8s.io/kubelet",
+        "k8s.io/legacy-cloud-providers",
+        "k8s.io/metrics",
+        "k8s.io/mount-utils",
+        "k8s.io/pod-security-admission",
+        "k8s.io/sample-apiserver",
+        "k8s.io/sample-cli-plugin",
+        "k8s.io/sample-controller"
+      ],
+      "groupName": "gomod-k8sio-dependencies",
+      "allowedVersions": "<0.26.0"
+    },
+    {
+      "matchPackagePatterns": [
+        "registry.suse.com/bci/bci"
+      ],
       "allowedVersions": "<15.5.0"
     },
     {
-      "matchPackagePatterns": ["rancher/dapper"],
+      "matchPackagePatterns": [
+        "registry.suse.com/bci/golang"
+      ],
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "matchPackageNames": [
+        "golang",
+        "go"
+      ],
+      "allowedVersions": "<1.20.0"
+    },
+    {
+      "matchPackagePatterns": [
+        "rancher/dapper"
+      ],
       "allowedVersions": "<1.0.0"
     },
     {
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "pinDigests": true
     },
     {
-      "matchPackagePatterns": ["kubernetes/kubernetes"],
+      "matchPackagePatterns": [
+        "rancher/helm"
+      ],
+      "extractVersion": "^release-(?<version>.*)$"
+    },
+    {
+      "matchPackagePatterns": [
+        "kubernetes/kubernetes"
+      ],
       "allowedVersions": "<1.26.0"
     },
     {
-      "matchPackagePatterns": ["rancher/kubectl"],
+      "matchPackagePatterns": [
+        "rancher/kubectl"
+      ],
       "allowedVersions": "<1.25.0",
       "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
     }
