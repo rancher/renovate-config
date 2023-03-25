@@ -2,7 +2,7 @@
   "baseBranches": [
     "main"
   ],
-  "rebaseWhen": "conflicted",
+  "rebaseWhen": "auto",
   "labels": [
     "dependencies"
   ],
