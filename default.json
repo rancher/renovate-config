@@ -2,7 +2,7 @@
   "baseBranches": [
     "main"
   ],
-  "rebaseWhen": "conflicted",
+  "rebaseWhen": "auto",
   "labels": [
     "dependencies"
   ],
@@ -20,7 +20,7 @@
         "\\.github/workflows/renovate.yml"
       ],
       "matchStrings": [
-        ".*?RENOVATE_VERSION:\\s(?<currentValue>.*?)\\n"
+        ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
       ],
       "depNameTemplate": "renovate/renovate",
       "datasourceTemplate": "docker"
