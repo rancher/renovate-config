@@ -8,6 +8,12 @@
       "automerge": true,
       "pinDigests": true,
       "schedule": ["every weekend after 4am"]
+    },
+    {
+      "matchPackageNames": ["renovate/renovate"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "schedule": ["every weekend after 4am"]
     }
   ]
 }
