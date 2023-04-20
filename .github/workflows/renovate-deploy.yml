@@ -1,0 +1,63 @@
+name: Deploy Renovate
+on:
+  workflow_dispatch:
+    inputs:
+      deployRepository:
+        description: "The repository to deploy Renovate to"
+        required: true
+        default: "rancher/"
+        type: string
+permissions: {}
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get token
+        id: get_token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        with:
+          app_id: ${{ secrets.RENOVATE_APP_ID }}
+          installation_id: ${{ secrets.RENOVATE_INSTALLATION_ID }}
+          private_key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        with:
+          token: '${{ steps.get_token.outputs.token }}'
+          path: main
+      - name: Checkout deploy repo
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        with:
+          repository: '${{ github.event.inputs.deployRepository }}'
+          token: '${{ steps.get_token.outputs.token }}'
+          path: deploy-repo
+      - name: Create branch, commit and PR
+        run: |
+          BRANCH="deploy-renovate-$(date +%Y-%m-%d-%H-%M-%S)"
+          git config --global user.email "119870437+renovate-rancher[bot]@users.noreply.github.com"
+          git config --global user.name "renovate-rancher[bot]"
+          cd deploy-repo
+          DEFAULT_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}')
+          git checkout -b "${BRANCH}"
+          mkdir -p .github/workflows
+          TEMP_CONFIG=$(mktemp)
+          jq --arg default_branch "${DEFAULT_BRANCH}" '.baseBranches = [$default_branch]' ../main/files/renovate.json > "${TEMP_CONFIG}"
+          mv "${TEMP_CONFIG}" .github/renovate.json
+          git add .github/renovate.json
+          cp ../main/files/renovate.yml .github/workflows/renovate.yml
+          git add .github/workflows/renovate.yml
+          FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml"
+          for FILE_TO_REMOVE in $FILES_TO_REMOVE; do
+            if [ -f "${FILE_TO_REMOVE}" ]; then
+              git rm "${FILE_TO_REMOVE}"
+            fi
+          done
+          git commit -a -m 'Add initial Renovate configuration'
+          git push origin "${BRANCH}"
+          CREATED_PR=$(gh pr create -R "${DEPLOY_REPOSITORY}" --title "Add initial Renovate configuration" --body "Add initial Renovate configuration, includes Renovate configuration file and GitHub Actions workflow. This automatically created PR has been initiated by @${GITHUB_ACTOR}" --base "${DEFAULT_BRANCH}" --head "${BRANCH}")
+          echo "Inputs:" >> $GITHUB_STEP_SUMMARY
+          echo "- deployRepository: [${DEPLOY_REPOSITORY}](https://github.com/${DEPLOY_REPOSITORY})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Created PR: ${CREATED_PR}" >> $GITHUB_STEP_SUMMARY
+        env:
+          DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
+          GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
