@@ -175,7 +175,8 @@
     },
     {
       "matchPackagePatterns": [
-        "registry.suse.com/bci/bci"
+        "registry.suse.com/bci/bci",
+        "registry.suse.com/suse/sle15"
       ],
       "allowedVersions": "<15.5.0"
     },
