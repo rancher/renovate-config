@@ -223,13 +223,13 @@
       "matchPackagePatterns": [
         "kubernetes/kubernetes"
       ],
-      "allowedVersions": "<1.26.0"
+      "allowedVersions": "<1.27.0"
     },
     {
       "matchPackagePatterns": [
         "rancher/kubectl"
       ],
-      "allowedVersions": "<1.25.0",
+      "allowedVersions": "<1.26.0",
       "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
     }
   ]
