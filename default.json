@@ -173,7 +173,7 @@
         "k8s.io/sample-controller"
       ],
       "groupName": "gomod-k8sio-dependencies",
-      "allowedVersions": "<0.27.0"
+      "allowedVersions": "<0.26.0"
     },
     {
       "matchPackagePatterns": [
@@ -224,7 +224,7 @@
       "matchPackagePatterns": [
         "kubernetes/kubernetes"
       ],
-      "allowedVersions": "<1.27.0"
+      "allowedVersions": "<1.26.0"
     },
     {
       "matchPackagePatterns": [
