@@ -37,16 +37,16 @@ jobs:
         run: jq type .github/renovate.json
       - name: Get token
         id: get_token
-        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        uses: tibdex/github-app-token@0d49dd721133f900ebd5e0dff2810704e8defbc6 # v1.8.2
         with:
           app_id: ${{ secrets.RENOVATE_APP_ID }}
           installation_id: ${{ secrets.RENOVATE_INSTALLATION_ID }}
           private_key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@fdd841aca4d443791558b2ad5db9d00b8e675b93 # v39.0.2
+        uses: renovatebot/github-action@3cef36a9aba515d8726b491905b3bc766832e221 # v39.0.5
         env:
           # Specify what Renovate version to use (this is separate from the github-action version)
-          RENOVATE_VERSION: "36.52.2"
+          RENOVATE_VERSION: "36.78.8"
           # Repository taken from variable to keep configuration file generic
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           # Onboarding not needed for self hosted
