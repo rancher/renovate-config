@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Validate JSON
         run: jq type .github/renovate.json
       - name: Get token
@@ -43,10 +43,10 @@ jobs:
           installation_id: ${{ secrets.RENOVATE_INSTALLATION_ID }}
           private_key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@3cef36a9aba515d8726b491905b3bc766832e221 # v39.0.5
+        uses: renovatebot/github-action@89c8a9b60f5bc8395658abab8f40f96e4b490ebf # v39.1.0
         env:
           # Specify what Renovate version to use (this is separate from the github-action version)
-          RENOVATE_VERSION: "37.19.2"
+          RENOVATE_VERSION: "37.31.1"
           # Repository taken from variable to keep configuration file generic
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           # Onboarding not needed for self hosted
