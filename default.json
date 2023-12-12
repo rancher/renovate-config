@@ -299,6 +299,17 @@
       ],
       "allowedVersions": "<1.28.0",
       "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
+    },    
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "K3D_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "k3d-io/k3d",
+      "datasourceTemplate": "github-releases"
     }
   ]
 }
