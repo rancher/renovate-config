@@ -179,6 +179,17 @@
       ],
       "datasourceTemplate": "docker",
       "description": "usage of rancher/kubectl in global.kubectl in Helm chart"
+    },    
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "K3D_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "k3d-io/k3d",
+      "datasourceTemplate": "github-releases"
     }
   ],
   "packageRules": [
