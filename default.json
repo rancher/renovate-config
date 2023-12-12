@@ -240,7 +240,7 @@
         "k8s.io/sample-controller"
       ],
       "groupName": "gomod-k8sio-dependencies",
-      "allowedVersions": "<0.26.0"
+      "allowedVersions": "<0.28.0"
     },
     {
       "matchPackagePatterns": [
@@ -291,13 +291,13 @@
       "matchPackagePatterns": [
         "kubernetes/kubernetes"
       ],
-      "allowedVersions": "<1.26.0"
+      "allowedVersions": "<1.28.0"
     },
     {
       "matchPackagePatterns": [
         "rancher/kubectl"
       ],
-      "allowedVersions": "<1.26.0",
+      "allowedVersions": "<1.28.0",
       "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
     }
   ]
