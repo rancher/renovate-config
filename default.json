@@ -131,7 +131,8 @@
         "(^|/)Dockerfile[^/]*$"
       ],
       "matchStrings": [
-        "ENV ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+        "ENV ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
+        "ENV CATTLE_ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "etcd-io/etcd",
       "datasourceTemplate": "github-releases"
