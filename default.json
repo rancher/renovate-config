@@ -83,6 +83,20 @@
     {
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$",
+        "(^|/|\\.)Makefile$",
+        "(^|/)Makefile[^/]*$"
+      ],
+      "matchStrings": [
+        "ENV CONTROLLER_GEN_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
+        "ENV CONTROLLER_GEN_VER(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "kubernetes-sigs/controller-tools",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
       ],
       "matchStrings": [
@@ -131,7 +145,8 @@
         "(^|/)Dockerfile[^/]*$"
       ],
       "matchStrings": [
-        "ENV ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+        "ENV ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
+        "ENV CATTLE_ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "etcd-io/etcd",
       "datasourceTemplate": "github-releases"
