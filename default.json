@@ -33,7 +33,8 @@
         "(^|/)Dockerfile[^/]*$"
       ],
       "matchStrings": [
-        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
+        "ARG KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases"
