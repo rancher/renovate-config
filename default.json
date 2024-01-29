@@ -14,8 +14,9 @@
   "postUpdateOptions": [
     "gomodTidy"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": [
         "\\.github/workflows/renovate.yml"
       ],
@@ -26,6 +27,7 @@
       "datasourceTemplate": "docker"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -37,6 +39,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -48,6 +51,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -59,6 +63,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -70,6 +75,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -81,6 +87,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$",
@@ -95,6 +102,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -107,6 +115,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -118,6 +127,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -129,6 +139,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -140,6 +151,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -152,6 +164,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -163,6 +176,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -174,6 +188,7 @@
       "datasourceTemplate": "github-releases"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
@@ -186,6 +201,7 @@
       "datasourceTemplate": "git-refs"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "values.yaml$"
       ],
@@ -194,8 +210,9 @@
       ],
       "datasourceTemplate": "docker",
       "description": "usage of rancher/kubectl in global.kubectl in Helm chart"
-    },    
+    },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$"
