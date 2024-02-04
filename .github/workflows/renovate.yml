@@ -46,7 +46,7 @@ jobs:
         uses: renovatebot/github-action@42c1d3cb1d1ca891765626ba71cdff5e757258de # v40.0.2
         env:
           # Specify what Renovate version to use (this is separate from the github-action version)
-          RENOVATE_VERSION: "37.168.2"
+          RENOVATE_VERSION: "37.170.0"
           # Repository taken from variable to keep configuration file generic
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           # Onboarding not needed for self hosted
