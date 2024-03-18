@@ -14,6 +14,9 @@
   "postUpdateOptions": [
     "gomodTidy"
   ],
+  "ignoreDeps":[
+    "golang.org/x/crypto/x509roots/fallback"
+  ],
   "customManagers": [
     {
       "customType": "regex",
