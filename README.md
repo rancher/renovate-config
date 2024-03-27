@@ -9,10 +9,16 @@ This repository contains the centralized Renovate preset (`default.json`) and th
 
 ## Testing new changes
 
-Renovate configuraiton is not very unit testing friendly. Therefore, this project aims to validate all renovate files for syntax issues via `make validate`.
+Renovate configuration is not very unit testing friendly. Therefore, this project aims to validate all renovate files for syntax issues via `make validate` at its PR checks.
 This runs a strict check, so new formats which require migration will break.
 
-New changes can be tested by adding a target file in `/tests` and running `make test`. Running it with the current sample `Dockerfile` results in:
+When introducing new configuration, changes can be tested manually by adding a sample target file in `/tests` and running `make test` locally. To test the impact on a `Dockerfile` for example, create a `test/Dockerfile`:
+
+```Dockerfile
+ENV KUBECTL_VERSION v1.25.12
+```
+
+Results in:
 
 ```
 DEBUG: packageFiles with updates (repository=local)
@@ -50,3 +56,7 @@ DEBUG: packageFiles with updates (repository=local)
          ]
        }
 ```
+
+Some specific data sources will require a token (as per example above) which can be provided via the `GITHUB_COM_TOKEN` environment variable. This token requires read-only access to public repositories and it is used to fetch [changelogs] without being constraint by GH's API rate-limits.
+
+[changelogs]: https://docs.renovatebot.com/getting-started/running/#githubcom-token-for-changelogs
