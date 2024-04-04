@@ -9,7 +9,7 @@
   "automergeStrategy": "merge-commit",
   "prConcurrentLimit": 0,
   "constraints": {
-    "go": "<1.22"
+    "go": "<1.23"
   },
   "postUpdateOptions": [
     "gomodTidy"
