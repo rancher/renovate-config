@@ -9,7 +9,7 @@
   "automergeStrategy": "merge-commit",
   "prConcurrentLimit": 0,
   "constraints": {
-    "go": "<1.22"
+    "go": "<1.23"
   },
   "postUpdateOptions": [
     "gomodTidy"
@@ -33,13 +33,11 @@
       "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+        "(^|/)Dockerfile[^/]*$",
+        "hack/make/deps.mk"
       ],
       "matchStrings": [
-        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
-        "ARG KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
-        "KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
-        "KUBECTL_VERSION_amd64(\\=|\\s)(?<currentDigest>.*?)\\n"        
+        "KUBECTL_VERSION.*\\=\\s*(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases"
