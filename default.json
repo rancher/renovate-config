@@ -231,13 +231,23 @@
       "customType": "regex",
       "fileMatch": [
         "(^|/|\\.)Dockerfile$",
+        "(^|/)Dockerfile[^/]*$"
+      ],
+      "matchStrings": [
+        "# renovate mod: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( groupName=(?<groupName>.*?))?\\.*\\sdigestVersion=kustomize/(?<currentValue>.*?)\\n"
+      ]
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/|\\.)Dockerfile$",
         "(^|/)Dockerfile[^/]*$",
         "(^|/)Makefile$",
         "hack/make/deps.mk"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?) digestVersion=(?<currentValue>.*)\\s+.+_(sha256|arm64|amd64|arm|s390x).*=(\\s|\"|)(?<currentDigest>.*)(\"|)"
+        "# renovate( mod)?: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( groupName=(?<groupName>.*?))?( extractVersion=(?<extractVersion>.*?))?\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
+        "# renovate( mod)?: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( groupName=(?<groupName>.*?))?( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?( allowedVersions=(?<allowedVersions>.*?))? digestVersion=(?<currentValue>.*)\\s+.+_(sha256|arm64|amd64|arm|s390x).*=(\\s|\"|)(?<currentDigest>.*)(\"|)"
       ]
     }
   ],
