@@ -29,12 +29,17 @@ on:
 concurrency: renovate
 jobs:
   renovate:
-    runs-on: ubuntu-latest
+    runs-on: runs-on,runner=1cpu-linux-x64,run-id=${{ github.run_id }}
+    container: registry.suse.com/bci/nodejs:20
     steps:
+      - name: Install Dependencies
+        run: |
+          zypper ref
+          zypper install -y jq docker
       - name: Checkout
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-      - name: Validate JSON
-        run: jq type .github/renovate.json
+      - name: Validate and printout config
+        run: jq -e . .github/renovate.json
       - name: Get token
         id: get_token
         uses: actions/create-github-app-token@a0de6af83968303c8c955486bf9739a57d23c7f1 # v1.10.0
