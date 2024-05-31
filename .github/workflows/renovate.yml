@@ -12,6 +12,16 @@ on:
         required: false
         default: "false"
         type: string
+      runner:
+        description: "Value to be used on runs-on"
+        required: false
+        default: "ubuntu-latest"
+        type: string
+      container:
+        description: "Value to be used on container"
+        required: false
+        default: ""
+        type: string
   workflow_dispatch:
     inputs:
       logLevel:
@@ -24,13 +34,23 @@ on:
         required: false
         default: "false"
         type: string
+      runner:
+        description: "Value to be used on runs-on"
+        required: false
+        default: "ubuntu-latest"
+        type: string
+      container:
+        description: "Value to be used on container"
+        required: false
+        default: ""
+        type: string
   schedule:
     - cron: '30 4,6 * * 6,0'
 concurrency: renovate
 jobs:
   renovate:
-    runs-on: runs-on,runner=1cpu-linux-x64,run-id=${{ github.run_id }}
-    container: registry.suse.com/bci/nodejs:20
+    runs-on: ${{ inputs.runner }}
+    container: ${{ inputs.container }}
     steps:
       - name: Install Dependencies
         run: |
