@@ -24,7 +24,8 @@
         "\\.github/workflows/renovate.yml"
       ],
       "matchStrings": [
-        ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
+        ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n",
+        ".*?ghcr.io/renovatebot/renovate:(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "renovate/renovate",
       "datasourceTemplate": "docker"
