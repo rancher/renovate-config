@@ -12,6 +12,11 @@ on:
         required: false
         default: "false"
         type: string
+      runner:
+        description: "Value to be used on runs-on"
+        required: false
+        default: "ubuntu-latest"
+        type: string
   workflow_dispatch:
     inputs:
       logLevel:
@@ -24,17 +29,44 @@ on:
         required: false
         default: "false"
         type: string
+      runner:
+        description: "Value to be used on runs-on"
+        required: false
+        default: "ubuntu-latest"
+        type: string
   schedule:
     - cron: '30 4,6 * * 6,0'
+
 concurrency: renovate
+
+env:
+  # Specify what Renovate version to use (this is separate from the github-action version)
+  RENOVATE_VERSION: "37.385.5"
+  # Repository taken from variable to keep configuration file generic
+  RENOVATE_REPOSITORIES: ${{ github.repository }}
+  # Onboarding not needed for self hosted
+  RENOVATE_ONBOARDING: "false"
+  # Username for GitHub authentication (should match GitHub App name + [bot])
+  RENOVATE_USERNAME: "renovate-rancher[bot]"
+  # Git commit author used, must match GitHub App
+  RENOVATE_GIT_AUTHOR: "renovate-rancher <119870437+renovate-rancher[bot]@users.noreply.github.com>"
+  # Use GitHub API to create commits (this allows for signed commits from GitHub App)
+  RENOVATE_PLATFORM_COMMIT: "true"
+  # Override schedule if set
+  RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
+  # Override loglevel if set
+  LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+  RENOVATE_CONFIG_FILE: .github/renovate.json
+
 jobs:
   renovate:
+    if:  ${{ inputs.runner }} == "ubuntu-latest"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-      - name: Validate JSON
-        run: jq type .github/renovate.json
+      - name: Validate and printout config
+        run: jq -e . "${RENOVATE_CONFIG_FILE}"
       - name: Get token
         id: get_token
         uses: actions/create-github-app-token@a0de6af83968303c8c955486bf9739a57d23c7f1 # v1.10.0
@@ -43,24 +75,29 @@ jobs:
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@063e0c946b9c1af35ef3450efc44114925d6e8e6 # v40.1.11
-        env:
-          # Specify what Renovate version to use (this is separate from the github-action version)
-          RENOVATE_VERSION: "37.377.5"
-          # Repository taken from variable to keep configuration file generic
-          RENOVATE_REPOSITORIES: ${{ github.repository }}
-          # Onboarding not needed for self hosted
-          RENOVATE_ONBOARDING: "false"
-          # Username for GitHub authentication (should match GitHub App name + [bot])
-          RENOVATE_USERNAME: "renovate-rancher[bot]"
-          # Git commit author used, must match GitHub App
-          RENOVATE_GIT_AUTHOR: "renovate-rancher <119870437+renovate-rancher[bot]@users.noreply.github.com>"
-          # Use GitHub API to create commits (this allows for signed commits from GitHub App)
-          RENOVATE_PLATFORM_COMMIT: "true"
-          # Override schedule if set
-          RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
-          # Override loglevel if set
-          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
-          configurationFile: .github/renovate.json
-          token: '${{ steps.get_token.outputs.token }}'
+          configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
+          token: "${{ steps.get_token.outputs.token }}"
+
+  renovate-selfhosted:
+    if:  ${{ inputs.runner }} != "ubuntu-latest"
+    runs-on: ${{ inputs.runner }}
+    container: 
+      image: ghcr.io/renovatebot/renovate:37.385.5
+      options: --user root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+      - name: Validate and printout config
+        run: jq -e . .github/renovate.json
+      - name: Get token
+        id: get_token
+        uses: actions/create-github-app-token@a0de6af83968303c8c955486bf9739a57d23c7f1 # v1.10.0
+        with:
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+      - name: Self-hosted runner Renovate
+        run: renovate
+        env:
+          RENOVATE_TOKEN: "${{ steps.get_token.outputs.token }}"
