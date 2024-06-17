@@ -41,7 +41,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "37.399.8"
+  RENOVATE_VERSION: "37.408.3"
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # Onboarding not needed for self hosted
@@ -84,7 +84,7 @@ jobs:
     if:  ${{ inputs.runner }} != "ubuntu-latest"
     runs-on: ${{ inputs.runner }}
     container: 
-      image: ghcr.io/renovatebot/renovate:37.399.8
+      image: ghcr.io/renovatebot/renovate:37.408.3
       options: --user root
     steps:
       - name: Checkout
