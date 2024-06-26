@@ -24,8 +24,7 @@
         "\\.github/workflows/renovate.yml"
       ],
       "matchStrings": [
-        ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n",
-        ".*?ghcr.io/renovatebot/renovate:(?<currentValue>.*?)\\n"
+        ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
       ],
       "depNameTemplate": "renovate/renovate",
       "datasourceTemplate": "docker"
@@ -308,7 +307,7 @@
         "registry.suse.com/bci/bci",
         "registry.suse.com/suse/sle15"
       ],
-      "allowedVersions": "<15.6.0"
+      "allowedVersions": "<15.7.0"
     },
     {
       "matchPackagePatterns": [
