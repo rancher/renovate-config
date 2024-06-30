@@ -84,7 +84,7 @@ jobs:
     if:  ${{ inputs.runner }} != "ubuntu-latest"
     runs-on: ${{ inputs.runner }}
     container: 
-      image: ghcr.io/renovatebot/renovate:37.414.1
+      image: ghcr.io/renovatebot/renovate:37.421.0
       options: --user root
     steps:
       - name: Checkout
