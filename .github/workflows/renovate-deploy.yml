@@ -59,4 +59,4 @@ jobs:
           echo "Created PR: ${CREATED_PR}" >> $GITHUB_STEP_SUMMARY
         env:
           DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
-          GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
+          GH_TOKEN: '${{ steps.get_token.outputs.token }}'
