@@ -11,25 +11,15 @@ permissions: {}
 jobs:
   renovate:
     runs-on: ubuntu-latest
-    outputs:
-      owner: ${{ steps.set_values.outputs.owner }}
-      repositories: ${{ steps.step2.outputs.repositories }}
     steps:
-      - name: Set owner and repositories values
-        id: set_values
-        run: | 
-          owner=$(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f1)
-          repositories=$(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f2)
-          echo "owner=$owner" >> "$GITHUB_OUTPUT"
-          echo "repositories=$repositories" >> "$GITHUB_OUTPUT"
       - name: Get token
         id: get_token
         uses: actions/create-github-app-token@31c86eb3b33c9b601a1f60f98dcbfd1d70f379b4 # v1.10.3
         with:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
-          owner: ${{ steps.set_values.outputs.owner }}
-          repositories: ${{ steps.set_values.outputs.repositories }}
+          owner: $(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f1)
+          repositories: $(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f2)
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
@@ -71,4 +61,4 @@ jobs:
           echo "Created PR: ${CREATED_PR}" >> $GITHUB_STEP_SUMMARY
         env:
           DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
-          GH_TOKEN: '${{ steps.get_token.outputs.token }}'
+          GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
