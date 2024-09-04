@@ -74,7 +74,7 @@ jobs:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@b266b24b144602ed4f512f0773009d026722f4cc # v40.2.6
+        uses: renovatebot/github-action@630a255a1f2f56c8d8ce160bed3e3ca577ca53e2 # v40.2.7
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
@@ -84,7 +84,7 @@ jobs:
     if:  ${{ inputs.runner }} != "ubuntu-latest"
     runs-on: ${{ inputs.runner }}
     container: 
-      image: ghcr.io/renovatebot/renovate:38.52.1
+      image: ghcr.io/renovatebot/renovate:38.59.2
       options: --user root
     steps:
       - name: Checkout
