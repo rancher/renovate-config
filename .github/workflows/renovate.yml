@@ -69,12 +69,12 @@ jobs:
         run: jq -e . "${RENOVATE_CONFIG_FILE}"
       - name: Get token
         id: get_token
-        uses: actions/create-github-app-token@3378cda945da322a8db4b193e19d46352ebe2de5 # v1.10.4
+        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69 # v1.11.0
         with:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@630a255a1f2f56c8d8ce160bed3e3ca577ca53e2 # v40.2.7
+        uses: renovatebot/github-action@dd4d265eb8646cd04fc5f86ff8bc8d496d75a251 # v40.2.8
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
@@ -84,7 +84,7 @@ jobs:
     if:  ${{ inputs.runner }} != "ubuntu-latest"
     runs-on: ${{ inputs.runner }}
     container: 
-      image: ghcr.io/renovatebot/renovate:38.72.0
+      image: ghcr.io/renovatebot/renovate:38.80.0
       options: --user root
     steps:
       - name: Checkout
@@ -93,7 +93,7 @@ jobs:
         run: jq -e . .github/renovate.json
       - name: Get token
         id: get_token
-        uses: actions/create-github-app-token@3378cda945da322a8db4b193e19d46352ebe2de5 # v1.10.4
+        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69 # v1.11.0
         with:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
