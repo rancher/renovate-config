@@ -15,7 +15,7 @@ on:
       runner:
         description: "Value to be used on runs-on"
         required: false
-        default: "ubuntu-latest"
+        default: '["ubuntu-latest"]'
         type: string
   workflow_dispatch:
     inputs:
@@ -32,7 +32,7 @@ on:
       runner:
         description: "Value to be used on runs-on"
         required: false
-        default: "ubuntu-latest"
+        default: '["ubuntu-latest"]'
         type: string
   schedule:
     - cron: '30 4,6 * * 6,0'
@@ -60,8 +60,7 @@ env:
 
 jobs:
   renovate:
-    if:  ${{ inputs.runner }} == "ubuntu-latest"
-    runs-on: ubuntu-latest
+    runs-on: ${{fromJSON(inputs.runner)}}
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -74,30 +73,9 @@ jobs:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@dd4d265eb8646cd04fc5f86ff8bc8d496d75a251 # v40.2.8
+        uses: renovatebot/github-action@e1db501385ddcccbaae6fb9c06befae04f379f23 # v40.2.10
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
           token: "${{ steps.get_token.outputs.token }}"
 
-  renovate-selfhosted:
-    if:  ${{ inputs.runner }} != "ubuntu-latest"
-    runs-on: ${{ inputs.runner }}
-    container: 
-      image: ghcr.io/renovatebot/renovate:38.80.0
-      options: --user root
-    steps:
-      - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - name: Validate and printout config
-        run: jq -e . .github/renovate.json
-      - name: Get token
-        id: get_token
-        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69 # v1.11.0
-        with:
-          app-id: ${{ secrets.RENOVATE_APP_ID }}
-          private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
-      - name: Self-hosted runner Renovate
-        run: renovate
-        env:
-          RENOVATE_TOKEN: "${{ steps.get_token.outputs.token }}"
