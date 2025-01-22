@@ -54,9 +54,9 @@ jobs:
           jq --arg default_branch "${DEFAULT_BRANCH}" '.baseBranches = [$default_branch]' ../main/files/renovate.json > "${TEMP_CONFIG}"
           mv "${TEMP_CONFIG}" .github/renovate.json
           git add .github/renovate.json
-          cp ../main/files/renovate.yml .github/workflows/renovate.yml
-          git add .github/workflows/renovate.yml
-          FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml"
+          cp ../main/files/renovate-vault.yml .github/workflows/renovate-vault.yml
+          git add .github/workflows/renovate-vault.yml
+          FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml .github/workflows/renovate.yml"
           for FILE_TO_REMOVE in $FILES_TO_REMOVE; do
             if [ -f "${FILE_TO_REMOVE}" ]; then
               git rm "${FILE_TO_REMOVE}"
