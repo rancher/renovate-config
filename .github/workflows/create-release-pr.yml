@@ -13,10 +13,19 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Create PR
         run: |
+          git clone --branch release "${REPO_URL}"
+          cd renovate-config
+          git fetch origin main
+          git switch -c main --track origin/main
+
+          set -x
+          if [[ $(git merge-base main release) == $(git rev-parse main) ]]; then
+              echo "No changes found in main, skip PR creation"
+              exit 0
+          fi
+
           PR=$(gh pr create --title "Release week $(date +%V)" --body "Automatically created PR to merge main into release" --base release --head main)
           RETVAL=$?
           if [ "${RETVAL}" -ne 0 ]; then
@@ -26,3 +35,4 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
