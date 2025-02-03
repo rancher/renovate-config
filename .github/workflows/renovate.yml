@@ -1,4 +1,6 @@
-name: Renovate
+# This workflow is deprecated, and will be removed once
+# all callers across the ecosystem moves on to renovate-vault.yml.
+name: Renovate (deprecated)
 on:
   workflow_call:
     inputs:
@@ -34,8 +36,6 @@ on:
         required: false
         default: '["ubuntu-latest"]'
         type: string
-  schedule:
-    - cron: '30 4,6 * * 6,0'
 
 concurrency: renovate
 
@@ -78,4 +78,3 @@ jobs:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
           token: "${{ steps.get_token.outputs.token }}"
-
