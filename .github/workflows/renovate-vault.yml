@@ -18,6 +18,11 @@ on:
         required: false
         default: '["ubuntu-latest"]'
         type: string
+      configMigration:
+        description: "Toggle PRs for config migration"
+        required: false
+        default: "true"
+        type: string
   workflow_dispatch:
     inputs:
       logLevel:
@@ -34,6 +39,11 @@ on:
         description: "Value to be used on runs-on"
         required: false
         default: '["ubuntu-latest"]'
+        type: string
+      configMigration:
+        description: "Toggle PRs for config migration"
+        required: false
+        default: "true"
         type: string
 
 concurrency: renovate
@@ -56,6 +66,8 @@ env:
   # Override loglevel if set
   LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
   RENOVATE_CONFIG_FILE: .github/renovate.json
+  # https://docs.renovatebot.com/configuration-options/#configmigration
+  RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
 
 permissions:
   contents: read
