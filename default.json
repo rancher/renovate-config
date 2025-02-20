@@ -9,7 +9,7 @@
   "automergeStrategy": "merge-commit",
   "prConcurrentLimit": 0,
   "constraints": {
-    "go": "<1.24"
+    "go": "<1.25"
   },
   "postUpdateOptions": [
     "gomodTidy"
@@ -302,7 +302,7 @@
         "k8s.io/sample-controller"
       ],
       "groupName": "gomod-k8sio-dependencies",
-      "allowedVersions": "<0.28.0"
+      "allowedVersions": "<0.32.0"
     },
     {
       "matchPackagePatterns": [
@@ -319,13 +319,13 @@
         "golang",
         "go"
       ],
-      "allowedVersions": "<1.24.0"
+      "allowedVersions": "<1.25.0"
     },
     {
       "matchDatasources": [
         "golang-version"
       ],
-      "allowedVersions": "<1.24.0"
+      "allowedVersions": "<1.25.0"
     },
     {
       "matchPackagePatterns": [
@@ -353,13 +353,13 @@
       "matchPackagePatterns": [
         "kubernetes/kubernetes"
       ],
-      "allowedVersions": "<1.28.0"
+      "allowedVersions": "<1.32.0"
     },
     {
       "matchPackagePatterns": [
         "rancher/kubectl"
       ],
-      "allowedVersions": "<1.28.0",
+      "allowedVersions": "<1.32.0",
       "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
     }
   ]
