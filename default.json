@@ -9,7 +9,7 @@
   "automergeStrategy": "merge-commit",
   "prConcurrentLimit": 0,
   "constraints": {
-    "go": "<1.24"
+    "go": "<1.25"
   },
   "postUpdateOptions": [
     "gomodTidy"
@@ -317,13 +317,13 @@
         "golang",
         "go"
       ],
-      "allowedVersions": "<1.24.0"
+      "allowedVersions": "<1.25.0"
     },
     {
       "matchDatasources": [
         "golang-version"
       ],
-      "allowedVersions": "<1.24.0"
+      "allowedVersions": "<1.25.0"
     },
     {
       "matchPackagePatterns": [
