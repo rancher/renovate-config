@@ -12,6 +12,11 @@ on:
         required: false
         default: "false"
         type: string
+      configMigration:
+        description: "Toggle PRs for config migration"
+        required: false
+        default: "true"
+        type: string
   # Run twice in the early morning (UTC) for initial and follow up steps (create pull request and merge)
   schedule:
     - cron: '30 4,6 * * *'
@@ -24,6 +29,7 @@ jobs:
   call-workflow:
     uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@release
     with:
+      configMigration: ${{ inputs.configMigration || 'true' }}
       logLevel: ${{ inputs.logLevel || 'info' }}
       overrideSchedule: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
     secrets: inherit
