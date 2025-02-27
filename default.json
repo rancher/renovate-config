@@ -14,9 +14,6 @@
   "postUpdateOptions": [
     "gomodTidy"
   ],
-  "ignoreDeps":[
-    "golang.org/x/crypto/x509roots/fallback"
-  ],
   "customManagers": [
     {
       "customType": "regex",
@@ -361,6 +358,16 @@
       ],
       "allowedVersions": "<1.32.0",
       "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
+    },
+    {
+      "matchPackageNames": [
+        "golang.org/x/crypto/x509roots/fallback",
+        "golang.org/x/exp"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "digest"
+      ]
     }
   ]
 }
