@@ -23,6 +23,11 @@ on:
         required: false
         default: "true"
         type: string
+      renovateConfig:
+        description: "Define a custom renovate config file"
+        required: false
+        default: ".github/renovate.json"
+        type: string
   workflow_dispatch:
     inputs:
       logLevel:
@@ -65,7 +70,7 @@ env:
   RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
   # Override loglevel if set
   LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
-  RENOVATE_CONFIG_FILE: .github/renovate.json
+  RENOVATE_CONFIG_FILE: ${{ inputs.renovateConfig || '.github/renovate.json' }}
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
 
