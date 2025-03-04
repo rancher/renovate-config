@@ -12,7 +12,8 @@
     "go": "<1.25"
   },
   "postUpdateOptions": [
-    "gomodTidy"
+    "gomodTidy",
+    "gomodUpdateImportPaths"
   ],
   "customManagers": [
     {
@@ -331,12 +332,31 @@
       "allowedVersions": "<1.0.0"
     },
     {
+      "groupName": "GitHub Actions",
       "matchManagers": [
         "github-actions"
       ],
+      "matchPackageNames": [
+        "actions/**",
+        "github/codeql-action/**"
+      ],
       "matchUpdateTypes": [
-        "minor",
-        "patch"
+        "major",
+        "minor"
+      ],
+      "pinDigests": true
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "!actions/**",
+        "!github/codeql-action/**"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
       ],
       "pinDigests": true
     },
