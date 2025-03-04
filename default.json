@@ -12,7 +12,8 @@
     "go": "<1.25"
   },
   "postUpdateOptions": [
-    "gomodTidy"
+    "gomodTidy",
+    "gomodUpdateImportPaths"
   ],
   "customManagers": [
     {
