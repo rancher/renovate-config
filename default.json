@@ -332,6 +332,21 @@
       "allowedVersions": "<1.0.0"
     },
     {
+      "groupName": "GitHub Actions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "actions/**",
+        "github/codeql-action/**"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "pinDigests": true
+    },
+    {
       "matchManagers": [
         "github-actions"
       ],
