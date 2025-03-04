@@ -350,9 +350,13 @@
       "matchManagers": [
         "github-actions"
       ],
+      "matchPackageNames": [
+        "!actions/**",
+        "!github/codeql-action/**"
+      ],
       "matchUpdateTypes": [
-        "minor",
-        "patch"
+        "major",
+        "minor"
       ],
       "pinDigests": true
     },
