@@ -1,4 +1,4 @@
-TMP_DIR := $(realpath build/tmp)
+TMP_DIR := $(shell mkdir -p build/tmp && realpath build/tmp)
 RENOVATE_IMG := renovate/renovate:slim
 
 VALIDATE_FILE := docker run --rm -v $(shell pwd):/repo:ro -e LOG_LEVEL=debug \

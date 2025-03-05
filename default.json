@@ -12,7 +12,8 @@
     "go": "<1.25"
   },
   "postUpdateOptions": [
-    "gomodTidy"
+    "gomodTidy",
+    "gomodUpdateImportPaths"
   ],
   "customManagers": [
     {
@@ -112,7 +113,7 @@
       ],
       "matchStrings": [
         ".*?https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh.*?sh -s (?<currentValue>.*?);",
-        "GOLANGCI_(LINT|LINT_VER|VERSION)(\\=|:\\=|\\?\\=|\\s)(?<currentValue>.*?)\\n"
+        "GOLANGCI_(LINT|LINT_VER|VERSION)(:|\\?|\\s)*=\\s*(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "golangci/golangci-lint",
       "datasourceTemplate": "github-releases"
@@ -331,12 +332,31 @@
       "allowedVersions": "<1.0.0"
     },
     {
+      "groupName": "GitHub Actions",
       "matchManagers": [
         "github-actions"
       ],
+      "matchPackageNames": [
+        "actions/**",
+        "github/codeql-action/**"
+      ],
       "matchUpdateTypes": [
-        "minor",
-        "patch"
+        "major",
+        "minor"
+      ],
+      "pinDigests": true
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "!actions/**",
+        "!github/codeql-action/**"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
       ],
       "pinDigests": true
     },
