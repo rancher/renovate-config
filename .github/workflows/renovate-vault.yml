@@ -28,6 +28,11 @@ on:
         required: false
         default: ".github/renovate.json"
         type: string
+      branch:
+        description: "The target branch, used to checkout renovate config"
+        required: false
+        default: ""
+        type: "string"
   workflow_dispatch:
     inputs:
       logLevel:
@@ -50,6 +55,11 @@ on:
         required: false
         default: "true"
         type: string
+      branch:
+        description: "The target branch, used to checkout renovate config"
+        required: false
+        default: ""
+        type: "string"
 
 concurrency: renovate
 
@@ -84,6 +94,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.branch || github.ref_name }}
       - name: Validate and printout config
         run: jq -e . "${RENOVATE_CONFIG_FILE}"
       - name: Load Secrets from Vault
