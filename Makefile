@@ -1,5 +1,5 @@
 TMP_DIR := $(shell mkdir -p build/tmp && realpath build/tmp)
-RENOVATE_IMG := renovate/renovate:slim
+RENOVATE_IMG := renovate/renovate:full
 
 VALIDATE_FILE := docker run --rm -v $(shell pwd):/repo:ro -e LOG_LEVEL=debug \
 		$(RENOVATE_IMG) renovate-config-validator --strict

@@ -19,7 +19,8 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "\\.github/workflows/renovate.yml"
+        "\\.github/workflows/renovate.yml",
+        "\\.github/workflows/renovate-vault.yml"
       ],
       "matchStrings": [
         ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
@@ -243,26 +244,27 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "renovate/renovate"
+      "matchPackageNames": [
+        "/renovate/renovate/"
       ],
-      "extractVersion": "(?<version>.*)-slim$"
+      "extractVersion": "(?<version>.*)-full$",
+      "groupName": "renovate-bumps"
     },
     {
-      "matchPackagePatterns": [
-        "kustomize"
-      ],
       "extractVersion": "^kustomize/(?<version>.*)$",
-      "groupName": "kustomize"
+      "groupName": "kustomize",
+      "matchPackageNames": [
+        "/kustomize/"
+      ]
     },
     {
       "matchManagers": [
         "gomod"
       ],
-      "matchPackagePatterns": [
-        "^sigs.k8s.io"
-      ],
-      "groupName": "gomod-sigsk8sio-dependencies"
+      "groupName": "gomod-sigsk8sio-dependencies",
+      "matchPackageNames": [
+        "/^sigs.k8s.io/"
+      ]
     },
     {
       "matchManagers": [
@@ -303,19 +305,17 @@
       "allowedVersions": "<0.32.0"
     },
     {
-      "matchPackagePatterns": [
-        "registry.suse.com/bci/bci",
-        "registry.suse.com/suse/sle15"
-      ],
-      "allowedVersions": "<15.7.0"
+      "allowedVersions": "<15.7.0",
+      "matchPackageNames": [
+        "/registry.suse.com/bci/bci/",
+        "/registry.suse.com/suse/sle15/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "registry.suse.com/bci/golang"
-      ],
       "matchPackageNames": [
         "golang",
-        "go"
+        "go",
+        "/registry.suse.com/bci/golang/"
       ],
       "allowedVersions": "<1.25.0"
     },
@@ -326,10 +326,10 @@
       "allowedVersions": "<1.25.0"
     },
     {
-      "matchPackagePatterns": [
-        "rancher/dapper"
-      ],
-      "allowedVersions": "<1.0.0"
+      "allowedVersions": "<1.0.0",
+      "matchPackageNames": [
+        "/rancher/dapper/"
+      ]
     },
     {
       "groupName": "GitHub Actions",
@@ -361,23 +361,23 @@
       "pinDigests": true
     },
     {
-      "matchPackagePatterns": [
-        "rancher/helm"
-      ],
-      "extractVersion": "^release-(?<version>.*)$"
+      "extractVersion": "^release-(?<version>.*)$",
+      "matchPackageNames": [
+        "/rancher/helm/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "kubernetes/kubernetes"
-      ],
-      "allowedVersions": "<1.32.0"
-    },
-    {
-      "matchPackagePatterns": [
-        "rancher/kubectl"
-      ],
       "allowedVersions": "<1.32.0",
-      "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver"
+      "matchPackageNames": [
+        "/kubernetes/kubernetes/"
+      ]
+    },
+    {
+      "allowedVersions": "<1.32.0",
+      "description": "kubectl is supported within one minor version (older or newer) of kube-apiserver",
+      "matchPackageNames": [
+        "/rancher/kubectl/"
+      ]
     },
     {
       "matchPackageNames": [
