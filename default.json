@@ -19,7 +19,8 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "\\.github/workflows/renovate.yml"
+        "\\.github/workflows/renovate.yml",
+        "\\.github/workflows/renovate-vault.yml"
       ],
       "matchStrings": [
         ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
@@ -246,7 +247,8 @@
       "matchPackagePatterns": [
         "renovate/renovate"
       ],
-      "extractVersion": "(?<version>.*)-slim$"
+      "extractVersion": "(?<version>.*)-full$",
+      "groupName": "renovate-bumps"
     },
     {
       "matchPackagePatterns": [
