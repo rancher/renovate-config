@@ -336,28 +336,6 @@
       "matchManagers": [
         "github-actions"
       ],
-      "matchPackageNames": [
-        "actions/**",
-        "github/codeql-action/**"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
-      "pinDigests": true
-    },
-    {
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchPackageNames": [
-        "!actions/**",
-        "!github/codeql-action/**"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
       "pinDigests": true
     },
     {
