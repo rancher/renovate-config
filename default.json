@@ -366,6 +366,16 @@
         "patch",
         "digest"
       ]
+    },
+    {
+      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "enabled": true
     }
   ]
 }
