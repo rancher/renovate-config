@@ -4,10 +4,8 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true,
       "pinDigests": true,
-      "schedule": ["every weekend after 4am"]
+      "schedule": ["* 4 * * 1/2"]
     },
     {
       "matchPackageNames": ["renovate/renovate"],
