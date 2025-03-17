@@ -20,7 +20,7 @@ on:
         type: string
 
   schedule:
-    - cron: '30 4,6 * * 6,0'
+    - cron: '30 4,6 * * 1-5'
 
 permissions:
   contents: read
