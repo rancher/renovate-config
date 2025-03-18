@@ -41,6 +41,8 @@ their `renovate.json` as per below:
 
 ## Testing new changes
 
+### Matching patterns / versions found
+
 Renovate configuration is not very unit testing friendly. Therefore, this project aims to validate all renovate files for syntax issues via `make validate` at its PR checks.
 This runs a strict check, so new formats which require migration will break.
 
@@ -90,5 +92,22 @@ DEBUG: packageFiles with updates (repository=local)
 ```
 
 Some specific data sources will require a token (as per example above) which can be provided via the `GITHUB_COM_TOKEN` environment variable. This token requires read-only access to public repositories and it is used to fetch [changelogs] without being constraint by GH's API rate-limits.
+
+### E2E testing
+For non straight-forward changes, an effective way to confirm the
+configuration is working as expected is to do a full renovate run.
+
+#### Manually triggering the Renovate workflow
+Push changes to a branch on the target repository (not your fork). On
+the GitHub Actions tab, manually trigger renovate via the `run workflow`
+button. Ensure that you pick the new branch and that "Override default log
+level" is set to `debug` and "Override all schedules" is set to `true`.
+
+Note that Renovate may at times merge your branch configuration
+with the configuration from the `default` branch of that repository, which
+may result in your settings not working as expected.
+To understand the final config, check the section `DEBUG: Post-massage config`
+of the logs - this is only visible when renovate is executed in
+debug mode as per above.
 
 [changelogs]: https://docs.renovatebot.com/getting-started/running/#githubcom-token-for-changelogs
