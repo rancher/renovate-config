@@ -10,7 +10,7 @@ This repository contains the centralized Renovate preset (`default.json`) and th
 ## Dependency bump alignment across Rancher Manager
 
 For easier alignment of versions across projects around the Rancher Manager
-ecosystem, a few presets were created that enforce version contraints for each
+ecosystem, a few presets were created that enforce version constraints for each
 Rancher minor version.
 
 The presets are available at the root of this repository and follow the naming
