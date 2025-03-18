@@ -360,7 +360,10 @@
       "matchUpdateTypes": ["patch","digest"]
     },
     {
-      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "description": "Disable major bumps",
+      "matchPackageNames": [
+        "rancher/kuberlr-kubectl"
+      ],
       "matchUpdateTypes": ["minor", "patch"]
     }
   ]

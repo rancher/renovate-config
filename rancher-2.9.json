@@ -37,6 +37,13 @@
         "k8s.io/**"
       ],
       "allowedVersions": "<0.31.0"
+    },
+    {
+      "description": "Disable major bumps",
+      "matchPackageNames": [
+        "rancher/kuberlr-kubectl"
+      ],
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ]
 }
