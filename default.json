@@ -336,7 +336,32 @@
       "matchManagers": [
         "github-actions"
       ],
+      "matchDatasources": [
+        "github-tags"
+      ],
+      "matchDepTypes": [
+        "action"
+      ],
       "pinDigests": true
+    },
+    {
+      "matchPackageNames": [
+        "/^registry.suse.com/",
+        "/^registry.opensuse.org/"
+      ],
+      "matchCurrentValue": "latest",
+      "enabled": false
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "matchCurrentValue": "1.24",
+      "enabled": false
     },
     {
       "extractVersion": "^release-(?<version>.*)$",
