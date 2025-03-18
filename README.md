@@ -7,6 +7,38 @@ This repository contains the centralized Renovate preset (`default.json`) and th
 - `main` (aka develop), this is where the development happens and changes are introduced. This branch is kept up-to-date with Renovate pointing to its own preset.
 - `release`, this is the branch where all the repositories point to. After testing our changes in `main`, we promote `main` to `release`.
 
+## Dependency bump alignment across Rancher Manager
+
+For easier alignment of versions across projects around the Rancher Manager
+ecosystem, a few presets were created that enforce version constraints for each
+Rancher minor version.
+
+The presets are available at the root of this repository and follow the naming
+convention: `rancher-<version>.json`. To use these presets, a project can configure
+their `renovate.json` as per below:
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>rancher/renovate-config//rancher-main#rancher-presets"
+  ],
+  "baseBranches": [
+    "main"
+  ],
+  "packageRules": [
+    {
+      "matchBaseBranches": ["releases/v0.7.x"],
+      "extends": ["github>rancher/renovate-config//rancher-2.11#rancher-presets"]
+    },
+    {
+      "matchBaseBranches": ["releases/v0.6.x"],
+      "extends": ["github>rancher/renovate-config//rancher-2.10#rancher-presets"]
+    }
+  ]
+}
+```
+
 ## Testing new changes
 
 Renovate configuration is not very unit testing friendly. Therefore, this project aims to validate all renovate files for syntax issues via `make validate` at its PR checks.
