@@ -1,0 +1,41 @@
+{
+  "extends": ["github>rancher/renovate-config#release"],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "allowedVersions": "<1.24.0"
+    },
+    {
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "allowedVersions": "<1.24.0"
+    },
+    {
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "rancher/kubectl",
+        "kubernetes/kubernetes",
+        "k8s.io/kubernetes"
+      ],
+      "allowedVersions": "<1.33.0"
+    },
+    {
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "!k8s.io/kubernetes",
+        "k8s.io/**"
+      ],
+      "allowedVersions": "<0.33.0"
+    }
+  ]
+}
