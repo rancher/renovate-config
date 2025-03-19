@@ -6,17 +6,36 @@ on:
       logLevel:
         description: "Override default log level"
         required: false
-        default: "info"
-        type: string
+        default: info
+        type: choice
+        options:
+          - info
+          - debug
       overrideSchedule:
         description: "Override all schedules"
         required: false
         default: "false"
-        type: string
+        type: choice
+        options:
+          - "false"
+          - "true"
       configMigration:
         description: "Toggle PRs for config migration"
         required: false
         default: "true"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      runner:
+        description: "Value to be used on runs-on"
+        required: false
+        default: '["ubuntu-latest"]'
+        type: string
+      renovateConfig:
+        description: "Define a custom renovate config file"
+        required: false
+        default: ".github/renovate.json"
         type: string
 
   schedule:
