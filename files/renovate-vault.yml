@@ -47,4 +47,5 @@ jobs:
       logLevel: ${{ inputs.logLevel || 'info' }}
       overrideSchedule: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
       renovateConfig: ${{ inputs.renovateConfig || '.github/renovate.json' }}
-    secrets: inherit
+    secrets:
+      override-token: "${{ secrets.RENOVATE_FORK_GH_TOKEN || '' }}"
