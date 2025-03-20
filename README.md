@@ -110,4 +110,11 @@ To understand the final config, check the section `DEBUG: Post-massage config`
 of the logs - this is only visible when renovate is executed in
 debug mode as per above.
 
+#### Running on Forks
+The execution in forks is possible by creating the secret `RENOVATE_FORK_GH_TOKEN`
+in the fork repository, then triggering the Renovate workflow.
+This provides the best way to test E2E scenarios, so that you can
+manipulate dependency versions across the different branches in
+the fork.
+
 [changelogs]: https://docs.renovatebot.com/getting-started/running/#githubcom-token-for-changelogs
