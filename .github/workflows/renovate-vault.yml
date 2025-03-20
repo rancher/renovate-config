@@ -28,28 +28,10 @@ on:
         required: false
         default: ".github/renovate.json"
         type: string
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: "Override default log level"
+    secrets:
+      override-token:
+        description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
         required: false
-        default: "info"
-        type: string
-      overrideSchedule:
-        description: "Override all schedules"
-        required: false
-        default: "false"
-        type: string
-      runner:
-        description: "Value to be used on runs-on"
-        required: false
-        default: '["ubuntu-latest"]'
-        type: string
-      configMigration:
-        description: "Toggle PRs for config migration"
-        required: false
-        default: "true"
-        type: string
 
 concurrency: renovate
 
@@ -86,13 +68,26 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Validate and printout config
         run: jq -e . "${RENOVATE_CONFIG_FILE}"
+      - name: Check token
+        id: override
+        run: |
+          if [[ -n "${{ secrets.override-token }}" ]]; then
+            echo "Override token will be used"
+            echo "use-gh-app=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "GitHub App will be used"
+            echo "use-gh-app=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Load Secrets from Vault
+        if: steps.override.outputs.use-gh-app == 'true'
         uses: rancher-eio/read-vault-secrets@main
         with:
           secrets: |
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
       - name: Get token
+        if: steps.override.outputs.use-gh-app == 'true'
         id: get_token
         uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1.11.6
         with:
@@ -103,4 +98,4 @@ jobs:
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
-          token: "${{ steps.get_token.outputs.token }}"
+          token: "${{ steps.override.outputs.use-gh-app == 'false' && secrets.override-token || steps.get_token.outputs.token }}"
