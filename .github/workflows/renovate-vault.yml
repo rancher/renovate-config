@@ -93,6 +93,8 @@ jobs:
         with:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
+      - name: Generate custom data sources
+        run: hack/generate-data-sources.sh
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@08ed9fa83e24bfe6222557f9e221395c57972127 # v41.0.16
         with:
