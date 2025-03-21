@@ -14,6 +14,7 @@ validate: # validates (strict mode) all renovate files for syntax errors.
 	$(VALIDATE_FILE) /repo/default.json
 
 test: # this is to enable manual tests, not for CI.
-	@rm -rf $(TMP_DIR) && mkdir -p tests && cp -r tests $(TMP_DIR) && \
-		mkdir -p $(TMP_DIR)/.github && cp default.json $(TMP_DIR)/.github/renovate.json
+	@rm -rf $(TMP_DIR) && mkdir -p tests && cp -r tests $(TMP_DIR)
+	@mkdir -p data && cp -r data $(TMP_DIR)
+	@mkdir -p $(TMP_DIR)/.github && cp default.json $(TMP_DIR)/.github/renovate.json
 	$(TEST_FILE)

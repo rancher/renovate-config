@@ -16,6 +16,12 @@
     "gomodTidy",
     "gomodUpdateImportPaths"
   ],
+  "customDatasources": {
+    "local": {
+      "defaultRegistryUrlTemplate": "file://data/{{packageName}}.json",
+      "format": "json"
+    }
+  },
   "customManagers": [
     {
       "customType": "regex",
@@ -238,9 +244,21 @@
         "hack/make/deps.mk"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)?( extractVersion=(?<extractVersion>.*?))?\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?) digestVersion=(?<currentValue>.*)\\s+.+_(sha256|arm64|amd64|arm|s390x).*=(\\s|\"|)(?<currentDigest>.*)(\"|)"
       ]
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)Makefile$",
+        "hack/make/deps.mk"
+      ],
+      "matchStrings": [
+        "# renovate-local: (?<depName>.*)\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
+        "# renovate-local: (?<depName>.*)=(?<currentValue>.*)\\s+.+_(sha256|arm64|amd64|arm|s390x).*=(\\s|\"|)(?<currentDigest>.*)(\"|)"
+      ],
+      "datasourceTemplate": "custom.local"
     }
   ],
   "packageRules": [
@@ -250,13 +268,6 @@
       ],
       "extractVersion": "(?<version>.*)-full$",
       "groupName": "renovate-bumps"
-    },
-    {
-      "extractVersion": "^kustomize/(?<version>.*)$",
-      "groupName": "kustomize",
-      "matchPackageNames": [
-        "/kustomize/"
-      ]
     },
     {
       "matchManagers": [
