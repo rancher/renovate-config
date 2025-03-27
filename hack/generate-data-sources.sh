@@ -14,7 +14,7 @@ kustomize_save_arch_sources() {
     archs=("amd64" "arm64" "s390x")
 
     for arch in "${archs[@]}"; do
-          grep "linux_${arch}" kustomize-data.raw | jq -n --raw-input --slurp '{ "releases": [
+          grep "linux_${arch}" "${DATA_DIR}/kustomize-data.raw" | jq -n --raw-input --slurp '{ "releases": [
             inputs | split("\n")[]
             | select(test("^\\w+\\s+kustomize_"))
             | match("(?<digest>\\w+)\\s+kustomize_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
