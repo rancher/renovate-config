@@ -37,7 +37,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "39.228.0"
+  RENOVATE_VERSION: "39.213.5"
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # Onboarding not needed for self hosted
