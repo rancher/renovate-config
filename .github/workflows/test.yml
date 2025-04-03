@@ -15,3 +15,16 @@ jobs:
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
     - run: make validate
+
+  call-workflow:
+    permissions:
+      contents: read
+      id-token: write
+
+    uses: ./.github/workflows/renovate-vault.yml
+    with:
+      configMigration: 'true'
+      logLevel: 'debug'
+      overrideSchedule: "{'schedule':null}'"
+      renovateConfig: ${{ inputs.renovateConfig || '.github/renovate.json' }}
+      dryRun: 'full'
