@@ -28,6 +28,12 @@ on:
         required: false
         default: ".github/renovate.json"
         type: string
+      dryRun:
+        description: "When enabled perform a dry run without creating/updating/deleting branches and PRs"
+        required: false
+        # https://docs.renovatebot.com/self-hosted-configuration/#dryrun
+        default: "null"
+        type: string
     secrets:
       override-token:
         description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
@@ -55,6 +61,7 @@ env:
   RENOVATE_CONFIG_FILE: ${{ inputs.renovateConfig || '.github/renovate.json' }}
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
+  RENOVATE_DRY_RUN: ${{ inputs.configMigration || 'null' }}
 
 permissions:
   contents: read
