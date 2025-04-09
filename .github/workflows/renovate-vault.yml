@@ -28,6 +28,12 @@ on:
         required: false
         default: ".github/renovate.json"
         type: string
+      dryRun:
+        description: "When enabled perform a dry run without creating/updating/deleting branches and PRs"
+        required: false
+        # https://docs.renovatebot.com/self-hosted-configuration/#dryrun
+        default: "null"
+        type: string
     secrets:
       override-token:
         description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
@@ -37,7 +43,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "39.213.5"
+  RENOVATE_VERSION: "39.235.2"
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # Onboarding not needed for self hosted
@@ -55,6 +61,7 @@ env:
   RENOVATE_CONFIG_FILE: ${{ inputs.renovateConfig || '.github/renovate.json' }}
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
+  RENOVATE_DRY_RUN: ${{ inputs.configMigration || 'null' }}
 
 permissions:
   contents: read
@@ -96,7 +103,7 @@ jobs:
       - name: Get token
         if: steps.override.outputs.use-gh-app == 'true'
         id: get_token
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        uses: actions/create-github-app-token@3ff1caaa28b64c9cc276ce0a02e2ff584f3900c5 # v2.0.2
         with:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
