@@ -21,7 +21,7 @@ their `renovate.json` as per below:
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "github>rancher/renovate-config//rancher-main#rancher-presets"
+    "github>rancher/renovate-config//rancher-main#release"
   ],
   "baseBranches": [
     "main"
@@ -29,11 +29,11 @@ their `renovate.json` as per below:
   "packageRules": [
     {
       "matchBaseBranches": ["releases/v0.7.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.11#rancher-presets"]
+      "extends": ["github>rancher/renovate-config//rancher-2.11#release"]
     },
     {
       "matchBaseBranches": ["releases/v0.6.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.10#rancher-presets"]
+      "extends": ["github>rancher/renovate-config//rancher-2.10#release"]
     }
   ]
 }
