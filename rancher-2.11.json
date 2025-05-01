@@ -33,7 +33,6 @@
         "gomod"
       ],
       "matchPackageNames": [
-        "!k8s.io/kubernetes",
         "k8s.io/**"
       ],
       "allowedVersions": "<0.33.0"
