@@ -33,7 +33,6 @@
         "gomod"
       ],
       "matchPackageNames": [
-        "!k8s.io/kubernetes",
         "k8s.io/**"
       ],
       "allowedVersions": "<0.31.0"
@@ -44,6 +43,13 @@
         "rancher/kuberlr-kubectl"
       ],
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "enabled": false
     }
   ]
 }
