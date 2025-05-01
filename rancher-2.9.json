@@ -44,6 +44,13 @@
         "rancher/kuberlr-kubectl"
       ],
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "enabled": false
     }
   ]
 }
