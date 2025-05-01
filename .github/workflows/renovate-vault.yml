@@ -61,7 +61,7 @@ env:
   RENOVATE_CONFIG_FILE: ${{ inputs.renovateConfig || '.github/renovate.json' }}
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
-  RENOVATE_DRY_RUN: ${{ inputs.configMigration || 'null' }}
+  RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
 
 permissions:
   contents: read
