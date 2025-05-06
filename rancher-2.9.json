@@ -1,8 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>rancher/renovate-config#release"],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
+      "enabled": false,
+      "matchPackageNames": [
+        "*"
+      ]
+    },
+    {
+      "enabled": true,
       "matchPackageNames": [
         "golang",
         "go",
@@ -12,12 +23,14 @@
       "allowedVersions": "<1.23.0"
     },
     {
+      "enabled": true,
       "matchDatasources": [
         "golang-version"
       ],
       "allowedVersions": "<1.23.0"
     },
     {
+      "enabled": true,
       "matchManagers": [
         "gomod"
       ],
@@ -29,6 +42,7 @@
       "allowedVersions": "<1.31.0"
     },
     {
+      "enabled": true,
       "matchManagers": [
         "gomod"
       ],
@@ -38,6 +52,7 @@
       "allowedVersions": "<0.31.0"
     },
     {
+      "enabled": true,
       "description": "Disable major bumps",
       "matchPackageNames": [
         "rancher/kuberlr-kubectl"
@@ -45,11 +60,11 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
+      "enabled": false,
       "groupName": "GitHub Actions",
       "matchManagers": [
         "github-actions"
-      ],
-      "enabled": false
+      ]
     }
   ]
 }
