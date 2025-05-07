@@ -25,9 +25,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "\\.github/workflows/renovate.yml",
-        "\\.github/workflows/renovate-vault.yml"
+      "managerFilePatterns": [
+        "/\\.github/workflows/renovate.yml/",
+        "/\\.github/workflows/renovate-vault.yml/"
       ],
       "matchStrings": [
         ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
@@ -37,10 +37,10 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$",
-        "hack/make/deps.mk"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/hack/make/deps.mk/"
       ],
       "matchStrings": [
         "KUBECTL_VERSION.*\\=\\s*(?<currentValue>.*?)\\n"
@@ -50,9 +50,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV KUSTOMIZE_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -62,9 +62,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV K9S_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -74,9 +74,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV HELM_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -86,9 +86,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV YQ_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -98,11 +98,11 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$",
-        "(^|/|\\.)Makefile$",
-        "(^|/)Makefile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/(^|/|\\.)Makefile$/",
+        "/(^|/)Makefile[^/]*$/"
       ],
       "matchStrings": [
         "ENV CONTROLLER_GEN_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
@@ -113,11 +113,11 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$",
-        "(^|/)Makefile$",
-        "hack/base.mk$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/(^|/)Makefile$/",
+        "/hack/base.mk$/"
       ],
       "matchStrings": [
         ".*?https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh.*?sh -s (?<currentValue>.*?);",
@@ -128,9 +128,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV CNI_PLUGINS_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -140,9 +140,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV FLANNEL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -152,9 +152,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV RANCHER_CONFD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -164,9 +164,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV ETCD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
@@ -177,9 +177,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV CRIDOCKERD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -189,9 +189,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "ENV DOCKER_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -201,9 +201,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "RUN git -C / clone --branch release-(?<currentValue>.*?) --depth=1 https://github.com/rancher/helm\\n"
@@ -214,8 +214,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "values.yaml$"
+      "managerFilePatterns": [
+        "/values.yaml$/"
       ],
       "matchStrings": [
         "global:[\\s\\S]*?kubectl:[\\s\\S]*?repository:\\s(?<depName>.*?)\\n[\\s\\S]*?tag:\\s(?<currentValue>.*?)\\n"
@@ -225,9 +225,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
         "K3D_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
@@ -237,11 +237,11 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile[^/]*$",
-        "(^|/)Makefile$",
-        "hack/make/deps.mk"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/(^|/)Makefile$/",
+        "/hack/make/deps.mk/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)?( extractVersion=(?<extractVersion>.*?))?\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
@@ -250,9 +250,9 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/)Makefile$",
-        "hack/make/deps.mk"
+      "managerFilePatterns": [
+        "/(^|/)Makefile$/",
+        "/hack/make/deps.mk/"
       ],
       "matchStrings": [
         "# renovate-local: (?<depName>.*)\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
@@ -368,14 +368,20 @@
         "golang.org/x/crypto/x509roots/fallback",
         "golang.org/x/exp"
       ],
-      "matchUpdateTypes": ["patch","digest"]
+      "matchUpdateTypes": [
+        "patch",
+        "digest"
+      ]
     },
     {
       "description": "Disable major bumps",
       "matchPackageNames": [
         "rancher/kuberlr-kubectl"
       ],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     }
   ]
 }
