@@ -26,6 +26,17 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/\\.github/workflows/release.yml/"
+      ],
+      "matchStrings": [
+        ".*?COSIGN_VERSION:\\s(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "sigstore/cosign",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/\\.github/workflows/renovate.yml/",
         "/\\.github/workflows/renovate-vault.yml/"
       ],
