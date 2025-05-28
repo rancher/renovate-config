@@ -24,7 +24,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "40.18.3"
+  RENOVATE_VERSION: "40.32.7"
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # Onboarding not needed for self hosted
@@ -56,7 +56,7 @@ jobs:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@2e8e8c59e00d930224943f86f6812fbc6640f454 # v42.0.3
+        uses: renovatebot/github-action@8058cfe11252651a837a58e2e3370fbc0e72c658 # v42.0.4
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
