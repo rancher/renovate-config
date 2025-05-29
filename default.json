@@ -241,7 +241,8 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/",
         "/(^|/)Makefile$/",
-        "/hack/make/deps.mk/"
+        "/hack/make/deps.mk/",
+        "/scripts/.*\\.sh$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)?( extractVersion=(?<extractVersion>.*?))?\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
