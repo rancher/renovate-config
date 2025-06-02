@@ -6,7 +6,7 @@ VALIDATE_FILE := docker run --rm -v $(shell pwd):/repo:ro -e LOG_LEVEL=debug \
 
 # When GITHUB_COM_TOKEN is provided, it is automatically redacted from logs.
 TEST_FILE := docker run --rm -v $(TMP_DIR):/repo:ro -e LOG_LEVEL=debug \
-	-e GITHUB_COM_TOKEN --workdir /repo $(RENOVATE_IMG) renovate --platform=local
+	-e GITHUB_COM_TOKEN --workdir /repo $(RENOVATE_IMG) renovate --platform=local --dry-run=full
 
 validate: # validates (strict mode) all renovate files for syntax errors.
 	$(VALIDATE_FILE) /repo/.github/renovate.json
