@@ -241,7 +241,8 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/",
         "/(^|/)Makefile$/",
-        "/hack/make/deps.mk/"
+        "/hack/make/deps.mk/",
+        "/scripts/.*\\.sh$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)?( extractVersion=(?<extractVersion>.*?))?\\s+.+_(version|VERSION).*=(\\s|\"|)(?<currentValue>.*)(\"|)",
@@ -273,20 +274,12 @@
       "matchManagers": [
         "gomod"
       ],
-      "groupName": "gomod-sigsk8sio-dependencies",
+      "groupName": "gomod-k8s-dependencies",
       "matchPackageNames": [
-        "sigs.k8s.io/**"
-      ]
-    },
-    {
-      "matchManagers": [
-        "gomod"
-      ],
-      "matchPackageNames": [
+        "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
         "k8s.io/**"
       ],
-      "groupName": "gomod-k8sio-dependencies",
       "allowedVersions": "<0.32.0"
     },
     {
@@ -295,7 +288,14 @@
         "kubernetes/kubernetes",
         "rancher/kubectl"
       ],
+      "groupName": "gomod-k8s-dependencies",
       "allowedVersions": "<1.32.0"
+    },
+    {
+      "matchPackageNames": [
+        "helm.sh/helm/v3"
+      ],
+      "groupName": "gomod-k8s-dependencies"
     },
     {
       "allowedVersions": "<15.7.0",
@@ -364,6 +364,16 @@
       ]
     },
     {
+      "description": "Disable digest updates (commit-based versions) for Go modules",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
       "matchPackageNames": [
         "golang.org/x/crypto/x509roots/fallback",
         "golang.org/x/exp"
@@ -371,7 +381,8 @@
       "matchUpdateTypes": [
         "patch",
         "digest"
-      ]
+      ],
+      "enabled": true
     },
     {
       "description": "Disable major bumps",
