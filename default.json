@@ -274,20 +274,12 @@
       "matchManagers": [
         "gomod"
       ],
-      "groupName": "gomod-sigsk8sio-dependencies",
+      "groupName": "gomod-k8s-dependencies",
       "matchPackageNames": [
-        "sigs.k8s.io/**"
-      ]
-    },
-    {
-      "matchManagers": [
-        "gomod"
-      ],
-      "matchPackageNames": [
+        "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
         "k8s.io/**"
       ],
-      "groupName": "gomod-k8sio-dependencies",
       "allowedVersions": "<0.32.0"
     },
     {
@@ -296,6 +288,7 @@
         "kubernetes/kubernetes",
         "rancher/kubectl"
       ],
+      "groupName": "gomod-k8s-dependencies",
       "allowedVersions": "<1.32.0"
     },
     {
