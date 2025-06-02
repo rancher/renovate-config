@@ -365,6 +365,16 @@
       ]
     },
     {
+      "description": "Disable digest updates (commit-based versions) for Go modules",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
       "matchPackageNames": [
         "golang.org/x/crypto/x509roots/fallback",
         "golang.org/x/exp"
@@ -372,7 +382,8 @@
       "matchUpdateTypes": [
         "patch",
         "digest"
-      ]
+      ],
+      "enabled": true
     },
     {
       "description": "Disable major bumps",
