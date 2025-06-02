@@ -292,6 +292,12 @@
       "allowedVersions": "<1.32.0"
     },
     {
+      "matchPackageNames": [
+        "helm.sh/helm/v3"
+      ],
+      "groupName": "gomod-k8s-dependencies"
+    },
+    {
       "allowedVersions": "<15.7.0",
       "matchPackageNames": [
         "/^registry.suse.com/bci/bci/",
