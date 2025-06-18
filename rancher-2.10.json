@@ -20,14 +20,14 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "allowedVersions": "<1.23.0"
+      "allowedVersions": "<1.24.0"
     },
     {
       "enabled": true,
       "matchDatasources": [
         "golang-version"
       ],
-      "allowedVersions": "<1.23.0"
+      "allowedVersions": "<1.24.0"
     },
     {
       "enabled": true,
