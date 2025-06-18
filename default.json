@@ -312,7 +312,7 @@
       "groupName": "gomod-k8s-dependencies"
     },
     {
-      "allowedVersions": "<15.7.0",
+      "allowedVersions": "<15.8.0",
       "matchPackageNames": [
         "/^registry.suse.com/bci/bci/",
         "/^registry.suse.com/suse/sle15/"
