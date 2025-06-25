@@ -43,7 +43,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "40.59.3"
+  RENOVATE_VERSION: "41.6.4"
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # Onboarding not needed for self hosted
@@ -110,7 +110,7 @@ jobs:
       - name: Generate custom data sources
         run: ./renovate-config/hack/generate-data-sources.sh
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@87c405b9750f1b6affae06311395b50e3882d54f # v42.0.6
+        uses: renovatebot/github-action@248bf5a619694187930adc80b9343c37761c173f # v43.0.1
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
