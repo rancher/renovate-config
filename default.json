@@ -297,6 +297,14 @@
       "allowedVersions": "<0.32.0"
     },
     {
+      "matchManagers": ["gomod"],
+      "groupName": "wrangler-lasso",
+      "matchPackageNames": [
+        "github.com/rancher/wrangler/v3",
+        "github.com/rancher/lasso"
+      ]
+    },
+    {
       "matchPackageNames": [
         "k8s.io/kubernetes",
         "kubernetes/kubernetes",
