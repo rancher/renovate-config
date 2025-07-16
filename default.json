@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "baseBranches": [
+  "baseBranchPatterns": [
     "main"
   ],
   "rebaseWhen": "auto",
@@ -295,6 +295,14 @@
         "k8s.io/**"
       ],
       "allowedVersions": "<0.32.0"
+    },
+    {
+      "matchManagers": ["gomod"],
+      "groupName": "wrangler-lasso",
+      "matchPackageNames": [
+        "github.com/rancher/wrangler/v3",
+        "github.com/rancher/lasso"
+      ]
     },
     {
       "matchPackageNames": [

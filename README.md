@@ -23,7 +23,7 @@ their `renovate.json` as per below:
   "extends": [
     "github>rancher/renovate-config//rancher-main#release"
   ],
-  "baseBranches": [
+  "baseBranchPatterns": [
     "main"
   ],
   "packageRules": [

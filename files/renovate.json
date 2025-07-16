@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>rancher/renovate-config#release"],
-  "baseBranches": ["main"],
+  "baseBranchPatterns": ["main"],
   "prHourlyLimit": 2
 }
