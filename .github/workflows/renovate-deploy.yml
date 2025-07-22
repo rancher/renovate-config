@@ -23,19 +23,19 @@ jobs:
           echo "owner=$owner" >> "$GITHUB_OUTPUT"
           echo "repositories=$repositories" >> "$GITHUB_OUTPUT"
       - name: Load Secrets from Vault
-        if: steps.override.outputs.use-gh-app == 'true'
         uses: rancher-eio/read-vault-secrets@main
         with:
           secrets: |
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
       - name: Get token
-        if: steps.override.outputs.use-gh-app == 'true'
         id: get_token
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
         with:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
+          owner: ${{ steps.set_values.outputs.owner }}
+          repositories: ${{ steps.set_values.outputs.repositories }}
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
