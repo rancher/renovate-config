@@ -220,6 +220,21 @@
         "/(^|/)Dockerfile[^/]*$/"
       ],
       "matchStrings": [
+        "ENV CATTLE_HELM_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+      ],
+      "depNameTemplate": "rancher/helm",
+      "packageNameTemplate": "https://github.com/rancher/helm",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v(?<version>.*-rancher.*)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "matchStrings": [
         "RUN git -C / clone --branch release-(?<currentValue>.*?) --depth=1 https://github.com/rancher/helm\\n"
       ],
       "depNameTemplate": "rancher/helm",

@@ -7,7 +7,9 @@ on:
         required: true
         default: "rancher/"
         type: string
-permissions: {}
+permissions: 
+  id-token: write
+  
 jobs:
   renovate:
     runs-on: ubuntu-latest
@@ -22,12 +24,18 @@ jobs:
           repositories=$(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f2)
           echo "owner=$owner" >> "$GITHUB_OUTPUT"
           echo "repositories=$repositories" >> "$GITHUB_OUTPUT"
+      - name: Load Secrets from Vault
+        uses: rancher-eio/read-vault-secrets@main
+        with:
+          secrets: |
+            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
+            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
       - name: Get token
         id: get_token
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
         with:
-          app-id: ${{ secrets.RENOVATE_APP_ID }}
-          private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+          app-id: ${{ env.APP_ID }}
+          private-key: ${{ env.PRIVATE_KEY }}
           owner: ${{ steps.set_values.outputs.owner }}
           repositories: ${{ steps.set_values.outputs.repositories }}
       - name: Checkout
