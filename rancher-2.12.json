@@ -1,0 +1,69 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config#release"],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "osvVulnerabilityAlerts": true,
+  "packageRules": [
+    {
+      "enabled": false,
+      "matchPackageNames": [
+        "*"
+      ]
+    },
+    {
+      "enabled": true,
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "allowedVersions": "<1.25.0"
+    },
+    {
+      "enabled": true,
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "allowedVersions": "<1.25.0"
+    },
+    {
+      "enabled": true,
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "rancher/kubectl",
+        "kubernetes/kubernetes",
+        "k8s.io/kubernetes"
+      ],
+      "allowedVersions": "<1.34.0"
+    },
+    {
+      "enabled": true,
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "!k8s.io/gengo",
+        "!k8s.io/gengo/**",
+        "!k8s.io/utils",
+        "!k8s.io/utils/**",
+        "!k8s.io/kube-openapi",
+        "!k8s.io/kube-openapi/**",
+        "k8s.io/**"
+      ],
+      "allowedVersions": "<0.34.0"
+    },
+    {
+      "enabled": true,
+      "description": "Disable major bumps",
+      "matchPackageNames": [
+        "rancher/kuberlr-kubectl"
+      ],
+      "matchUpdateTypes": ["minor", "patch"]
+    }
+  ]
+}
