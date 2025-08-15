@@ -320,6 +320,9 @@
       ]
     },
     {
+      "matchManagers": [
+        "gomod"
+      ],
       "matchPackageNames": [
         "k8s.io/kubernetes",
         "kubernetes/kubernetes",
