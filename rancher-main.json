@@ -33,6 +33,7 @@
         "gomod"
       ],
       "matchPackageNames": [
+        "!k8s.io/kubernetes",
         "!k8s.io/gengo",
         "!k8s.io/gengo/**",
         "!k8s.io/utils",
