@@ -1,51 +1,43 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>rancher/renovate-config#release"],
-  "vulnerabilityAlerts": {
-    "enabled": true
-  },
+  "vulnerabilityAlerts": { "enabled": true },
   "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
-      "enabled": false,
-      "matchPackageNames": [
-        "*"
-      ]
+      "matchUpdateTypes": ["major","minor","patch","pin","digest"],
+      "enabled": false
     },
     {
-      "enabled": true,
       "matchPackageNames": [
         "golang",
         "go",
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
+      "matchUpdateTypes": ["minor","patch","pin"],
+      "enabled": true,
       "allowedVersions": "<1.24.0"
     },
     {
+      "matchDatasources": ["golang-version"],
+      "matchUpdateTypes": ["minor","patch","pin"],
       "enabled": true,
-      "matchDatasources": [
-        "golang-version"
-      ],
       "allowedVersions": "<1.24.0"
     },
     {
-      "enabled": true,
-      "matchManagers": [
-        "gomod"
-      ],
+      "matchManagers": ["gomod"],
       "matchPackageNames": [
         "rancher/kubectl",
         "kubernetes/kubernetes",
         "k8s.io/kubernetes"
       ],
+      "matchUpdateTypes": ["minor","patch","pin"],
+      "enabled": true,
       "allowedVersions": "<1.32.0"
     },
     {
-      "enabled": true,
-      "matchManagers": [
-        "gomod"
-      ],
+      "matchManagers": ["gomod"],
       "matchPackageNames": [
         "!k8s.io/kubernetes",
         "!k8s.io/gengo",
@@ -56,15 +48,15 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
+      "matchUpdateTypes": ["minor","patch","pin"],
+      "enabled": true,
       "allowedVersions": "<0.32.0"
     },
     {
-      "enabled": true,
       "description": "Disable major bumps",
-      "matchPackageNames": [
-        "rancher/kuberlr-kubectl"
-      ],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchUpdateTypes": ["minor","patch"],
+      "enabled": true
     }
   ]
 }
