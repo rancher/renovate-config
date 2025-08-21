@@ -50,7 +50,12 @@
       ],
       "matchUpdateTypes": ["minor","patch","pin"],
       "enabled": true,
-      "allowedVersions": "<0.32.0"
+      "allowedVersions": "<0.32.0",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "k8s dependencies",
+      "commitMessageExtra": "to {{#if newValue}}{{newValue}}{{else}}new patch version{{/if}}"
     },
     {
       "description": "Disable major bumps",
