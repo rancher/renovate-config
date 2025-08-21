@@ -40,12 +40,6 @@
       "matchManagers": ["gomod"],
       "matchPackageNames": [
         "!k8s.io/kubernetes",
-        "!k8s.io/gengo",
-        "!k8s.io/gengo/**",
-        "!k8s.io/utils",
-        "!k8s.io/utils/**",
-        "!k8s.io/kube-openapi",
-        "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
       "matchUpdateTypes": ["patch"],
