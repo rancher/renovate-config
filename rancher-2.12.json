@@ -15,13 +15,13 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<1.25.0"
     },
     {
       "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<1.25.0"
     },
@@ -32,7 +32,7 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes"
       ],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<1.34.0"
     },
@@ -48,7 +48,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<0.34.0"
     },
