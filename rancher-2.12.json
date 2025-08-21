@@ -51,6 +51,19 @@
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
+    },
+    {
+      "description": "Disable vulnerability alerts for all k8s and golang modules to prevent non-patch level bumps",
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang",
+        "rancher/kubectl",
+        "kubernetes/kubernetes",
+        "k8s.io/**"
+      ],
+      "vulnerabilityAlerts": { "enabled": false }
     }
   ]
 }
