@@ -15,13 +15,13 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<1.24.0"
     },
     {
       "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<1.24.0"
     },
@@ -32,7 +32,7 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes"
       ],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
       "allowedVersions": "<1.31.0"
     },
@@ -40,23 +40,35 @@
       "matchManagers": ["gomod"],
       "matchPackageNames": [
         "!k8s.io/kubernetes",
-        "!k8s.io/gengo",
-        "!k8s.io/gengo/**",
-        "!k8s.io/utils",
-        "!k8s.io/utils/**",
-        "!k8s.io/kube-openapi",
-        "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "matchUpdateTypes": ["minor","patch","pin"],
+      "matchUpdateTypes": ["patch"],
       "enabled": true,
-      "allowedVersions": "<0.31.0"
+      "allowedVersions": "<0.31.0",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "k8s dependencies",
+      "commitMessageExtra": "to {{#if newValue}}{{newValue}}{{else}}new patch version{{/if}}"
     },
     {
       "description": "Disable major bumps",
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
+    },
+    {
+      "description": "Disable vulnerability alerts for all k8s and golang modules to prevent non-patch level bumps",
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang",
+        "rancher/kubectl",
+        "kubernetes/kubernetes",
+        "k8s.io/**"
+      ],
+      "vulnerabilityAlerts": { "enabled": false }
     }
   ]
 }
