@@ -19,7 +19,9 @@
     },
     {
       "matchManagers": [
-        "gomod"
+        "gomod",
+        "regex",
+        "dockerfile"
       ],
       "matchPackageNames": [
         "rancher/kubectl",
