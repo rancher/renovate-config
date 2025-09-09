@@ -19,14 +19,16 @@
     },
     {
       "matchManagers": [
-        "gomod"
+        "gomod",
+        "regex",
+        "dockerfile"
       ],
       "matchPackageNames": [
         "rancher/kubectl",
         "kubernetes/kubernetes",
         "k8s.io/kubernetes"
       ],
-      "allowedVersions": "<1.34.0"
+      "allowedVersions": "<1.35.0"
     },
     {
       "matchManagers": [
@@ -42,7 +44,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.34.0"
+      "allowedVersions": "<0.35.0"
     }
   ]
 }
