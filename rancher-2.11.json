@@ -42,7 +42,7 @@
     },
     {
       "description": "Enable patch updates for kubectl/k8s packages",
-      "matchManagers": ["gomod", "regex", "dockerfile"],
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": [
         "rancher/kubectl",
         "kubernetes/kubernetes",
@@ -53,7 +53,7 @@
     },
     {
       "description": "Restrict kubectl/k8s versions to below 1.33.0",
-      "matchManagers": ["gomod", "regex", "dockerfile"],
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": [
         "rancher/kubectl",
         "kubernetes/kubernetes",

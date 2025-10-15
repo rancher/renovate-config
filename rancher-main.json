@@ -20,7 +20,7 @@
     {
       "matchManagers": [
         "gomod",
-        "regex",
+        "custom.regex",
         "dockerfile"
       ],
       "matchPackageNames": [
