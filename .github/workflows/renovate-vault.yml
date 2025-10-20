@@ -110,7 +110,7 @@ jobs:
       - name: Generate custom data sources
         run: ./renovate-config/hack/generate-data-sources.sh
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@70ea19f1b0dc8a9cc7af1b4278f8d3fd9778b577 # v43.0.17
+        uses: renovatebot/github-action@aec779d4f7845f8431ddf403cf9659d4702ddde0 # v43.0.18
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
