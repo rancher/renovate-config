@@ -38,6 +38,17 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/\\.github/workflows/.*\\.ya?ml/"
+      ],
+      "matchStrings": [
+        ".*?- uses:\\s*rancherlabs/slsactl/actions/install-slsactl@.*?\\s*with:\\s*(?:[^\\n]*\\n\\s*)*?version:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "rancherlabs/slsactl",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/",
         "/hack/make/deps.mk/"
