@@ -305,6 +305,17 @@
   ],
   "packageRules": [
     {
+      "description": "Restrict helm/chart-testing-action below 2.8.0",
+      "matchPackageNames": [
+        "helm/chart-testing-action"
+      ],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "allowedVersions": "<2.8.0",
+      "minimumReleaseAge": "14 days"
+    },
+    {
       "matchPackageNames": [
         "renovate/renovate"
       ],
