@@ -34,6 +34,11 @@ on:
         # https://docs.renovatebot.com/self-hosted-configuration/#dryrun
         default: "null"
         type: string
+      minimumReleaseAge:
+        description: "Override minimumReleaseAge for a one-time run (e.g., '0 days' to disable delay)"
+        required: false
+        default: "null"
+        type: string
     secrets:
       override-token:
         description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
@@ -62,6 +67,8 @@ env:
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
+  # Override minimumReleaseAge if set
+  RENOVATE_MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge != 'null' && inputs.minimumReleaseAge || '' }}
 
 permissions:
   contents: read
