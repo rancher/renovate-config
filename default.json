@@ -457,6 +457,11 @@
         "minor",
         "patch"
       ]
+    },
+    {
+      "description": "Restrict rancherlabs/slsactl",
+      "matchPackageNames": ["rancherlabs/slsactl"],
+      "allowedVersions": "<=v0.1.2"
     }
   ]
 }
