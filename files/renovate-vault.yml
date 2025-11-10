@@ -39,7 +39,7 @@ on:
       extendsPreset:
         description: "Override renovate extends preset (default: 'github>rancher/renovate-config#release')."
         required: false
-        default: "release"
+        default: "github>rancher/renovate-config#release"
         type: string
 
   schedule:
