@@ -39,6 +39,11 @@ on:
         required: false
         default: "null"
         type: string
+      extendsPreset:
+        description: "Override renovate extends preset (default: 'github>rancher/renovate-config#release')."
+        required: false
+        default: "github>rancher/renovate-config#release"
+        type: string
     secrets:
       override-token:
         description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
@@ -69,6 +74,8 @@ env:
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
   # Override minimumReleaseAge if set
   RENOVATE_MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge != 'null' && inputs.minimumReleaseAge || '' }}
+  # Override renovate extends preset if set
+  RENOVATE_EXTENDS_PRESET: ${{ inputs.extendsPreset || 'github>rancher/renovate-config#release' }}
 
 permissions:
   contents: read
