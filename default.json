@@ -9,6 +9,7 @@
   ],
   "automergeStrategy": "merge-commit",
   "prConcurrentLimit": 0,
+  "minimumReleaseAge": "5 days",
   "constraints": {
     "go": "<1.26"
   },
@@ -304,6 +305,17 @@
   ],
   "packageRules": [
     {
+      "description": "Restrict helm/chart-testing-action below 2.8.0",
+      "matchPackageNames": [
+        "helm/chart-testing-action"
+      ],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "allowedVersions": "<2.8.0",
+      "minimumReleaseAge": "14 days"
+    },
+    {
       "matchPackageNames": [
         "renovate/renovate"
       ],
@@ -387,7 +399,8 @@
       "matchDepTypes": [
         "action"
       ],
-      "pinDigests": true
+      "pinDigests": true,
+      "minimumReleaseAge": "14 days"
     },
     {
       "matchPackageNames": [
@@ -444,6 +457,11 @@
         "minor",
         "patch"
       ]
+    },
+    {
+      "description": "Restrict rancherlabs/slsactl",
+      "matchPackageNames": ["rancherlabs/slsactl"],
+      "allowedVersions": "<=v0.1.2"
     }
   ]
 }
