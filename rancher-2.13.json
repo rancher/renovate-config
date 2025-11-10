@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config#release"],
+  "extends": ["{{ or env.RENOVATE_EXTENDS_PRESET 'github>rancher/renovate-config#release' }}"],
   "packageRules": [
     {
       "matchPackageNames": [

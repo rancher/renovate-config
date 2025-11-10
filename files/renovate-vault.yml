@@ -31,6 +31,16 @@ on:
         required: false
         default: ".github/renovate.json"
         type: string
+      minimumReleaseAge:
+        description: "Override minimumReleaseAge for a one-time run (e.g., '0 days' to disable delay)"
+        required: false
+        default: "null"
+        type: string
+      extendsPreset:
+        description: "Override renovate extends preset (default: 'github>rancher/renovate-config#release')."
+        required: false
+        default: "release"
+        type: string
 
   schedule:
     - cron: '30 4,6 * * 1-5'
@@ -47,5 +57,7 @@ jobs:
       logLevel: ${{ inputs.logLevel || 'info' }}
       overrideSchedule: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
       renovateConfig: ${{ inputs.renovateConfig || '.github/renovate.json' }}
+      minimumReleaseAge: ${{ inputs.minimumReleaseAge || 'null' }}
+      extendsPreset: ${{ inputs.extendsPreset || 'github>rancher/renovate-config#release' }}
     secrets:
       override-token: "${{ secrets.RENOVATE_FORK_GH_TOKEN || '' }}"
