@@ -48,10 +48,18 @@ kubectl_save_arch_sources() {
 
 main() {
     mkdir -p "${DATA_DIR}"
-    kustomize_fetch_data
-    kustomize_save_arch_sources
-    kubectl_fetch_data
-    kubectl_save_arch_sources
+
+    grep -r -q --exclude-dir=renovate-config "# renovate-local:" ./
+
+    # Only fetch custom data in projects where they are used.
+    # For projects where "# renovate-local" is not applied, skip this
+    # process altogether.
+    if [ $? -eq 0 ]; then
+        kustomize_fetch_data
+        kustomize_save_arch_sources
+        kubectl_fetch_data
+        kubectl_save_arch_sources
+    fi
 }
 
 main
