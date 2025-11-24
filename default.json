@@ -465,7 +465,7 @@
     {
       "description": "Restrict rancherlabs/slsactl",
       "matchPackageNames": ["rancherlabs/slsactl"],
-      "allowedVersions": "<=v0.1.2"
+      "allowedVersions": "<=v0.1.6"
     }
   ]
 }
