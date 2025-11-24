@@ -13,6 +13,7 @@
   "automergeStrategy": "merge-commit",
   "prConcurrentLimit": 0,
   "minimumReleaseAge": "5 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
   "constraints": {
     "go": "<1.26"
   },
@@ -464,7 +465,7 @@
     {
       "description": "Restrict rancherlabs/slsactl",
       "matchPackageNames": ["rancherlabs/slsactl"],
-      "allowedVersions": "<=v0.1.2"
+      "allowedVersions": "<=v0.1.6"
     }
   ]
 }
