@@ -20,14 +20,14 @@
       "enabled": true
     },
     {
-      "description": "Restrict Go versions to below 1.24.0",
+      "description": "Restrict Go versions to below 1.25.0",
       "matchPackageNames": [
         "golang",
         "go",
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "allowedVersions": "<1.24.0"
+      "allowedVersions": "<1.25.0"
     },
     {
       "description": "Enable patch updates for golang-version datasource",
@@ -36,9 +36,9 @@
       "enabled": true
     },
     {
-      "description": "Restrict golang-version to below 1.24.0",
+      "description": "Restrict golang-version to below 1.25.0",
       "matchDatasources": ["golang-version"],
-      "allowedVersions": "<1.24.0"
+      "allowedVersions": "<1.25.0"
     },
     {
       "description": "Enable patch updates for kubectl/k8s packages",
