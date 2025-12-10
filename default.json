@@ -465,7 +465,13 @@
     {
       "description": "Restrict rancherlabs/slsactl",
       "matchPackageNames": ["rancherlabs/slsactl"],
-      "allowedVersions": "<=v0.1.10"
+      "allowedVersions": "<=v0.1.10",
+      "groupName": "slsactl"
+    },
+    {
+      "description": "Group slsactl GitHub Action with version parameter",
+      "matchPackageNames": ["rancherlabs/slsactl/**"],
+      "groupName": "slsactl"
     }
   ]
 }
