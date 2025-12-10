@@ -3,6 +3,7 @@
   "extends":[
     "mergeConfidence:age-confidence-badges"
   ],
+  "osvVulnerabilityAlerts": true,
   "baseBranchPatterns": [
     "main"
   ],
