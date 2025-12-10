@@ -9,6 +9,11 @@
       "enabled": false
     },
     {
+      "description": "Enable updates for packages with known vulnerabilities",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "enabled": true
+    },
+    {
       "description": "Enable patch updates for Go packages",
       "matchPackageNames": [
         "golang",
