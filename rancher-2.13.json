@@ -13,6 +13,12 @@
       "enabled": true
     },
     {
+      "description": "Disable vulnerability updates for test/dev dependencies",
+      "matchDepTypes": ["devDependencies", "dev-dependencies", "test"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "enabled": false
+    },
+    {
       "description": "Enable SLSACTL updates",
       "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
       "enabled": true
