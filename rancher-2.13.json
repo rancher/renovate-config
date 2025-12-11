@@ -13,6 +13,11 @@
       "enabled": true
     },
     {
+      "description": "Enable SLSACTL updates",
+      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
+      "enabled": true
+    },
+    {
       "description": "Enable patch updates for Go packages",
       "matchPackageNames": [
         "golang",
