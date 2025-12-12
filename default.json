@@ -473,6 +473,21 @@
       "description": "Group slsactl GitHub Action with version parameter",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "groupName": "slsactl"
+    },
+    {
+      "description": "Group kubernetes/kubernetes and k8s.io/kubernetes",
+      "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "groupName": "Kubernetes dependencies",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if newValue}}{{newValue}}{{else}}new patch version{{/if}}"
+    },
+    {
+      "description": "Group other k8s.io dependencies with kubernetes/kubernetes",
+      "matchPackageNames": ["k8s.io/**"],
+      "groupName": "Kubernetes dependencies"
     }
   ]
 }
