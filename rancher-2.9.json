@@ -51,49 +51,25 @@
       "allowedVersions": "<1.25.0"
     },
     {
-      "description": "Enable patch updates for kubectl/k8s packages",
+      "description": "Enable and restrict kubectl to below 1.31.0",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": [
-        "rancher/kubectl",
-        "kubernetes/kubernetes",
-        "k8s.io/kubernetes"
-      ],
-      "matchUpdateTypes": ["patch"],
+      "matchPackageNames": ["rancher/kubectl"],
+      "allowedVersions": "<1.31.0",
       "enabled": true
     },
     {
-      "description": "Restrict kubectl/k8s versions to below 1.31.0",
-      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": [
-        "rancher/kubectl",
-        "kubernetes/kubernetes",
-        "k8s.io/kubernetes"
-      ],
-      "allowedVersions": "<1.31.0"
+      "description": "Enable and restrict kubernetes/kubernetes and k8s.io/kubernetes to below 1.31.0",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "allowedVersions": "<1.31.0",
+      "enabled": true
     },
     {
-      "description": "Enable patch updates for k8s.io dependencies",
+      "description": "Enable and restrict k8s.io dependencies (excluding k8s.io/kubernetes) to below 0.31.0",
       "matchManagers": ["gomod"],
-      "matchPackageNames": [
-        "!k8s.io/kubernetes",
-        "k8s.io/**"
-      ],
-      "matchUpdateTypes": ["patch"],
-      "enabled": true,
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessageAction": "update",
-      "commitMessageTopic": "k8s dependencies",
-      "commitMessageExtra": "to {{#if newValue}}{{newValue}}{{else}}new patch version{{/if}}"
-    },
-    {
-      "description": "Restrict k8s.io dependencies to below 0.31.0",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": [
-        "!k8s.io/kubernetes",
-        "k8s.io/**"
-      ],
-      "allowedVersions": "<0.31.0"
+      "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
+      "allowedVersions": "<0.31.0",
+      "enabled": true
     },
     {
       "description": "Disable major bumps",
