@@ -35,49 +35,34 @@
       "enabled": true
     },
     {
-      "description": "Restrict Go versions to below 1.25.0",
-      "matchPackageNames": [
-        "golang",
-        "go",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang"
-      ],
-      "allowedVersions": "<1.25.0"
-    },
-    {
       "description": "Enable patch updates for golang-version datasource",
       "matchDatasources": ["golang-version"],
       "matchUpdateTypes": ["patch"],
       "enabled": true
     },
     {
-      "description": "Restrict golang-version to below 1.25.0",
-      "matchDatasources": ["golang-version"],
-      "allowedVersions": "<1.25.0"
-    },
-    {
-      "description": "Enable and restrict kubectl to below 1.33.0",
+      "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl"],
-      "allowedVersions": "<1.33.0",
+      "matchUpdateTypes": ["patch"],
       "enabled": true
     },
     {
-      "description": "Enable and restrict kubernetes/kubernetes and k8s.io/kubernetes to below 1.33.0",
+      "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.33.0",
+      "matchUpdateTypes": ["patch"],
       "enabled": true
     },
     {
-      "description": "Enable and restrict k8s.io dependencies (excluding k8s.io/kubernetes) to below 0.33.0",
+      "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
-      "allowedVersions": "<0.33.0",
+      "matchUpdateTypes": ["patch"],
       "enabled": true
     },
     {
-      "description": "Disable major bumps",
+      "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
