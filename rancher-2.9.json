@@ -63,7 +63,7 @@
       "enabled": true
     },
     {
-      "description": "Disable vulnerability alerts for all k8s and golang modules to prevent non-patch level bumps",
+      "description": "Disable vulnerability alerts for packages with patch-level updates to prevent minor/major version bumps",
       "matchPackageNames": [
         "golang",
         "go",
