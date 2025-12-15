@@ -328,42 +328,12 @@
       "groupName": "renovate-bumps"
     },
     {
-      "matchManagers": [
-        "gomod"
-      ],
-      "groupName": "gomod-k8s-dependencies",
-      "matchPackageNames": [
-        "sigs.k8s.io/**",
-        "!k8s.io/kubernetes",
-        "k8s.io/**"
-      ],
-      "allowedVersions": "<0.35.0"
-    },
-    {
       "matchManagers": ["gomod"],
       "groupName": "wrangler-lasso",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
         "github.com/rancher/lasso"
       ]
-    },
-    {
-      "matchManagers": [
-        "gomod"
-      ],
-      "matchPackageNames": [
-        "k8s.io/kubernetes",
-        "kubernetes/kubernetes",
-        "rancher/kubectl"
-      ],
-      "groupName": "gomod-k8s-dependencies",
-      "allowedVersions": "<1.35.0"
-    },
-    {
-      "matchPackageNames": [
-        "helm.sh/helm/v3"
-      ],
-      "groupName": "gomod-k8s-dependencies"
     },
     {
       "allowedVersions": "<15.8.0",
@@ -477,6 +447,7 @@
     {
       "description": "Group kubernetes/kubernetes and k8s.io/kubernetes",
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "allowedVersions": "<1.35.0",
       "groupName": "Kubernetes dependencies",
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
@@ -486,7 +457,12 @@
     },
     {
       "description": "Group other k8s.io dependencies with kubernetes/kubernetes",
-      "matchPackageNames": ["k8s.io/**"],
+      "matchPackageNames": [
+        "sigs.k8s.io/**",
+        "!k8s.io/kubernetes",
+        "k8s.io/**"
+      ],
+      "allowedVersions": "<0.35.0",
       "groupName": "Kubernetes dependencies"
     }
   ]
