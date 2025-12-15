@@ -434,14 +434,15 @@
       ]
     },
     {
-      "description": "Restrict rancherlabs/slsactl",
+      "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
       "matchPackageNames": ["rancherlabs/slsactl"],
       "allowedVersions": "<=v0.1.10",
       "groupName": "slsactl"
     },
     {
-      "description": "Group slsactl GitHub Action with version parameter",
+      "description": "Group slsactl GitHub Action (with digest)",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
+      "allowedVersions": "<=v0.1.10",
       "groupName": "slsactl"
     },
     {
