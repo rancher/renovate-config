@@ -35,79 +35,40 @@
       "enabled": true
     },
     {
-      "description": "Restrict Go versions to below 1.25.0",
-      "matchPackageNames": [
-        "golang",
-        "go",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang"
-      ],
-      "allowedVersions": "<1.25.0"
-    },
-    {
       "description": "Enable patch updates for golang-version datasource",
       "matchDatasources": ["golang-version"],
       "matchUpdateTypes": ["patch"],
       "enabled": true
     },
     {
-      "description": "Restrict golang-version to below 1.25.0",
-      "matchDatasources": ["golang-version"],
-      "allowedVersions": "<1.25.0"
-    },
-    {
-      "description": "Enable patch updates for kubectl/k8s packages",
+      "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": [
-        "rancher/kubectl",
-        "kubernetes/kubernetes",
-        "k8s.io/kubernetes"
-      ],
+      "matchPackageNames": ["rancher/kubectl"],
       "matchUpdateTypes": ["patch"],
       "enabled": true
     },
     {
-      "description": "Restrict kubectl/k8s versions to below 1.34.0",
-      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": [
-        "rancher/kubectl",
-        "kubernetes/kubernetes",
-        "k8s.io/kubernetes"
-      ],
-      "allowedVersions": "<1.34.0"
+      "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true
     },
     {
       "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
-      "matchPackageNames": [
-        "!k8s.io/kubernetes",
-        "k8s.io/**"
-      ],
+      "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
       "matchUpdateTypes": ["patch"],
-      "enabled": true,
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessageAction": "update",
-      "commitMessageTopic": "k8s dependencies",
-      "commitMessageExtra": "to {{#if newValue}}{{newValue}}{{else}}new patch version{{/if}}"
+      "enabled": true
     },
     {
-      "description": "Restrict k8s.io dependencies to below 0.34.0",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": [
-        "!k8s.io/kubernetes",
-        "k8s.io/**"
-      ],
-      "allowedVersions": "<0.34.0"
-    },
-    {
-      "description": "Disable major bumps",
+      "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
     },
     {
-      "description": "Disable vulnerability alerts for all k8s and golang modules to prevent non-patch level bumps",
+      "description": "Disable vulnerability alerts for packages with patch-level updates to prevent minor/major version bumps",
       "matchPackageNames": [
         "golang",
         "go",
