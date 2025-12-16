@@ -51,14 +51,16 @@
       "matchManagers": ["gomod"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
       "matchUpdateTypes": ["patch"],
-      "enabled": true
+      "enabled": true,
+      "groupName": "Kubernetes dependencies"
     },
     {
       "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
       "matchUpdateTypes": ["patch"],
-      "enabled": true
+      "enabled": true,
+      "groupName": "Kubernetes dependencies"
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
