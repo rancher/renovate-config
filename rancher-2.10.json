@@ -8,15 +8,19 @@
       "enabled": false
     },
     {
-      "description": "Enable updates for packages with known vulnerabilities",
+      "description": "Enable updates for packages with known vulnerabilities (except Go/K8s/test deps)",
+      "matchPackageNames": [
+        "!golang",
+        "!go",
+        "!registry.suse.com/bci/golang",
+        "!registry.opensuse.org/opensuse/bci/golang",
+        "!rancher/kubectl",
+        "!kubernetes/kubernetes",
+        "!k8s.io/**"
+      ],
+      "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
       "enabled": true
-    },
-    {
-      "description": "Disable vulnerability updates for test/dev dependencies",
-      "matchDepTypes": ["devDependencies", "dev-dependencies", "test"],
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
-      "enabled": false
     },
     {
       "description": "Enable patch updates for Go packages",
@@ -61,19 +65,6 @@
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
-    },
-    {
-      "description": "Disable vulnerability alerts for packages with patch-level updates to prevent minor/major version bumps",
-      "matchPackageNames": [
-        "golang",
-        "go",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang",
-        "rancher/kubectl",
-        "kubernetes/kubernetes",
-        "k8s.io/**"
-      ],
-      "vulnerabilityAlerts": { "enabled": false }
     }
   ]
 }
