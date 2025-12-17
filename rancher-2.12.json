@@ -26,7 +26,8 @@
       "description": "Enable SLSACTL updates",
       "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
       "enabled": true,
-      "groupName": "slsactl"
+      "groupName": "slsactl",
+      "allowedVersions": "<=v0.1.10"
     },
     {
       "description": "Enable patch updates for Go packages",
