@@ -86,9 +86,9 @@ jobs:
     runs-on: ${{fromJSON(inputs.runner)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           repository: rancher/renovate-config
           ref: release
@@ -124,7 +124,7 @@ jobs:
       - name: Generate custom data sources
         run: ./renovate-config/hack/generate-data-sources.sh
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@03026bd55840025343414baec5d9337c5f9c7ea7 # v44.0.4
+        uses: renovatebot/github-action@5712c6a41dea6cdf32c72d92a763bd417e6606aa # v44.0.5
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
