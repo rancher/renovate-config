@@ -442,8 +442,14 @@
     {
       "description": "Group slsactl GitHub Action (with digest)",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
-      "allowedVersions": "<=v0.1.10",
-      "groupName": "slsactl"
+      "groupName": "slsactl",
+      "matchUpdateTypes": ["pinDigest"]
+    },
+    {
+      "description": "Skip digest-only updates for slsactl GitHub Action",
+      "matchPackageNames": ["rancherlabs/slsactl/**"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
     },
     {
       "description": "Group kubernetes/kubernetes and k8s.io/kubernetes",
