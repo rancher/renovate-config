@@ -4,6 +4,7 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "enabled": false
     },
@@ -21,20 +22,6 @@
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
       "enabled": true
-    },
-    {
-      "description": "Enable SLSACTL updates (version parameter)",
-      "matchPackageNames": ["rancherlabs/slsactl"],
-      "enabled": true,
-      "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.10"
-    },
-    {
-      "description": "Enable SLSACTL updates (GitHub Action digest)",
-      "matchPackageNames": ["rancherlabs/slsactl/**"],
-      "enabled": true,
-      "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.10"
     },
     {
       "description": "Enable patch updates for Go packages",
