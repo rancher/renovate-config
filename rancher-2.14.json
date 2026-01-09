@@ -1,0 +1,73 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["{{#if env.RENOVATE_EXTENDS_PRESET}}{{env.RENOVATE_EXTENDS_PRESET}}{{else}}github>rancher/renovate-config#release{{/if}}"],
+  "vulnerabilityAlerts": { "enabled": true },
+  "packageRules": [
+    {
+      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
+      "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
+      "enabled": false
+    },
+    {
+      "description": "Enable updates for packages with known vulnerabilities (except Go/K8s/test deps)",
+      "matchPackageNames": [
+        "!golang",
+        "!go",
+        "!registry.suse.com/bci/golang",
+        "!registry.opensuse.org/opensuse/bci/golang",
+        "!rancher/kubectl",
+        "!kubernetes/kubernetes",
+        "!k8s.io/**"
+      ],
+      "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "enabled": true
+    },
+    {
+      "description": "Enable patch updates for Go packages",
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true
+    },
+    {
+      "description": "Enable patch updates for golang-version datasource",
+      "matchDatasources": ["golang-version"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true
+    },
+    {
+      "description": "Enable patch updates for kubectl",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/kubectl"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true
+    },
+    {
+      "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true,
+      "groupName": "Kubernetes dependencies"
+    },
+    {
+      "description": "Enable patch updates for k8s.io dependencies",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true,
+      "groupName": "Kubernetes dependencies"
+    },
+    {
+      "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
+      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchUpdateTypes": ["minor","patch"],
+      "enabled": true
+    }
+  ]
+}
