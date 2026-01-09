@@ -454,13 +454,13 @@
     {
       "description": "Group kubernetes/kubernetes and k8s.io/kubernetes",
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.35.0",
+      "allowedVersions": "<1.35",
       "groupName": "Kubernetes dependencies",
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
       "commitMessageAction": "update",
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if newValue}}{{newValue}}{{else}}new patch version{{/if}}"
+      "commitMessageTopic": "Kubernetes dependencies to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}v{{newMajor}}{{else}}{{#if isSingleVersion}}{{newVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{newDigestShort}}{{/if}}{{/if}}{{/if}}{{/if}}",
+      "commitMessageExtra": ""
     },
     {
       "description": "Group other k8s.io dependencies with kubernetes/kubernetes",
@@ -469,7 +469,7 @@
         "!k8s.io/kubernetes",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.35.0",
+      "allowedVersions": "<0.35",
       "groupName": "Kubernetes dependencies"
     }
   ]
