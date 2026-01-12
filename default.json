@@ -459,18 +459,29 @@
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
       "commitMessageAction": "update",
-      "commitMessageTopic": "Kubernetes dependencies to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}v{{newMajor}}{{else}}{{#if isSingleVersion}}{{newVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{newDigestShort}}{{/if}}{{/if}}{{/if}}{{/if}}",
-      "commitMessageExtra": ""
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Group other k8s.io dependencies with kubernetes/kubernetes",
       "matchPackageNames": [
         "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
+        "!k8s.io/gengo",
+        "!k8s.io/gengo/**",
+        "!k8s.io/utils",
+        "!k8s.io/utils/**",
+        "!k8s.io/kube-openapi",
+        "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
       "allowedVersions": "<0.35",
-      "groupName": "Kubernetes dependencies"
+      "groupName": "Kubernetes dependencies",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     }
   ]
 }
