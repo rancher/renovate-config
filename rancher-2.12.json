@@ -4,6 +4,7 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "enabled": false
     },
@@ -23,20 +24,6 @@
       "enabled": true
     },
     {
-      "description": "Enable SLSACTL updates (version parameter)",
-      "matchPackageNames": ["rancherlabs/slsactl"],
-      "enabled": true,
-      "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.10"
-    },
-    {
-      "description": "Enable SLSACTL updates (GitHub Action digest)",
-      "matchPackageNames": ["rancherlabs/slsactl/**"],
-      "enabled": true,
-      "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.10"
-    },
-    {
       "description": "Enable patch updates for Go packages",
       "matchPackageNames": [
         "golang",
@@ -44,27 +31,27 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.25",
       "enabled": true
     },
     {
       "description": "Enable patch updates for golang-version datasource",
       "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.25",
       "enabled": true
     },
     {
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.34",
       "enabled": true
     },
     {
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.34",
       "enabled": true,
       "groupName": "Kubernetes dependencies"
     },
@@ -72,7 +59,7 @@
       "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<0.34",
       "enabled": true,
       "groupName": "Kubernetes dependencies"
     },
