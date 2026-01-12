@@ -58,10 +58,24 @@
     {
       "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
-      "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
+      "matchPackageNames": [
+        "!k8s.io/kubernetes",
+        "!k8s.io/gengo",
+        "!k8s.io/gengo/**",
+        "!k8s.io/utils",
+        "!k8s.io/utils/**",
+        "!k8s.io/kube-openapi",
+        "!k8s.io/kube-openapi/**",
+        "k8s.io/**"
+      ],
       "allowedVersions": "<0.34",
       "enabled": true,
-      "groupName": "Kubernetes dependencies"
+      "groupName": "Kubernetes dependencies",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
