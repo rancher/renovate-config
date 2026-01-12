@@ -69,7 +69,12 @@
       ],
       "allowedVersions": "<0.32",
       "enabled": true,
-      "groupName": "Kubernetes dependencies"
+      "groupName": "Kubernetes dependencies",
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessageAction": "update",
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
