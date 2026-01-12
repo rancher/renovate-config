@@ -30,27 +30,27 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.24",
       "enabled": true
     },
     {
       "description": "Enable patch updates for golang-version datasource",
       "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.24",
       "enabled": true
     },
     {
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.31",
       "enabled": true
     },
     {
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<1.31",
       "enabled": true,
       "groupName": "Kubernetes dependencies"
     },
@@ -58,7 +58,7 @@
       "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["!k8s.io/kubernetes", "k8s.io/**"],
-      "matchUpdateTypes": ["patch"],
+      "allowedVersions": "<0.31",
       "enabled": true,
       "groupName": "Kubernetes dependencies"
     },
