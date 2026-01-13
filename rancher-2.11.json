@@ -54,10 +54,7 @@
       "allowedVersions": "<1.33",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessageAction": "update",
-      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
@@ -76,10 +73,7 @@
       "allowedVersions": "<0.33",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessageAction": "update",
-      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
