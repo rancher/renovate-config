@@ -54,7 +54,7 @@
       "allowedVersions": "<1.31",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
@@ -73,7 +73,7 @@
       "allowedVersions": "<0.31",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
