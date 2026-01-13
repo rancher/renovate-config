@@ -17,6 +17,7 @@
         "!registry.opensuse.org/opensuse/bci/golang",
         "!rancher/kubectl",
         "!kubernetes/kubernetes",
+        "!k8s.io/kubernetes",
         "!k8s.io/**"
       ],
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
@@ -53,7 +54,9 @@
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
       "allowedVersions": "<1.33",
       "enabled": true,
-      "groupName": "Kubernetes dependencies"
+      "groupName": "Kubernetes dependencies",
+      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Enable patch updates for k8s.io dependencies",
@@ -71,10 +74,7 @@
       "allowedVersions": "<0.33",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessageAction": "update",
-      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
