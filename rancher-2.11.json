@@ -17,6 +17,7 @@
         "!registry.opensuse.org/opensuse/bci/golang",
         "!rancher/kubectl",
         "!kubernetes/kubernetes",
+        "!k8s.io/kubernetes",
         "!k8s.io/**"
       ],
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
