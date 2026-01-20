@@ -336,10 +336,11 @@
       ]
     },
     {
-      "allowedVersions": "<15.8.0",
+      "description": "Restrict BCI images to maintained versions only",
+      "allowedVersions": "<15.8",
       "matchPackageNames": [
-        "/^registry.suse.com/bci/bci/",
-        "/^registry.suse.com/suse/sle15/"
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
       ]
     },
     {
