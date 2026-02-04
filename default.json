@@ -437,7 +437,6 @@
     {
       "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
       "matchPackageNames": ["rancherlabs/slsactl"],
-      "allowedVersions": "<=v0.1.10",
       "groupName": "slsactl"
     },
     {
