@@ -81,6 +81,11 @@
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
+    },
+    {
+      "matchPackageNames": ["rancherlabs/slsactl"],
+      "groupName": "slsactl",
+      "allowedVersions": "<=v0.1.20"
     }
   ]
 }

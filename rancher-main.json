@@ -51,6 +51,11 @@
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "matchPackageNames": ["rancherlabs/slsactl"],
+      "groupName": "slsactl",
+      "allowedVersions": "<=v0.1.20"
     }
   ]
 }
