@@ -6,7 +6,7 @@
     {
       "matchManagers": ["github-actions"],
       "pinDigests": true,
-      "schedule": ["* 4 * * 1/2"]
+      "schedule": ["at 4am on Monday and Wednesday"]
     },
     {
       "matchPackageNames": ["renovate/renovate"],
