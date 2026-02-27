@@ -46,7 +46,10 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl"],
       "allowedVersions": "<1.34",
-      "enabled": true
+      "enabled": true,
+      "groupName": "Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
