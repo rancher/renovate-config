@@ -4,6 +4,7 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "enabled": false
     },
@@ -88,7 +89,8 @@
     {
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.20"
+      "allowedVersions": "<=v0.1.20",
+      "minimumGroupSize": 2
     }
   ]
 }
