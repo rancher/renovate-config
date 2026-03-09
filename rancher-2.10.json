@@ -4,6 +4,7 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "enabled": false
     },
@@ -45,7 +46,10 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl"],
       "allowedVersions": "<1.32",
-      "enabled": true
+      "enabled": true,
+      "groupName": "Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
@@ -85,7 +89,8 @@
     {
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.20"
+      "allowedVersions": "<=v0.1.20",
+      "minimumGroupSize": 2
     }
   ]
 }

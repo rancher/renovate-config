@@ -437,13 +437,15 @@
     {
       "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
       "matchPackageNames": ["rancherlabs/slsactl"],
-      "groupName": "slsactl"
+      "groupName": "slsactl",
+      "minimumGroupSize": 2
     },
     {
       "description": "Group slsactl GitHub Action (with digest)",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "groupName": "slsactl",
-      "matchUpdateTypes": ["pinDigest"]
+      "matchUpdateTypes": ["pinDigest"],
+      "minimumGroupSize": 2
     },
     {
       "description": "Skip digest-only updates for slsactl GitHub Action",
@@ -452,15 +454,17 @@
       "enabled": false
     },
     {
-      "description": "Group kubernetes/kubernetes and k8s.io/kubernetes",
-      "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.35",
+      "description": "Group kubectl, kubernetes/kubernetes and k8s.io/kubernetes",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "allowedVersions": "<1.36",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Group other k8s.io dependencies with kubernetes/kubernetes",
+      "matchManagers": ["gomod"],
       "matchPackageNames": [
         "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
@@ -472,7 +476,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.35",
+      "allowedVersions": "<0.36",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
