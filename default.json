@@ -359,6 +359,20 @@
       "allowedVersions": "<1.26.0"
     },
     {
+      "description": "Group Go and toolchain minor bumps into one PR",
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["minor"],
+      "matchDatasources": ["golang-version"],
+      "groupName": "Go toolchain"
+    },
+    {
+      "description": "Bump go directive on minor Go releases",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "rangeStrategy": "bump",
+      "groupName": "Go toolchain"
+    },
+    {
       "allowedVersions": "<1.0.0",
       "matchPackageNames": [
         "rancher/dapper"
