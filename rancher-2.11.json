@@ -32,13 +32,13 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "allowedVersions": "<1.25",
+      "allowedVersions": "<1.26",
       "enabled": true
     },
     {
       "description": "Enable patch updates for golang-version datasource",
       "matchDatasources": ["golang-version"],
-      "allowedVersions": "<1.25",
+      "allowedVersions": "<1.26",
       "enabled": true
     },
     {
