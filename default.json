@@ -373,6 +373,13 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Disable patch bumps for go directive",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false
+    },
+    {
       "allowedVersions": "<1.0.0",
       "matchPackageNames": [
         "rancher/dapper"
