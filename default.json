@@ -160,6 +160,18 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/\\.github/workflows/.*\\.ya?ml/"
+      ],
+      "matchStrings": [
+        "uses:\\s*golangci/golangci-lint-action@[^\\n]+[\\s\\S]*?version:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
@@ -364,6 +376,15 @@
       "matchUpdateTypes": ["minor"],
       "matchDatasources": ["golang-version"],
       "groupName": "Go toolchain"
+    },
+    {
+      "description": "Group outdated golangci-lint workflow versions with Go minor bumps",
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": [".github/workflows/**"],
+      "matchPackageNames": ["golangci/golangci-lint"],
+      "matchCurrentVersion": "<2.4.0",
+      "groupName": "Go toolchain",
+      "minimumGroupSize": 2
     },
     {
       "allowedVersions": "<1.0.0",
