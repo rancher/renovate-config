@@ -442,6 +442,11 @@
       ]
     },
     {
+      "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
+      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
+      "minimumReleaseAge": "0 days"
+    },
+    {
       "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
