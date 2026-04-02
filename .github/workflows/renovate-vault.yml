@@ -109,7 +109,7 @@ jobs:
 
       - name: Load Secrets from Vault
         if: steps.override.outputs.use-gh-app == 'true'
-        uses: rancher-eio/read-vault-secrets@main
+        uses: rancher-eio/read-vault-secrets@7282bf97898cd1c16c89f837e0bb442e6d384c89 # main
         with:
           secrets: |
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
