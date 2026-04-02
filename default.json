@@ -318,7 +318,7 @@
         "github-actions"
       ],
       "allowedVersions": "<2.8.0",
-      "minimumReleaseAge": "14 days"
+      "minimumReleaseAge": "28 days"
     },
     {
       "matchPackageNames": [
@@ -383,7 +383,7 @@
         "action"
       ],
       "pinDigests": true,
-      "minimumReleaseAge": "14 days"
+      "minimumReleaseAge": "28 days"
     },
     {
       "matchPackageNames": [
