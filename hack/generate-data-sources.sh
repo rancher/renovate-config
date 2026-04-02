@@ -36,7 +36,7 @@ kustomize_save_arch_sources() {
 }
 
 kubectl_save_arch_sources() {
-    for arch in "${archs[@]}"; do
+    for arch in "${ARCHS[@]}"; do
           grep "linux_${arch}" "${DATA_DIR}/kubectl-data.raw" | jq -n --raw-input --slurp '{ "releases": [
             inputs | split("\n")[]
             | select(test("^\\w+\\s+kubectl_"))
