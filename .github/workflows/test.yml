@@ -16,7 +16,8 @@ jobs:
 
     - run: make validate
 
-  call-workflow:
+  call-workflow-push:
+    if: !github.event.pull_request.head.repo.fork
     permissions:
       contents: read
       id-token: write
@@ -28,3 +29,18 @@ jobs:
       overrideSchedule: "{'schedule':null}'"
       renovateConfig: ${{ inputs.renovateConfig || '.github/renovate.json' }}
       dryRun: 'full'
+
+  call-workflow-pr:
+    if: github.event.pull_request.head.repo.fork
+    permissions:
+      contents: read
+
+    uses: ./.github/workflows/renovate-vault.yml
+    with:
+      configMigration: 'true'
+      logLevel: 'debug'
+      overrideSchedule: "{'schedule':null}'"
+      renovateConfig: ${{ inputs.renovateConfig || '.github/renovate.json' }}
+      dryRun: 'full'
+    secrets:
+      override-token: "${{ secrets.GITHUB_TOKEN }}"
