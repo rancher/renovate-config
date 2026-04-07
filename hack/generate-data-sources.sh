@@ -24,6 +24,28 @@ kubectl_fetch_data() {
   done
 }
 
+ghcli_fetch_data() {
+  # Return the last 4 patch releases across the supported minors, along with their release dates separated by a tab.
+  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/cli/cli/releases | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not)) | .[0:10][] | "\(.tag_name)\t\(.created_at)"')
+
+  ARCHS=("amd64" "arm64")
+
+  for arch in "${ARCHS[@]}"; do
+    VERSION_JSON="{ \"releases\": ["
+
+    while IFS=$'\t' read -r version created_at; do
+      CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused -L "https://github.com/cli/cli/releases/download/${version}/gh_${version#v}_checksums.txt")
+      checksum=$(grep "_linux_${arch}.tar.gz" <<<"$CHECKSUM_DATA" | cut -d ' ' -f1)
+      VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/cli/cli/releases/tag/${version}\"},"
+    done <<<"${versions}"
+
+    # remove last comma
+    VERSION_JSON="${VERSION_JSON%,}"
+    VERSION_JSON+="]}"
+    echo "${VERSION_JSON}" >"${DATA_DIR}/ghcli-${arch}.json"
+  done
+}
+
 goreleaser_fetch_data() {
   # Return the last 4 patch releases across the supported minors, along with their release dates separated by a tab.
   versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/goreleaser/goreleaser/releases | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not)) | .[0:4][] | "\(.tag_name)\t\(.created_at)"')
@@ -79,6 +101,9 @@ main() {
   fi
   if grep -r -q "GORELEASER_VERSION" ./.github/workflows; then
     goreleaser_fetch_data
+  fi
+  if grep -r -q --exclude-dir=renovate-config "# renovate-local: ghcli" ./; then
+    ghcli_fetch_data
   fi
 }
 
