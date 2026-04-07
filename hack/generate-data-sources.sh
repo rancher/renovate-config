@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -exo pipefail
 
@@ -7,14 +7,13 @@ DATA_DIR="data"
 ARCHS=("amd64" "arm64" "s390x")
 
 kustomize_fetch_data() {
-  curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes-sigs/kustomize/releases |
+  curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes-sigs/kustomize/releases?per-page=100 |
     jq -r '.[].assets[] | select(.name == "checksums.txt") | .browser_download_url' |
     head -n3 | xargs -I{} curl --retry 3 --retry-connrefused -L {} >>"${DATA_DIR}/kustomize-data.raw"
 }
 
 kubectl_fetch_data() {
-  # Return the last 4 patch releases across the supported minors.
-  versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name' | grep -v alpha | grep -v rc | grep -v beta | head -n 4)
+  versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per-page=100 | jq -r '.[].tag_name' | grep -v alpha | grep -v rc | grep -v beta)
 
   echo "${versions}" | while IFS= read -r version; do
     for arch in "${ARCHS[@]}"; do
@@ -25,8 +24,7 @@ kubectl_fetch_data() {
 }
 
 ghcli_fetch_data() {
-  # Return the last 4 patch releases across the supported minors, along with their release dates separated by a tab.
-  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/cli/cli/releases | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not)) | .[0:10][] | "\(.tag_name)\t\(.created_at)"')
+  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/cli/cli/releases?per-page=100 | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
   ARCHS=("amd64" "arm64")
 
@@ -47,8 +45,7 @@ ghcli_fetch_data() {
 }
 
 goreleaser_fetch_data() {
-  # Return the last 4 patch releases across the supported minors, along with their release dates separated by a tab.
-  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/goreleaser/goreleaser/releases | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not)) | .[0:4][] | "\(.tag_name)\t\(.created_at)"')
+  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/goreleaser/goreleaser/releases?per-page=100 | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
   ARCH="x86_64"
 
