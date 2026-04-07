@@ -297,6 +297,17 @@
       ]
     },
     {
+      "customType": "jsonata",
+      "fileFormat": "yaml",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/.*\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "jobs.goreleaser.steps[env.GORELEASER_VERSION].{ \"depName\": \"goreleaser-x86_64\", \"currentValue\": env.GORELEASER_VERSION, \"currentDigest\": env.GORELEASER_CHECKSUM_x86_64 }"
+      ],
+      "datasourceTemplate": "custom.local"
+    },
+    {
       "customType": "regex",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
