@@ -46,6 +46,20 @@ kubectl_save_arch_sources() {
     done
 }
 
+envtest_fetch_data() {
+    curl --retry 3 --retry-connrefused -L https://raw.githubusercontent.com/kubernetes-sigs/controller-tools/HEAD/envtest-releases.yaml > "${DATA_DIR}/envtest-data.yaml"
+}
+
+envtest_save_arch_sources() {
+    local OSES=("linux" "darwin")
+    for os in "${OSES[@]}"; do
+        for arch in "${ARCHS[@]}"; do
+            yq e -o=json '.releases | to_entries | .[] | .key as $version | .value | to_entries | .[] | select(.key == "envtest-" + $version + "-'"${os}"'-'"${arch}"'.tar.gz") | { "version": $version, "digest": .value.hash }' "${DATA_DIR}/envtest-data.yaml" | \
+            jq -s '{ "releases": . | sort_by(.version) | reverse }' > "${DATA_DIR}/envtest-${os}-${arch}.json"
+        done
+    done
+}
+
 main() {
     mkdir -p "${DATA_DIR}"
 
@@ -57,6 +71,8 @@ main() {
         kustomize_save_arch_sources
         kubectl_fetch_data
         kubectl_save_arch_sources
+        envtest_fetch_data
+        envtest_save_arch_sources
     fi
 }
 
