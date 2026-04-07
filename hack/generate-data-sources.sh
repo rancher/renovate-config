@@ -62,7 +62,6 @@ goreleaser_fetch_data() {
   VERSION_JSON="${VERSION_JSON%,}"
   VERSION_JSON+="]}"
   echo "${VERSION_JSON}" >"${DATA_DIR}/goreleaser-${ARCH}.json"
-
 }
 
 kustomize_save_arch_sources() {
@@ -93,13 +92,15 @@ main() {
   # Only fetch custom data in projects where they are used.
   # For projects where "# renovate-local" is not applied, skip this
   # process altogether.
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local:" ./; then
-    kustomize_fetch_data
-    kustomize_save_arch_sources
+  if grep -r -q --exclude-dir=renovate-config "# renovate-local: kubectl" ./; then
     kubectl_fetch_data
     kubectl_save_arch_sources
   fi
-  if grep -r -q "GORELEASER_VERSION" ./.github/workflows; then
+  if grep -r -q --exclude-dir=renovate-config "# renovate-local: kustomize" ./; then
+    kustomize_fetch_data
+    kustomize_save_arch_sources
+  fi
+  if grep -r -q --exclude-dir=renovate-config "# renovate-local: goreleaser" ./; then
     goreleaser_fetch_data
   fi
   if grep -r -q --exclude-dir=renovate-config "# renovate-local: ghcli" ./; then
