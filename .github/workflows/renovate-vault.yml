@@ -72,8 +72,6 @@ env:
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
-  # Override minimumReleaseAge if set
-  RENOVATE_MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge != 'null' && inputs.minimumReleaseAge || '' }}
   # Override renovate extends preset if set
   RENOVATE_EXTENDS_PRESET: ${{ inputs.extendsPreset || 'github>rancher/renovate-config#release' }}
 
@@ -123,6 +121,17 @@ jobs:
           private-key: ${{ env.PRIVATE_KEY }}
       - name: Generate custom data sources
         run: ./renovate-config/hack/generate-data-sources.sh
+      - name: Override minimumReleaseAge in RENOVATE_FORCE
+        if: inputs.minimumReleaseAge != 'null'
+        env:
+          MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge }}
+        run: |
+          CURRENT="${RENOVATE_FORCE:-}"
+          if [[ -z "$CURRENT" ]]; then
+            CURRENT='{}'
+          fi
+          MERGED=$(printf '%s' "$CURRENT" | jq --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
+          echo "RENOVATE_FORCE=$MERGED" >> "$GITHUB_ENV"
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@0b17c4eb901eca44d018fb25744a50a74b2042df # v46.1.4
         with:
