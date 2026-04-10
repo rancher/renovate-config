@@ -4,6 +4,9 @@
     "mergeConfidence:age-confidence-badges"
   ],
   "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": "2 days"
+  },
   "baseBranchPatterns": [
     "main"
   ],
