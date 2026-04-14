@@ -39,6 +39,11 @@ on:
         required: false
         default: "null"
         type: string
+      extendsPreset:
+        description: "Deprecated: no longer used. Kept for backward compatibility with older deployed workflows."
+        required: false
+        default: ""
+        type: string
     secrets:
       override-token:
         description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
@@ -48,7 +53,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "43.101.2"
+  RENOVATE_VERSION: "43.104.9"
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}
   # Onboarding not needed for self hosted
@@ -59,8 +64,6 @@ env:
   RENOVATE_GIT_AUTHOR: "renovate-rancher <119870437+renovate-rancher[bot]@users.noreply.github.com>"
   # Use GitHub API to create commits (this allows for signed commits from GitHub App)
   RENOVATE_PLATFORM_COMMIT: "true"
-  # Override schedule if set
-  RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
   # Override loglevel if set
   LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
   RENOVATE_CONFIG_FILE: ${{ inputs.renovateConfig || '.github/renovate.json' }}
@@ -114,17 +117,21 @@ jobs:
           private-key: ${{ env.PRIVATE_KEY }}
       - name: Generate custom data sources
         run: ./renovate-config/hack/generate-data-sources.sh
-      - name: Override minimumReleaseAge in RENOVATE_FORCE
-        if: inputs.minimumReleaseAge != 'null'
+      - name: Assemble RENOVATE_FORCE
         env:
+          OVERRIDE_SCHEDULE: ${{ github.event.inputs.overrideSchedule }}
           MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge }}
         run: |
-          CURRENT="${RENOVATE_FORCE:-}"
-          if [[ -z "$CURRENT" ]]; then
-            CURRENT='{}'
+          FORCE='{}'
+          if [[ "$OVERRIDE_SCHEDULE" == 'true' ]]; then
+            FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"schedule": null}')
           fi
-          MERGED=$(printf '%s' "$CURRENT" | jq --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
-          echo "RENOVATE_FORCE=$MERGED" >> "$GITHUB_ENV"
+          if [[ -n "$MINIMUM_RELEASE_AGE" && "$MINIMUM_RELEASE_AGE" != 'null' ]]; then
+            FORCE=$(printf '%s' "$FORCE" | jq -c --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
+          fi
+          if [[ "$FORCE" != '{}' ]]; then
+            echo "RENOVATE_FORCE=$FORCE" >> "$GITHUB_ENV"
+          fi
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@0b17c4eb901eca44d018fb25744a50a74b2042df # v46.1.4
         with:
