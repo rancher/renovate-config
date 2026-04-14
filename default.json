@@ -511,6 +511,12 @@
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Update renovate-vault workflow references quickly after release",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
+      "minimumReleaseAge": "2 days"
     }
   ]
 }
