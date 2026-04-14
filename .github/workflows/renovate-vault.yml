@@ -39,6 +39,11 @@ on:
         required: false
         default: "null"
         type: string
+      extendsPreset:
+        description: "Deprecated: no longer used. Kept for backward compatibility with older deployed workflows."
+        required: false
+        default: ""
+        type: string
     secrets:
       override-token:
         description: "Overrides the GH App Token. Use this to run from forks which don't have access to the GH App."
