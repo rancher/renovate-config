@@ -72,6 +72,17 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/\\.sh$/"
+      ],
+      "matchStrings": [
+        "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}]+)\\}\""
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/",
         "/hack/make/deps.mk/"
