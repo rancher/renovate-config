@@ -75,7 +75,7 @@
         "/\\.sh$/"
       ],
       "matchStrings": [
-        "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}]+)\\}\""
+        "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\""
       ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases"
