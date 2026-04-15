@@ -84,7 +84,7 @@ jobs:
             LATEST_TAG="${STATIC_TAG}"
           fi
           cp ../main/files/renovate-vault.yml .github/workflows/renovate-vault.yml
-          sed -i "s|/.github/workflows/renovate-vault.yml@release|/.github/workflows/renovate-vault.yml@${TAG_SHA} # ${LATEST_TAG}|" \
+          sed -i -E "s~/.github/workflows/renovate-vault.yml@(release|[a-f0-9]{40})( # .*)?~/.github/workflows/renovate-vault.yml@${TAG_SHA} # ${LATEST_TAG}~" \
             .github/workflows/renovate-vault.yml
           git add .github/workflows/renovate-vault.yml
           FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml .github/workflows/renovate.yml"
