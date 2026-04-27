@@ -18,9 +18,6 @@
   "prConcurrentLimit": 0,
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
-  "constraints": {
-    "go": "<1.26"
-  },
   "postUpdateOptions": [
     "gomodTidy",
     "gomodUpdateImportPaths"
@@ -398,21 +395,6 @@
         "/^registry\\.suse\\.com\\/bci\\//",
         "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
       ]
-    },
-    {
-      "matchPackageNames": [
-        "golang",
-        "go",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang"
-      ],
-      "allowedVersions": "<1.26.0"
-    },
-    {
-      "matchDatasources": [
-        "golang-version"
-      ],
-      "allowedVersions": "<1.26.0"
     },
     {
       "description": "Group Go and toolchain minor bumps into one PR",
