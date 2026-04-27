@@ -396,12 +396,6 @@
       "groupName": "Go toolchain"
     },
     {
-      "allowedVersions": "<1.0.0",
-      "matchPackageNames": [
-        "rancher/dapper"
-      ]
-    },
-    {
       "groupName": "GitHub Actions",
       "matchManagers": [
         "github-actions"
