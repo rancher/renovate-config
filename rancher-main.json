@@ -3,6 +3,14 @@
   "extends": ["github>rancher/renovate-config#release"],
   "packageRules": [
     {
+      "description": "Restrict BCI images to maintained versions only",
+      "allowedVersions": "<16.1",
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+      ]
+    },
+    {
       "matchPackageNames": [
         "golang",
         "go",
@@ -28,7 +36,7 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes"
       ],
-      "allowedVersions": "<1.36.0",
+      "allowedVersions": "<1.37.0",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
@@ -38,6 +46,7 @@
         "gomod"
       ],
       "matchPackageNames": [
+        "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
         "!k8s.io/gengo",
         "!k8s.io/gengo/**",
@@ -47,7 +56,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.36.0",
+      "allowedVersions": "<0.37.0",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
