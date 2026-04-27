@@ -3,6 +3,14 @@
   "extends": ["github>rancher/renovate-config#release"],
   "packageRules": [
     {
+      "description": "Restrict BCI images to maintained versions only",
+      "allowedVersions": "<16.1",
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+      ]
+    },
+    {
       "matchPackageNames": [
         "golang",
         "go",

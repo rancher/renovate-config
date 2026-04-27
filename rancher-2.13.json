@@ -4,6 +4,14 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "description": "Restrict BCI images to maintained versions only",
+      "allowedVersions": "<15.8",
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+      ]
+    },
+    {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "enabled": false

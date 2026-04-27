@@ -389,14 +389,6 @@
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Restrict BCI images to maintained versions only",
-      "allowedVersions": "<15.8",
-      "matchPackageNames": [
-        "/^registry\\.suse\\.com\\/bci\\//",
-        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
-      ]
-    },
-    {
       "description": "Group Go and toolchain minor bumps into one PR",
       "matchManagers": ["gomod"],
       "matchUpdateTypes": ["minor"],
