@@ -28,7 +28,7 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes"
       ],
-      "allowedVersions": "<1.36.0",
+      "allowedVersions": "<1.37.0",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
@@ -47,7 +47,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.36.0",
+      "allowedVersions": "<0.37.0",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"

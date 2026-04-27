@@ -499,7 +499,7 @@
       "description": "Group kubectl, kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.36",
+      "allowedVersions": "<1.37.0",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
@@ -518,7 +518,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.36",
+      "allowedVersions": "<0.37.0",
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Update Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
