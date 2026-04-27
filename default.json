@@ -366,6 +366,32 @@
       ]
     },
     {
+      "description": "Group kubectl, kubernetes/kubernetes and k8s.io/kubernetes",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "groupName": "Kubernetes dependencies",
+      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Group other k8s.io and sigs.k8s.io dependencies",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": [
+        "sigs.k8s.io/**",
+        "!k8s.io/kubernetes",
+        "!k8s.io/gengo",
+        "!k8s.io/gengo/**",
+        "!k8s.io/utils",
+        "!k8s.io/utils/**",
+        "!k8s.io/kube-openapi",
+        "!k8s.io/kube-openapi/**",
+        "k8s.io/**"
+      ],
+      "groupName": "Kubernetes dependencies",
+      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<15.8",
       "matchPackageNames": [
@@ -494,34 +520,6 @@
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
       "enabled": false
-    },
-    {
-      "description": "Group kubectl, kubernetes/kubernetes and k8s.io/kubernetes",
-      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.37.0",
-      "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
-    },
-    {
-      "description": "Group other k8s.io dependencies with kubernetes/kubernetes",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": [
-        "sigs.k8s.io/**",
-        "!k8s.io/kubernetes",
-        "!k8s.io/gengo",
-        "!k8s.io/gengo/**",
-        "!k8s.io/utils",
-        "!k8s.io/utils/**",
-        "!k8s.io/kube-openapi",
-        "!k8s.io/kube-openapi/**",
-        "k8s.io/**"
-      ],
-      "allowedVersions": "<0.37.0",
-      "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Update renovate-vault workflow references quickly after release",
