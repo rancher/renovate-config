@@ -73,7 +73,6 @@
       "description": "Enable patch updates for k8s.io dependencies",
       "matchManagers": ["gomod"],
       "matchPackageNames": [
-        "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
         "!k8s.io/gengo",
         "!k8s.io/gengo/**",
