@@ -62,9 +62,8 @@
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "matchPackageNames": ["rancherlabs/slsactl"],
+      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
       "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.22",
       "minimumGroupSize": 2
     }
   ]
