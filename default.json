@@ -484,6 +484,12 @@
       "minimumGroupSize": 2
     },
     {
+      "description": "Group ginkgo and gomega together as ginkgo bumps gomega",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/onsi/ginkgo/v2", "github.com/onsi/gomega"],
+      "groupName": "ginkgo and gomega"
+    },
+    {
       "description": "Skip digest-only updates for slsactl GitHub Action",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
