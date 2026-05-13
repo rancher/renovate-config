@@ -38,6 +38,7 @@
       ],
       "allowedVersions": "<1.37.0",
       "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 5,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -58,6 +59,7 @@
       ],
       "allowedVersions": "<0.37.0",
       "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 5,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
