@@ -47,7 +47,7 @@
         "/\\.github/workflows/.*\\.ya?ml/"
       ],
       "matchStrings": [
-        ".*?- uses:\\s*rancherlabs/slsactl/actions/install-slsactl@.*?\\s*with:\\s*(?:[^\\n]*\\n\\s*)*?version:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+        "# renovate: datasource=github-tags depName=rancherlabs/slsactl\\n\\s*version:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ],
       "depNameTemplate": "rancherlabs/slsactl",
       "datasourceTemplate": "github-tags"
