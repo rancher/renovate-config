@@ -490,6 +490,12 @@
       "groupName": "ginkgo and gomega"
     },
     {
+      "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["golang.org/x/**"],
+      "groupName": "golang.org/x dependencies"
+    },
+    {
       "description": "Skip digest-only updates for slsactl GitHub Action",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
