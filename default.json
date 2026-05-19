@@ -355,12 +355,14 @@
       "groupName": "renovate-bumps"
     },
     {
+      "description": "Allow Wrangler and lasso updates to be created after 3 days because they are internal products",
       "matchManagers": ["gomod"],
       "groupName": "wrangler-lasso",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
         "github.com/rancher/lasso"
-      ]
+      ],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group kubectl, kubernetes/kubernetes and k8s.io/kubernetes",
