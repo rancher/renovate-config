@@ -518,6 +518,13 @@
       "groupName": "golang.org/x dependencies"
     },
     {
+      "description": "Group golang.org/x/ vulnerability fixes into the same group to avoid sys artifact conflicts",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["golang.org/x/**"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "groupName": "golang.org/x dependencies"
+    },
+    {
       "description": "Skip digest-only updates for slsactl GitHub Action",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
