@@ -355,12 +355,14 @@
       "groupName": "renovate-bumps"
     },
     {
+      "description": "Allow Wrangler and lasso updates to be created after 3 days because they are internal products",
       "matchManagers": ["gomod"],
       "groupName": "wrangler-lasso",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
         "github.com/rancher/lasso"
-      ]
+      ],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group kubectl, kubernetes/kubernetes and k8s.io/kubernetes",
@@ -394,6 +396,26 @@
       "matchUpdateTypes": ["minor"],
       "matchDatasources": ["golang-version"],
       "groupName": "Go toolchain"
+    },
+    {
+      "description": "Allow Go runtime updates after 3 days to get security releases faster",
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Allow Go Docker image updates after 3 days to get security releases faster",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "minimumReleaseAge": "3 days"
     },
     {
       "groupName": "GitHub Actions",
@@ -488,6 +510,12 @@
       "matchManagers": ["gomod"],
       "matchPackageNames": ["github.com/onsi/ginkgo/v2", "github.com/onsi/gomega"],
       "groupName": "ginkgo and gomega"
+    },
+    {
+      "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["golang.org/x/**"],
+      "groupName": "golang.org/x dependencies"
     },
     {
       "description": "Skip digest-only updates for slsactl GitHub Action",
