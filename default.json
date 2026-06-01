@@ -6,7 +6,8 @@
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "minimumReleaseAge": "2 days",
-    "groupName": "security"
+    "groupName": "security",
+    "separateMajorMinor": false
   },
   "baseBranchPatterns": [
     "main"
