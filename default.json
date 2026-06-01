@@ -5,8 +5,7 @@
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "minimumReleaseAge": "2 days",
-    "groupName": "security"
+    "minimumReleaseAge": "2 days"
   },
   "baseBranchPatterns": [
     "main"
@@ -516,6 +515,13 @@
       "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["golang.org/x/**"],
+      "groupName": "golang.org/x dependencies"
+    },
+    {
+      "description": "Group golang.org/x/ vulnerability fixes into the same group to avoid sys artifact conflicts",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["golang.org/x/**"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
       "groupName": "golang.org/x dependencies"
     },
     {
