@@ -34,7 +34,9 @@
       "matchPackageNames": [
         "rancher/kubectl",
         "kubernetes/kubernetes",
-        "k8s.io/kubernetes"
+        "k8s.io/kubernetes",
+        "kubectl-amd64",
+        "kubectl-arm64"
       ],
       "allowedVersions": "<1.37.0",
       "groupName": "Kubernetes dependencies",

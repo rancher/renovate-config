@@ -87,9 +87,9 @@ main() {
   mkdir -p "${DATA_DIR}"
 
   # Only fetch custom data in projects where they are used.
-  # For projects where "# renovate-local" is not applied, skip this
-  # process altogether.
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: kubectl" ./; then
+  # For kubectl, also enable this when checksum variables are present,
+  # even if "# renovate-local" is not applied.
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "# renovate-local: kubectl" -e "KUBECTL_CHECKSUM_amd64" -e "KUBECTL_CHECKSUM_arm64" ./; then
     kubectl_fetch_data
     kubectl_save_arch_sources
   fi
