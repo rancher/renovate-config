@@ -93,14 +93,14 @@ main() {
     kubectl_fetch_data
     kubectl_save_arch_sources
   fi
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: kustomize" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: kustomize" ./; then
     kustomize_fetch_data
     kustomize_save_arch_sources
   fi
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: goreleaser" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: goreleaser" ./; then
     goreleaser_fetch_data
   fi
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: ghcli" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: ghcli" ./; then
     ghcli_fetch_data
   fi
 }
