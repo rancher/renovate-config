@@ -52,7 +52,7 @@
     {
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl"],
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
       "allowedVersions": "<1.36",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
