@@ -87,20 +87,20 @@ main() {
   mkdir -p "${DATA_DIR}"
 
   # Only fetch custom data in projects where they are used.
-  # For projects where "# renovate-local" is not applied, skip this
-  # process altogether.
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: kubectl" ./; then
+  # For kubectl, also enable this when checksum variables are present,
+  # even if "# renovate-local" is not applied.
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "# renovate-local: kubectl" -e "KUBECTL_CHECKSUM_amd64" -e "KUBECTL_CHECKSUM_arm64" ./; then
     kubectl_fetch_data
     kubectl_save_arch_sources
   fi
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: kustomize" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: kustomize" ./; then
     kustomize_fetch_data
     kustomize_save_arch_sources
   fi
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: goreleaser" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: goreleaser" ./; then
     goreleaser_fetch_data
   fi
-  if grep -r -q --exclude-dir=renovate-config "# renovate-local: ghcli" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: ghcli" ./; then
     ghcli_fetch_data
   fi
 }
