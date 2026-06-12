@@ -77,7 +77,8 @@ kubectl_save_arch_sources() {
     grep "linux_${arch}" "${DATA_DIR}/kubectl-data.raw" | jq -n --raw-input --slurp '{ "releases": [
             inputs | split("\n")[]
             | select(test("^\\w+\\s+kubectl_"))
-            | match("(?<digest>\\w+)\\s+kubectl_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
+            | (match("(?<digest>\\w+)\\s+kubectl_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")?)
+            | select(. != null)
             | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
           ]}' >"${DATA_DIR}/kubectl-${arch}.json"
   done
@@ -85,6 +86,7 @@ kubectl_save_arch_sources() {
 
 main() {
   mkdir -p "${DATA_DIR}"
+  rm -f "${DATA_DIR}/kubectl-data.raw" "${DATA_DIR}/kustomize-data.raw"
 
   # Only fetch custom data in projects where they are used.
   # For kubectl, also enable this when checksum variables are present,
