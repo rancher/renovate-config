@@ -66,7 +66,8 @@ kustomize_save_arch_sources() {
     grep "linux_${arch}" "${DATA_DIR}/kustomize-data.raw" | jq -n --raw-input --slurp '{ "releases": [
             inputs | split("\n")[]
             | select(test("^\\w+\\s+kustomize_"))
-            | match("(?<digest>\\w+)\\s+kustomize_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
+            | (match("(?<digest>\\w+)\\s+kustomize_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")?)
+            | select(. != null)
             | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
           ]}' >"${DATA_DIR}/kustomize-${arch}.json"
   done
