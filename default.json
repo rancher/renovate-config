@@ -74,8 +74,8 @@
       "matchStrings": [
         "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\""
       ],
-      "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases"
+      "depNameTemplate": "kubectl-amd64",
+      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
