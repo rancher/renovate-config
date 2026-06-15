@@ -67,6 +67,7 @@ kustomize_save_arch_sources() {
             inputs | split("\n")[]
             | select(test("^\\w+\\s+kustomize_"))
             | match("(?<digest>\\w+)\\s+kustomize_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
+            | select(. != null)
             | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
           ]}' >"${DATA_DIR}/kustomize-${arch}.json"
   done
@@ -78,6 +79,7 @@ kubectl_save_arch_sources() {
             inputs | split("\n")[]
             | select(test("^\\w+\\s+kubectl_"))
             | match("(?<digest>\\w+)\\s+kubectl_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
+            | select(. != null)
             | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
           ]}' >"${DATA_DIR}/kubectl-${arch}.json"
   done
@@ -85,11 +87,12 @@ kubectl_save_arch_sources() {
 
 main() {
   mkdir -p "${DATA_DIR}"
+  rm -f "${DATA_DIR}/kubectl-data.raw" "${DATA_DIR}/kustomize-data.raw"
 
   # Only fetch custom data in projects where they are used.
-  # For kubectl, also enable this when checksum variables are present,
+  # For kubectl, also enable this when KUBECTL_VERSION/checksum variables are present,
   # even if "# renovate-local" is not applied.
-  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "# renovate-local: kubectl" -e "KUBECTL_CHECKSUM_amd64" -e "KUBECTL_CHECKSUM_arm64" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "# renovate-local: kubectl" -e "KUBECTL_VERSION" -e "KUBECTL_CHECKSUM_amd64" -e "KUBECTL_CHECKSUM_arm64" ./; then
     kubectl_fetch_data
     kubectl_save_arch_sources
   fi
