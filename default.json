@@ -59,23 +59,27 @@
         "/(^|/)Dockerfile[^/]*$/",
         "/hack/make/deps.mk/"
       ],
+      "description": "Canonical kubectl version source for Dockerfile and deps files; tied to custom.local so version bumps only happen when checksum data is available",
       "matchStrings": [
         "KUBECTL_VERSION.*\\=\\s*(?<currentValue>.*?)\\n",
         "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases"
+      "packageNameTemplate": "kubectl-amd64",
+      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
       "managerFilePatterns": [
         "/\\.sh$/"
       ],
+      "description": "Canonical kubectl version source for shell scripts; tied to custom.local so version bumps only happen when checksum data is available",
       "matchStrings": [
         "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\""
       ],
       "depNameTemplate": "kubernetes/kubernetes",
-      "datasourceTemplate": "github-releases"
+      "packageNameTemplate": "kubectl-amd64",
+      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
@@ -298,6 +302,7 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
+      "description": "Arch-specific checksum manager for kubectl amd64 in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
@@ -312,6 +317,7 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
+      "description": "Arch-specific checksum manager for kubectl arm64 in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
