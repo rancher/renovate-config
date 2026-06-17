@@ -13,7 +13,7 @@ kustomize_fetch_data() {
 }
 
 kubectl_fetch_data() {
-  versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per-page=100 |
+  versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per_page=100 |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | .tag_name')
 
   echo "${versions}" | while IFS= read -r version; do
@@ -22,7 +22,7 @@ kubectl_fetch_data() {
         continue
       fi
       checksum="$(echo "${checksum}" | tr -d '\r\n')"
-      if [[ ! "${checksum}" =~ ^[0-9a-f]{64}$ ]]; then
+      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
         continue
       fi
       echo "${checksum}  kubectl_${version}_linux_${arch}.tar.gz" >>"${DATA_DIR}/kubectl-data.raw"
