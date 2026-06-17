@@ -29,11 +29,11 @@ their `renovate.json` as per below:
   "packageRules": [
     {
       "matchBaseBranches": ["releases/v0.7.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.11#release"]
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
     },
     {
       "matchBaseBranches": ["releases/v0.6.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.10#release"]
+      "extends": ["github>rancher/renovate-config//rancher-2.13#release"]
     }
   ]
 }
