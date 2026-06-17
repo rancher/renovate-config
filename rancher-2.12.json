@@ -56,7 +56,7 @@
       "allowedVersions": "<1.34",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 5,
+      "minimumGroupSize": 15,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -67,7 +67,7 @@
       "allowedVersions": "<1.34",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 5,
+      "minimumGroupSize": 15,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -87,7 +87,7 @@
       "allowedVersions": "<0.34",
       "enabled": true,
       "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 5,
+      "minimumGroupSize": 15,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
