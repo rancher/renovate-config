@@ -13,12 +13,19 @@ kustomize_fetch_data() {
 }
 
 kubectl_fetch_data() {
-  versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per-page=100 | jq -r '.[].tag_name' | grep -v alpha | grep -v rc | grep -v beta)
+  versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per_page=100 |
+    jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | .tag_name')
 
   echo "${versions}" | while IFS= read -r version; do
     for arch in "${ARCHS[@]}"; do
-      curl --retry 3 --retry-connrefused -L "https://dl.k8s.io/release/${version}/bin/linux/${arch}/kubectl.sha256" >>"${DATA_DIR}/kubectl-data.raw"
-      echo "  kubectl_${version}_linux_${arch}.tar.gz" >>"${DATA_DIR}/kubectl-data.raw"
+      if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://dl.k8s.io/release/${version}/bin/linux/${arch}/kubectl.sha256"); then
+        continue
+      fi
+      checksum="$(echo "${checksum}" | tr -d '\r\n')"
+      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        continue
+      fi
+      echo "${checksum}  kubectl_${version}_linux_${arch}.tar.gz" >>"${DATA_DIR}/kubectl-data.raw"
     done
   done
 }
