@@ -562,6 +562,13 @@
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
       "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Isolate and create PRs to pin GitHub Actions digests immediately with 0 days delay",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["pinDigest"],
+      "minimumReleaseAge": "0 days",
+      "groupName": "Pin GitHub Actions"
     }
   ]
 }
