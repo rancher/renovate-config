@@ -375,8 +375,9 @@
       "groupName": "Pin GitHub Actions",
       "matchManagers": ["github-actions"],
       "matchDepTypes": ["action"],
-      "matchDatasources": ["github-tags"],
+      "matchDatasources": ["github-tags", "github-releases"],
       "matchUpdateTypes": ["pinDigest"],
+      "pinDigests": true,
       "minimumReleaseAge": "5 days"
     },
     {
