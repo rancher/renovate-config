@@ -371,6 +371,15 @@
   ],
   "packageRules": [
     {
+      "description": "Create a grouped PR to pin GitHub Actions digests",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action"],
+      "matchDatasources": ["github-tags"],
+      "matchUpdateTypes": ["pinDigest"],
+      "minimumReleaseAge": "5 days",
+      "groupName": "Pin GitHub Actions"
+    },
+    {
       "description": "Restrict helm/chart-testing-action below 2.8.0",
       "matchPackageNames": [
         "helm/chart-testing-action"
@@ -562,15 +571,6 @@
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
       "minimumReleaseAge": "2 days"
-    },
-    {
-      "description": "Create a grouped PR to pin GitHub Actions digests",
-      "matchManagers": ["github-actions"],
-      "matchDepTypes": ["action"],
-      "matchDatasources": ["github-tags"],
-      "matchUpdateTypes": ["pinDigest"],
-      "minimumReleaseAge": "5 days",
-      "groupName": "Pin GitHub Actions"
     }
   ]
 }
