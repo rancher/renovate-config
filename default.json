@@ -569,7 +569,7 @@
       "matchDepTypes": ["action"],
       "matchDatasources": ["github-tags"],
       "matchUpdateTypes": ["pinDigest"],
-      "minimumReleaseAge": "0 days",
+      "minimumReleaseAge": "5 days",
       "groupName": "Pin GitHub Actions"
     }
   ]
