@@ -566,6 +566,8 @@
     {
       "description": "Create a grouped PR to pin GitHub Actions digests",
       "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action"],
+      "matchDatasources": ["github-tags"],
       "matchUpdateTypes": ["pinDigest"],
       "minimumReleaseAge": "0 days",
       "groupName": "Pin GitHub Actions"
