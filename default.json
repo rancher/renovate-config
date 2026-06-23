@@ -371,6 +371,27 @@
   ],
   "packageRules": [
     {
+      "description": "Create a grouped PR to pin GitHub Actions digests",
+      "groupName": "Pin GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action"],
+      "matchDatasources": ["github-tags", "github-releases"],
+      "matchUpdateTypes": ["pinDigest"],
+      "pinDigests": true,
+      "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Update renovate-vault workflow references quickly after release",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
+      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
+      "minimumReleaseAge": "0 days"
+    },
+    {
       "description": "Restrict helm/chart-testing-action below 2.8.0",
       "matchPackageNames": [
         "helm/chart-testing-action"
@@ -452,20 +473,6 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "groupName": "GitHub Actions",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchDatasources": [
-        "github-tags"
-      ],
-      "matchDepTypes": [
-        "action"
-      ],
-      "pinDigests": true,
-      "minimumReleaseAge": "28 days"
-    },
-    {
       "matchPackageNames": [
         "registry.suse.com/**",
         "registry.opensuse.org/**"
@@ -522,11 +529,6 @@
       ]
     },
     {
-      "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
-      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
-      "minimumReleaseAge": "0 days"
-    },
-    {
       "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
@@ -556,12 +558,6 @@
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
       "enabled": false
-    },
-    {
-      "description": "Update renovate-vault workflow references quickly after release",
-      "matchManagers": ["github-actions"],
-      "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
-      "minimumReleaseAge": "2 days"
     }
   ]
 }
