@@ -381,6 +381,18 @@
       "minimumReleaseAge": "5 days"
     },
     {
+      "description": "Group GitHub Actions updates and require at least three actions",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "minimumGroupSize": 3
+    },
+    {
+      "description": "Allow security fixes for GitHub Actions without the group-size threshold",
+      "matchManagers": ["github-actions"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "minimumGroupSize": 1
+    },
+    {
       "description": "Update renovate-vault workflow references quickly after release",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
