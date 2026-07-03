@@ -330,6 +330,66 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for helm amd64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "ENV HELM_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV HELM_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "helm-amd64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for helm arm64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "ENV HELM_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV HELM_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "helm-arm64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for yq amd64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "ENV YQ_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV YQ_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "yq-amd64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for yq arm64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "ENV YQ_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV YQ_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "yq-arm64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/",
         "/(^|/)Makefile$/",
         "/hack/make/deps.mk/",
