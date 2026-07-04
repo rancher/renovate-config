@@ -30,6 +30,63 @@ kubectl_fetch_data() {
   done
 }
 
+helm_fetch_data() {
+  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/helm/helm/releases?per_page=100 |
+    jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
+
+  ARCHS=("amd64" "arm64")
+
+  for arch in "${ARCHS[@]}"; do
+    VERSION_JSON="{ \"releases\": ["
+
+    while IFS=$'\t' read -r version created_at; do
+      if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://get.helm.sh/helm-${version}-linux-${arch}.tar.gz.sha256sum"); then
+        continue
+      fi
+      checksum=$(echo "${checksum}" | awk '{print $1}' | tr -d '\r\n')
+      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        continue
+      fi
+      VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/helm/helm/releases/tag/${version}\"},"
+    done <<<"${versions}"
+
+    # remove last comma
+    VERSION_JSON="${VERSION_JSON%,}"
+    VERSION_JSON+="]}"
+    echo "${VERSION_JSON}" >"${DATA_DIR}/helm-${arch}.json"
+  done
+}
+
+yq_fetch_data() {
+  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/mikefarah/yq/releases?per_page=100 |
+    jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
+
+  ARCHS=("amd64" "arm64")
+
+  # SHA-256 is the 19th field in yq's checksums file (field 1 = filename, then hashes in checksums_hashes_order)
+  readonly YQ_SHA256_FIELD=19
+
+  for arch in "${ARCHS[@]}"; do
+    VERSION_JSON="{ \"releases\": ["
+
+    while IFS=$'\t' read -r version created_at; do
+      if ! CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/mikefarah/yq/releases/download/${version}/checksums"); then
+        continue
+      fi
+      checksum=$(awk "/yq_linux_${arch}\\.tar\\.gz[[:space:]]/ { print \$${YQ_SHA256_FIELD} }" <<<"${CHECKSUM_DATA}" | tr -d '\r\n')
+      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        continue
+      fi
+      VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/mikefarah/yq/releases/tag/${version}\"},"
+    done <<<"${versions}"
+
+    # remove last comma
+    VERSION_JSON="${VERSION_JSON%,}"
+    VERSION_JSON+="]}"
+    echo "${VERSION_JSON}" >"${DATA_DIR}/yq-${arch}.json"
+  done
+}
+
 ghcli_fetch_data() {
   versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/cli/cli/releases?per-page=100 | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
@@ -112,6 +169,12 @@ main() {
   fi
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: ghcli" ./; then
     ghcli_fetch_data
+  fi
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "HELM_CHECKSUM_amd64" -e "HELM_CHECKSUM_arm64" ./; then
+    helm_fetch_data
+  fi
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "YQ_CHECKSUM_amd64" -e "YQ_CHECKSUM_arm64" ./; then
+    yq_fetch_data
   fi
 }
 
