@@ -16,11 +16,10 @@ validate: # validates (strict mode) all renovate files for syntax errors.
 	done
 
 data:
-	@mkdir -p data && rm data/*
-	@./hack/generate-data-sources.sh
-	
+	@mkdir -p data && rm -f data/*
+	@RENOVATE_LOCAL_DATA_FORCE_ALL=true ./hack/generate-data-sources.sh
+
 test: data # this is to enable manual tests, not for CI.
 	@rm -rf $(TMP_DIR) && mkdir -p tests && cp -r tests $(TMP_DIR)
 	@mkdir -p $(TMP_DIR)/.github && cp default.json $(TMP_DIR)/.github/renovate.json
-	@cp -r data $(TMP_DIR)
 	$(TEST_FILE)

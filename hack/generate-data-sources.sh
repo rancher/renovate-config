@@ -2,6 +2,16 @@
 
 set -exo pipefail
 
+# Renovate's custom.local file:// datasource is sandboxed to the repository's
+# own local checkout ("allowedDir"): absolute paths like /tmp are rejected.
+# Since Renovate self-hosted runs (renovatebot/github-action) clone the target
+# repository into their own directory, per-consumer-repo generated data is
+# never visible to Renovate. Data files are therefore generated here and
+# served to consumers over HTTPS (see default.json's
+# customDatasources.local.defaultRegistryUrlTemplate) from the dedicated
+# "renovate-data" branch, which .github/workflows/refresh-data.yml refreshes
+# on a schedule. main/release require a reviewed PR for every push, so the
+# generated data is published to that unprotected branch instead.
 DATA_DIR="data"
 
 ARCHS=("amd64" "arm64" "s390x")
@@ -152,6 +162,22 @@ kubectl_save_arch_sources() {
 main() {
   mkdir -p "${DATA_DIR}"
   rm -f "${DATA_DIR}/kubectl-data.raw" "${DATA_DIR}/kustomize-data.raw"
+
+  # RENOVATE_LOCAL_DATA_FORCE_ALL=true generates every dataset unconditionally,
+  # regardless of whether markers are present in the current directory tree.
+  # Used by the scheduled refresh workflow in this repository, since the data
+  # is now centrally hosted rather than generated per consumer repository.
+  if [[ "${RENOVATE_LOCAL_DATA_FORCE_ALL:-false}" == "true" ]]; then
+    kubectl_fetch_data
+    kubectl_save_arch_sources
+    kustomize_fetch_data
+    kustomize_save_arch_sources
+    goreleaser_fetch_data
+    ghcli_fetch_data
+    helm_fetch_data
+    yq_fetch_data
+    return
+  fi
 
   # Only fetch custom data in projects where they are used.
   # For kubectl, also enable this when KUBECTL_VERSION/checksum variables are present,

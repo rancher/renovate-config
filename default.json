@@ -24,7 +24,7 @@
   ],
   "customDatasources": {
     "local": {
-      "defaultRegistryUrlTemplate": "file://data/{{packageName}}.json",
+      "defaultRegistryUrlTemplate": "https://raw.githubusercontent.com/rancher/renovate-config/renovate-data/data/{{packageName}}.json",
       "format": "json"
     }
   },
@@ -497,6 +497,22 @@
       "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
       "groupName": "Kubernetes dependencies",
       "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Group helm version and checksum dependencies in Dockerfiles",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["helm/helm", "helm-amd64", "helm-arm64"],
+      "groupName": "helm",
+      "commitMessageTopic": "helm",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Group yq version and checksum dependencies in Dockerfiles",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["mikefarah/yq", "yq-amd64", "yq-arm64"],
+      "groupName": "yq",
+      "commitMessageTopic": "yq",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
