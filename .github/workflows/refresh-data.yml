@@ -1,0 +1,41 @@
+---
+name: Refresh custom.local data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Regenerate data
+        env:
+          RENOVATE_LOCAL_DATA_FORCE_ALL: "true"
+        run: ./hack/generate-data-sources.sh
+      - name: Commit and push
+        run: |
+          git config --global user.email "119870437+renovate-rancher[bot]@users.noreply.github.com"
+          git config --global user.name "renovate-rancher[bot]"
+          # main and release are protected by a "block direct pushes" ruleset
+          # requiring a reviewed PR, so this data is instead published on a
+          # dedicated, unprotected branch that consumers fetch over HTTPS
+          # (see default.json's customDatasources.local.defaultRegistryUrlTemplate).
+          # The branch is squashed to a single orphan commit on every run.
+          shopt -s nullglob
+          data_files=(data/*.json)
+          if [[ ${#data_files[@]} -eq 0 ]]; then
+            echo "No data files generated, aborting" >&2
+            exit 1
+          fi
+          git checkout --orphan renovate-data
+          git reset
+          git add "${data_files[@]}"
+          git commit --no-gpg-sign -m "Refresh custom.local data"
+          git push --force origin HEAD:refs/heads/renovate-data

@@ -81,13 +81,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          repository: rancher/renovate-config
-          ref: release
-          sparse-checkout: hack/generate-data-sources.sh
-          path: renovate-config
       - name: Validate and printout config
         run: jq -e . "${RENOVATE_CONFIG_FILE}"
       - name: Check token
@@ -115,8 +108,6 @@ jobs:
         with:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
-      - name: Generate custom data sources
-        run: ./renovate-config/hack/generate-data-sources.sh
       - name: Assemble RENOVATE_FORCE
         env:
           OVERRIDE_SCHEDULE: ${{ github.event.inputs.overrideSchedule }}
