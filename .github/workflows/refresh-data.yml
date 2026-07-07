@@ -36,6 +36,6 @@ jobs:
           fi
           git checkout --orphan renovate-data
           git reset
-          git add "${data_files[@]}"
+          git add -f "${data_files[@]}"
           git commit --no-gpg-sign -m "Refresh custom.local data"
           git push --force origin HEAD:refs/heads/renovate-data
