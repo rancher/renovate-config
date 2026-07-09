@@ -541,14 +541,14 @@
       "groupName": "Go toolchain"
     },
     {
-      "description": "Allow Go runtime updates after 3 days to get security releases faster",
+      "description": "Allow Go runtime updates after 2 days to get security releases faster",
       "matchDatasources": [
         "golang-version"
       ],
-      "minimumReleaseAge": "3 days"
+      "minimumReleaseAge": "2 days"
     },
     {
-      "description": "Allow Go Docker image updates after 3 days to get security releases faster",
+      "description": "Allow Go Docker image updates after 2 days to get security releases faster",
       "matchDatasources": [
         "docker"
       ],
@@ -558,7 +558,7 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "minimumReleaseAge": "3 days"
+      "minimumReleaseAge": "2 days"
     },
     {
       "matchPackageNames": [
