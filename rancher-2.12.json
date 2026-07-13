@@ -34,6 +34,12 @@
       "enabled": true
     },
     {
+      "description": "Block vulnerability updates above patch level",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
       "description": "Enable patch updates for Go packages",
       "matchPackageNames": [
         "golang",
