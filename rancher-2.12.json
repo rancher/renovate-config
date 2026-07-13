@@ -18,17 +18,7 @@
       "enabled": false
     },
     {
-      "description": "Enable updates for packages with known vulnerabilities (except Go/K8s/test deps)",
-      "matchPackageNames": [
-        "!golang",
-        "!go",
-        "!registry.suse.com/bci/golang",
-        "!registry.opensuse.org/opensuse/bci/golang",
-        "!rancher/kubectl",
-        "!kubernetes/kubernetes",
-        "!k8s.io/kubernetes",
-        "!k8s.io/**"
-      ],
+      "description": "Enable updates for packages with known vulnerabilities (except test deps)",
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
       "enabled": true
