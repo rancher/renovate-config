@@ -14,6 +14,7 @@
     {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion))"],
       "enabled": false
     },
     {

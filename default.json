@@ -453,6 +453,12 @@
       "minimumGroupSize": 1
     },
     {
+      "description": "Prioritize vulnerability fix updates across all branches",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "prPriority": 100,
+      "prCreation": "immediate"
+    },
+    {
       "description": "Update renovate-vault workflow references quickly after release",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
