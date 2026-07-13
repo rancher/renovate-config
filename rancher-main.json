@@ -3,13 +3,6 @@
   "extends": ["github>rancher/renovate-config#release"],
   "packageRules": [
     {
-      "description": "Only open gomod PRs after branch checks pass",
-      "matchManagers": [
-        "gomod"
-      ],
-      "prCreation": "status-success"
-    },
-    {
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<16.1",
       "matchPackageNames": [
