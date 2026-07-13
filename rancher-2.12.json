@@ -14,23 +14,20 @@
     {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion))"],
       "enabled": false
     },
     {
-      "description": "Enable updates for packages with known vulnerabilities (except Go/K8s/test deps)",
-      "matchPackageNames": [
-        "!golang",
-        "!go",
-        "!registry.suse.com/bci/golang",
-        "!registry.opensuse.org/opensuse/bci/golang",
-        "!rancher/kubectl",
-        "!kubernetes/kubernetes",
-        "!k8s.io/kubernetes",
-        "!k8s.io/**"
-      ],
+      "description": "Enable updates for packages with known vulnerabilities (except test deps)",
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
       "enabled": true
+    },
+    {
+      "description": "Block vulnerability updates above patch level",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
     },
     {
       "description": "Enable patch updates for Go packages",
