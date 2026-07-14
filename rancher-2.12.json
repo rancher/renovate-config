@@ -14,18 +14,18 @@
     {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion))"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
     },
     {
       "description": "Enable updates for packages with known vulnerabilities (except test deps)",
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
       "enabled": true
     },
     {
       "description": "Block vulnerability updates above patch level",
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
