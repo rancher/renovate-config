@@ -99,6 +99,18 @@
       "groupName": "slsactl",
       "allowedVersions": "<=v0.1.22",
       "minimumGroupSize": 2
+    },
+    {
+      "description": "Create patch vulnerability updates independently",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true,
+      "minimumGroupSize": 1,
+      "branchConcurrentLimit": 0,
+      "prConcurrentLimit": 0,
+      "prHourlyLimit": 0,
+      "prPriority": 100,
+      "prCreation": "immediate"
     }
   ]
 }
