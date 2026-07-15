@@ -459,10 +459,11 @@
       "prCreation": "immediate"
     },
     {
-      "description": "Update renovate-vault workflow references quickly after release",
+      "description": "Update renovate-vault workflow references after two days without a group-size restriction",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
-      "minimumReleaseAge": "2 days"
+      "minimumReleaseAge": "2 days",
+      "minimumGroupSize": 1
     },
     {
       "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
