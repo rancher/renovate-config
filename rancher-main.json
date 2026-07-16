@@ -17,13 +17,13 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "allowedVersions": "<1.27.0"
+      "allowedVersions": "<1.28.0"
     },
     {
       "matchDatasources": [
         "golang-version"
       ],
-      "allowedVersions": "<1.27.0"
+      "allowedVersions": "<1.28.0"
     },
     {
       "matchManagers": [
@@ -38,7 +38,7 @@
         "kubectl-amd64",
         "kubectl-arm64"
       ],
-      "allowedVersions": "<1.37.0",
+      "allowedVersions": "<1.38.0",
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
       "commitMessageTopic": "Kubernetes dependencies",
@@ -59,7 +59,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.37.0",
+      "allowedVersions": "<0.38.0",
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
       "commitMessageTopic": "Kubernetes dependencies",
