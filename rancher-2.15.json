@@ -1,0 +1,116 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config#release"],
+  "vulnerabilityAlerts": { "enabled": true },
+  "packageRules": [
+    {
+      "description": "Restrict BCI images to maintained versions only",
+      "allowedVersions": "<15.8",
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+      ]
+    },
+    {
+      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
+      "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "enabled": false
+    },
+    {
+      "description": "Enable updates for packages with known vulnerabilities (except test deps)",
+      "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "enabled": true
+    },
+    {
+      "description": "Block vulnerability updates above patch level",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "Enable patch updates for Go packages",
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "allowedVersions": "<1.27",
+      "enabled": true
+    },
+    {
+      "description": "Enable patch updates for golang-version datasource",
+      "matchDatasources": ["golang-version"],
+      "allowedVersions": "<1.27",
+      "enabled": true
+    },
+    {
+      "description": "Enable patch updates for kubectl",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
+      "allowedVersions": "<1.37",
+      "enabled": true,
+      "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 15,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "allowedVersions": "<1.37",
+      "enabled": true,
+      "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 15,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Enable patch updates for k8s.io dependencies",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": [
+        "!k8s.io/kubernetes",
+        "!k8s.io/gengo",
+        "!k8s.io/gengo/**",
+        "!k8s.io/utils",
+        "!k8s.io/utils/**",
+        "!k8s.io/kube-openapi",
+        "!k8s.io/kube-openapi/**",
+        "k8s.io/**"
+      ],
+      "allowedVersions": "<0.37",
+      "enabled": true,
+      "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 15,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
+      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchUpdateTypes": ["minor","patch"],
+      "enabled": true
+    },
+    {
+      "matchPackageNames": ["rancherlabs/slsactl"],
+      "groupName": "slsactl",
+      "allowedVersions": "<=v0.1.22",
+      "minimumGroupSize": 2
+    },
+    {
+      "description": "Create patch vulnerability updates independently",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true,
+      "minimumGroupSize": 1,
+      "branchConcurrentLimit": 0,
+      "prConcurrentLimit": 0,
+      "prHourlyLimit": 0,
+      "prPriority": 100,
+      "prCreation": "immediate"
+    }
+  ]
+}
