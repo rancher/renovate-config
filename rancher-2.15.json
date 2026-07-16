@@ -97,7 +97,7 @@
     {
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.22",
+      "allowedVersions": "<=v0.1.36",
       "minimumGroupSize": 2
     },
     {
