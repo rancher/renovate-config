@@ -456,6 +456,17 @@
   ],
   "packageRules": [
     {
+      "description": "Automerge patch and minor updates",
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "description": "Automerge security updates",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
       "description": "Create a grouped PR to pin GitHub Actions digests",
       "groupName": "Pin GitHub Actions",
       "matchManagers": ["github-actions"],
