@@ -55,22 +55,22 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+        "/\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track tagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"
+        "container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?"
       ],
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+        "/\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "(?<indentation>\\s*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\\s*$"
+        "(?<indentation>\\s*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?\\s*$"
       ],
       "currentValueTemplate": "latest",
       "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
