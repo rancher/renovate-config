@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config#release"],
+  "extends": ["github>rancher/renovate-config#enable_automerge_updates"],
   "baseBranchPatterns": [
     "main",
     "release/v2.15",
@@ -17,7 +17,7 @@
         "release/v2.15"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.15#release"
+        "github>rancher/renovate-config//rancher-2.15#enable_automerge_updates"
       ]
     },
     {
@@ -26,7 +26,7 @@
         "release/v2.14"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.14#release"
+        "github>rancher/renovate-config//rancher-2.14#enable_automerge_updates"
       ]
     },
     {
@@ -35,7 +35,7 @@
         "release/v2.13"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.13#release"
+        "github>rancher/renovate-config//rancher-2.13#enable_automerge_updates"
       ]
     },
     {
@@ -44,7 +44,7 @@
         "release/v2.12"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.12#release"
+        "github>rancher/renovate-config//rancher-2.12#enable_automerge_updates"
       ]
     },
     {
@@ -53,7 +53,7 @@
         "release/v2.11"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.11#release"
+        "github>rancher/renovate-config//rancher-2.11#enable_automerge_updates"
       ]
     }
   ]
