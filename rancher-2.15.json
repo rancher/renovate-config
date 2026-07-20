@@ -24,9 +24,9 @@
       "enabled": true
     },
     {
-      "description": "Block vulnerability updates above patch level",
+      "description": "Block vulnerability updates above minor level",
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
-      "matchUpdateTypes": ["major", "minor"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
@@ -111,6 +111,19 @@
       "prHourlyLimit": 0,
       "prPriority": 100,
       "prCreation": "immediate"
+    },
+    {
+      "description": "Keep minor Helm and Kubernetes updates out of release branches",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": [
+        "helm/**",
+        "helm.sh/helm/**",
+        "helm-amd64",
+        "helm-arm64",
+        "rancher/helm"
+      ],
+      "matchUpdateTypes": ["minor"],
+      "enabled": false
     }
   ]
 }
