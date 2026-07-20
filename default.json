@@ -55,6 +55,31 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track tagged Rancher CI container images in GitHub Actions workflows",
+      "matchStrings": [
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?"
+      ],
+      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
+      "matchStrings": [
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?<lineEnding>[ \\t]*(?:#.*)?(?:\\r?\\n|$))"
+      ],
+      "currentValueTemplate": "latest",
+      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}{{{lineEnding}}}",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/",
         "/hack/make/deps.mk/"
@@ -439,6 +464,14 @@
       "matchUpdateTypes": ["pinDigest"],
       "pinDigests": true,
       "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Track and pin Rancher CI container images",
+      "matchManagers": ["custom.regex"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/rancher/ci-image/**"],
+      "groupName": "Rancher CI images",
+      "pinDigests": true
     },
     {
       "description": "Group GitHub Actions updates and require at least three actions",
