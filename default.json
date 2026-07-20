@@ -71,10 +71,10 @@
       ],
       "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?!:)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?=[ \\t]*(?:#|\\r?\\n|$))"
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?<lineEnding>[ \\t]*(?:#.*)?(?:\\r?\\n|$))"
       ],
       "currentValueTemplate": "latest",
-      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}{{{lineEnding}}}",
       "datasourceTemplate": "docker"
     },
     {
