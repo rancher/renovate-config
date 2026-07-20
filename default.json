@@ -59,8 +59,9 @@
       ],
       "description": "Track tagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?"
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?"
       ],
+      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
       "datasourceTemplate": "docker"
     },
     {
@@ -70,7 +71,7 @@
       ],
       "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "(?<indentation>\\s*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?\\s*$"
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[^:\\s@]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?[ \\t]*$"
       ],
       "currentValueTemplate": "latest",
       "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
