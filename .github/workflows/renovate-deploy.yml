@@ -7,6 +7,11 @@ on:
         required: true
         default: "rancher/"
         type: string
+      removeDependabot:
+        description: "Remove existing Dependabot configuration"
+        required: false
+        default: true
+        type: boolean
 permissions:
   id-token: write
 
@@ -87,7 +92,10 @@ jobs:
           sed -i -E "s~/.github/workflows/renovate-vault.yml@(release|[a-f0-9]{40})( # .*)?~/.github/workflows/renovate-vault.yml@${TAG_SHA} # ${LATEST_TAG}~" \
             .github/workflows/renovate-vault.yml
           git add .github/workflows/renovate-vault.yml
-          FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml .github/workflows/renovate.yml"
+          FILES_TO_REMOVE=".github/workflows/renovate.yml"
+          if [[ "${REMOVE_DEPENDABOT}" == "true" ]]; then
+            FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml ${FILES_TO_REMOVE}"
+          fi
           for FILE_TO_REMOVE in $FILES_TO_REMOVE; do
             if [ -f "${FILE_TO_REMOVE}" ]; then
               git rm "${FILE_TO_REMOVE}"
@@ -102,4 +110,5 @@ jobs:
           echo "Created PR: ${CREATED_PR}" >> $GITHUB_STEP_SUMMARY
         env:
           DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
+          REMOVE_DEPENDABOT: '${{ inputs.removeDependabot }}'
           GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
