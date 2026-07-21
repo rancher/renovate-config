@@ -59,7 +59,7 @@ jobs:
           git checkout -b "${BRANCH}"
           mkdir -p .github/workflows
           TEMP_CONFIG=$(mktemp)
-          jq --arg default_branch "${DEFAULT_BRANCH}" '.baseBranchPatterns = [$default_branch]' ../main/files/renovate.json > "${TEMP_CONFIG}"
+          jq --arg default_branch "${DEFAULT_BRANCH}" '.baseBranchPatterns |= map(if . == "main" then $default_branch else . end)' ../main/files/renovate.json > "${TEMP_CONFIG}"
 
           if [ ! -f .github/renovate.json ]; then
             mv "${TEMP_CONFIG}" .github/renovate.json
