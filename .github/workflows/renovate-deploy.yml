@@ -104,10 +104,12 @@ jobs:
           git commit -a -m 'Add initial Renovate configuration'
           git push origin "${BRANCH}"
           CREATED_PR=$(gh pr create -R "${DEPLOY_REPOSITORY}" --title "Add initial Renovate configuration" --body "Add initial Renovate configuration, includes Renovate configuration file and GitHub Actions workflow. This automatically created PR has been initiated by @${GITHUB_ACTOR}" --base "${DEFAULT_BRANCH}" --head "${BRANCH}")
-          echo "Inputs:" >> $GITHUB_STEP_SUMMARY
-          echo "- deployRepository: [${DEPLOY_REPOSITORY}](https://github.com/${DEPLOY_REPOSITORY})" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Created PR: ${CREATED_PR}" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "Inputs:"
+            echo "- deployRepository: [${DEPLOY_REPOSITORY}](https://github.com/${DEPLOY_REPOSITORY})"
+            echo ""
+            echo "Created PR: ${CREATED_PR}"
+          } >> "$GITHUB_STEP_SUMMARY"
         env:
           DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
           REMOVE_DEPENDABOT: '${{ inputs.removeDependabot }}'
