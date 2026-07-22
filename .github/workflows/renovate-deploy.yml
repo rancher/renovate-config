@@ -7,6 +7,11 @@ on:
         required: true
         default: "rancher/"
         type: string
+      removeDependabot:
+        description: "Remove existing Dependabot configuration"
+        required: false
+        default: true
+        type: boolean
 permissions:
   id-token: write
 
@@ -19,9 +24,11 @@ jobs:
     steps:
       - name: Set owner and repositories values
         id: set_values
+        env:
+          DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
         run: |
-          owner=$(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f1)
-          repositories=$(echo "${{ github.event.inputs.deployRepository }}" | cut -d '/' -f2)
+          owner=$(echo "${DEPLOY_REPOSITORY}" | cut -d '/' -f1)
+          repositories=$(echo "${DEPLOY_REPOSITORY}" | cut -d '/' -f2)
           echo "owner=$owner" >> "$GITHUB_OUTPUT"
           echo "repositories=$repositories" >> "$GITHUB_OUTPUT"
       - name: Load Secrets from Vault
@@ -38,22 +45,32 @@ jobs:
           private-key: ${{ env.PRIVATE_KEY }}
           owner: ${{ steps.set_values.outputs.owner }}
           repositories: ${{ steps.set_values.outputs.repositories }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           token: '${{ steps.get_token.outputs.token }}'
           path: main
+          persist-credentials: false
       - name: Checkout deploy repo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: '${{ github.event.inputs.deployRepository }}'
           token: '${{ steps.get_token.outputs.token }}'
           path: deploy-repo
+          persist-credentials: false
       - name: Create branch, commit and PR
+        env:
+          DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
+          REMOVE_DEPENDABOT: '${{ inputs.removeDependabot }}'
+          GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
         run: |
           BRANCH="deploy-renovate-$(date +%Y-%m-%d-%H-%M-%S)"
           git config --global user.email "119870437+renovate-rancher[bot]@users.noreply.github.com"
           git config --global user.name "renovate-rancher[bot]"
+          gh auth setup-git
           cd deploy-repo
           DEFAULT_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}')
           git checkout -b "${BRANCH}"
@@ -87,7 +104,10 @@ jobs:
           sed -i -E "s~/.github/workflows/renovate-vault.yml@(release|[a-f0-9]{40})( # .*)?~/.github/workflows/renovate-vault.yml@${TAG_SHA} # ${LATEST_TAG}~" \
             .github/workflows/renovate-vault.yml
           git add .github/workflows/renovate-vault.yml
-          FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml .github/workflows/renovate.yml"
+          FILES_TO_REMOVE=".github/workflows/renovate.yml"
+          if [[ "${REMOVE_DEPENDABOT}" == "true" ]]; then
+            FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml ${FILES_TO_REMOVE}"
+          fi
           for FILE_TO_REMOVE in $FILES_TO_REMOVE; do
             if [ -f "${FILE_TO_REMOVE}" ]; then
               git rm "${FILE_TO_REMOVE}"
@@ -96,10 +116,9 @@ jobs:
           git commit -a -m 'Add initial Renovate configuration'
           git push origin "${BRANCH}"
           CREATED_PR=$(gh pr create -R "${DEPLOY_REPOSITORY}" --title "Add initial Renovate configuration" --body "Add initial Renovate configuration, includes Renovate configuration file and GitHub Actions workflow. This automatically created PR has been initiated by @${GITHUB_ACTOR}" --base "${DEFAULT_BRANCH}" --head "${BRANCH}")
-          echo "Inputs:" >> $GITHUB_STEP_SUMMARY
-          echo "- deployRepository: [${DEPLOY_REPOSITORY}](https://github.com/${DEPLOY_REPOSITORY})" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Created PR: ${CREATED_PR}" >> $GITHUB_STEP_SUMMARY
-        env:
-          DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
-          GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
+          {
+            echo "Inputs:"
+            echo "- deployRepository: [${DEPLOY_REPOSITORY}](https://github.com/${DEPLOY_REPOSITORY})"
+            echo ""
+            echo "Created PR: ${CREATED_PR}"
+          } >> "$GITHUB_STEP_SUMMARY"
