@@ -1,0 +1,16 @@
+{
+  "releases": [
+    {
+      "version": "v5.8.1",
+      "digest": "0953ea3e476f66d6ddfcd911d750f5167b9365aa9491b2326398e289fef2c142"
+    },
+    {
+      "version": "v5.8.0",
+      "digest": "a4f48b4c3d4ca97d748943e19169de85a2e86e80bcc09558603e2aa66fb15ce1"
+    },
+    {
+      "version": "v5.7.1",
+      "digest": "4261a040217df3bd6896597c3986d1465925726e4f22a945304b5233a4dcdbda"
+    }
+  ]
+}

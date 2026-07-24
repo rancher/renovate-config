@@ -1,0 +1,292 @@
+{
+  "releases": [
+    {
+      "version": "v1.36.3",
+      "digest": "9fa5963b7275b7447c6a7c1f468b7e5a5164fb6f89e23da99ab42d2ea5b81a50"
+    },
+    {
+      "version": "v1.35.7",
+      "digest": "d24da1c32fc1db248860d5702f87303e6efe99077abddacf4f13802949bd2fb9"
+    },
+    {
+      "version": "v1.34.10",
+      "digest": "46808d5de3dc524241e2950826d4e8e3052579651660414c8041dcdcf87e6cd6"
+    },
+    {
+      "version": "v1.36.2",
+      "digest": "d0e5bddf4d896acccb398f9d458dd4e15b293be8a29f23e7bbb87f8462821c01"
+    },
+    {
+      "version": "v1.35.6",
+      "digest": "46293207e2a74902874c57d35fca5f3b97761d2bf3d102a1c5f91f5c2fae816e"
+    },
+    {
+      "version": "v1.34.9",
+      "digest": "cee588b2d0a2507b243278256dfaa35dcc3238f327e1e7725eae38b46e2a9707"
+    },
+    {
+      "version": "v1.33.13",
+      "digest": "3fe8409715a07b2e6a547df2a45acd9cff0fab867b7f31a7c91e4bba9b610847"
+    },
+    {
+      "version": "v1.36.1",
+      "digest": "8e47a105c6d762bbbe6af32d9087232f444d6325c32671c6950404c207abfda2"
+    },
+    {
+      "version": "v1.35.5",
+      "digest": "f69a048a24bcbe061befd11670fd88e89a5e45e88ca83e572450f926947e773c"
+    },
+    {
+      "version": "v1.34.8",
+      "digest": "44083d2d24947a8a2b0c0cc3be7778953f8784bad67048a16333f8dbdc146548"
+    },
+    {
+      "version": "v1.33.12",
+      "digest": "2ccfc8fecbc733d399dc20155428f04be135fe336e9e1a2aa9a970f0d52a0b13"
+    },
+    {
+      "version": "v1.36.0",
+      "digest": "06642a2a92a651f5813585ef4296c79ab9707941756947b57ce1e901f201d999"
+    },
+    {
+      "version": "v1.35.4",
+      "digest": "be73dc19a0c3e70ef746ca4079eae4be5709a27f3602f740798d1ac238fd855d"
+    },
+    {
+      "version": "v1.34.7",
+      "digest": "546e71cd4a5205c3b70b97ed2de184d4bdf0062f05ecb067a702e7634e4ee707"
+    },
+    {
+      "version": "v1.33.11",
+      "digest": "91fc18359faf7cc4408517e3c15fc1f80ba2d71f45952623a43ea39f357d6d77"
+    },
+    {
+      "version": "v1.35.3",
+      "digest": "7f86726d21e525585c6702697e980fccd6e9d0b4bfd19d1eaab8534b04410362"
+    },
+    {
+      "version": "v1.34.6",
+      "digest": "c25e8b0eba65be943fc6d77fc02cd1e79ffd02a3bff6817177aae02b7dba38ce"
+    },
+    {
+      "version": "v1.33.10",
+      "digest": "faae13748fc00a0cdb758fcba84cd0e63565b37dfb85c06c3358b61d86f329f9"
+    },
+    {
+      "version": "v1.35.2",
+      "digest": "8bd2eec89ebbeb1afadc67dc8ae182cd5e25edc7a87906c71935423af01fbf41"
+    },
+    {
+      "version": "v1.34.5",
+      "digest": "2be5f9cc0e7a039d3cc24b8ea862469dfaf4280e27e0a3abe845adc7cfedcdb7"
+    },
+    {
+      "version": "v1.33.9",
+      "digest": "abe4930265dd0957a897953320b79403cbbb2507fc466d95ab2603db95d3f5e8"
+    },
+    {
+      "version": "v1.32.13",
+      "digest": "2503323fe0e503bb43d7a563fcc3ab715e919336c355ff0facb4ed4481671f4a"
+    },
+    {
+      "version": "v1.35.1",
+      "digest": "9c281ee3f5f010d5fcc7ff92774d88b9e88bcf48361d45478ac0748fa9ea5ffc"
+    },
+    {
+      "version": "v1.34.4",
+      "digest": "8b95a8a3dc49b35a479d6dbd508813c6ee815a33ca85c3516920d0d2f2a7ca72"
+    },
+    {
+      "version": "v1.33.8",
+      "digest": "1a76717db1c21d504d51742d9fe7d59236affe0fd513a58ec041ba3de004821d"
+    },
+    {
+      "version": "v1.32.12",
+      "digest": "d7b0f2e3e3747cc86e693fe26478dfff466f9513bc6a9771d77af9112829b22c"
+    },
+    {
+      "version": "v1.35.0",
+      "digest": "4802596127746370223b3a4a6c7db58a9d995cbd98df50f60f5638e643b2b526"
+    },
+    {
+      "version": "v1.32.11",
+      "digest": "628d5eb52074ae180c825ef0874fee8725f7d6ca6d7ab408ac6c3664b3056aae"
+    },
+    {
+      "version": "v1.34.3",
+      "digest": "601478724665ffb9f4d66b406d160a547ab56c23e0a4ea15c8369870d4c3bdcd"
+    },
+    {
+      "version": "v1.33.7",
+      "digest": "3b73cb4bbad18ce00f98735cdf0a8c0b768e568280267e50864c6fa9930b7e09"
+    },
+    {
+      "version": "v1.34.2",
+      "digest": "1482e754474b45129bac02f7d70b8c091cdedaccdbe39fc8c6f21a482e34fa05"
+    },
+    {
+      "version": "v1.33.6",
+      "digest": "348c9ae4d4c5a4158f4c14694b3ac0650eb159a9d055633c3b91a659f2da92cd"
+    },
+    {
+      "version": "v1.32.10",
+      "digest": "ba654bcf6e9c6cb76ff6836958ecabb6a27d35ef16c783e4c33d60a96bbf8dc4"
+    },
+    {
+      "version": "v1.31.14",
+      "digest": "5846066804501c988f82076bb4c67d5ed873c24026e37ca1d0c0e91b25fbe524"
+    },
+    {
+      "version": "v1.34.1",
+      "digest": "daad8b3dea344a91391a7e66b1e798baa12cf7818dd804ea1eacb7b96dcda104"
+    },
+    {
+      "version": "v1.33.5",
+      "digest": "31897ba10138dbb0d6eea1dc9f924a36bc9555c8aaead893579e53a442d9bb37"
+    },
+    {
+      "version": "v1.32.9",
+      "digest": "90bfac794aa0091e0834ace50fa1ad2bed388051141b4ae1aecc0ccb27c067e1"
+    },
+    {
+      "version": "v1.31.13",
+      "digest": "c43da10667532435e3afa9b91e64133875e3de39069b9a3cc65beaf498e23052"
+    },
+    {
+      "version": "v1.34.0",
+      "digest": "ebbfc34159e727c9ee453b3ca442eb6aebe9a79b545f17da554da379bc2e9210"
+    },
+    {
+      "version": "v1.33.4",
+      "digest": "3782475a2b0bf0a9d7dcdd2189d151278488344e7ff396cf402ee916b9224108"
+    },
+    {
+      "version": "v1.32.8",
+      "digest": "240ff349f69706eddef6865b2dcb5aa66b5d742be1166edbb329c8b8f8480ae1"
+    },
+    {
+      "version": "v1.31.12",
+      "digest": "a8d548f5dbb67d6938eeb59de25ad3f0494bfd95ef14b35acb23b8dc5f067925"
+    },
+    {
+      "version": "v1.33.3",
+      "digest": "69101eeaf9b72c410f824b75ea41f9664f0f055bac8abed0077fc27a4858662e"
+    },
+    {
+      "version": "v1.32.7",
+      "digest": "5cc37413cbcaa51002128ab07f3a5f7681d89297769a0305461e9ad015b3d5fc"
+    },
+    {
+      "version": "v1.31.11",
+      "digest": "2c641829099a617da0e7d0384881f515c36f40be166216d27088555ce19d300c"
+    },
+    {
+      "version": "v1.33.2",
+      "digest": "0759f68e90bf6b460553ad1085cf5ecd4eb54d5bedfafd41559be00ad51ec0e3"
+    },
+    {
+      "version": "v1.32.6",
+      "digest": "becf833f5655032180bbf96c859a4adb1ee728a220f8fe425c0acbdeb3c3eb91"
+    },
+    {
+      "version": "v1.31.10",
+      "digest": "d6ffa46c1b48aaa8308d397fd3db2a7056cb6a7ea67d7faf7513b4c95d705e67"
+    },
+    {
+      "version": "v1.30.14",
+      "digest": "ca26a5f0f5fbcb887532e485c9826af2e44e29ae7a27a940fc596782cb146c5e"
+    },
+    {
+      "version": "v1.33.1",
+      "digest": "71acb44c22910bbd6576704a181d58ddfecb7825e65acab4f4323a04372774e7"
+    },
+    {
+      "version": "v1.32.5",
+      "digest": "405ec553d7cebcad968457a210941c288393cf7a0961742d743f3bb0c741ae2c"
+    },
+    {
+      "version": "v1.31.9",
+      "digest": "d1f4cffdc0b4ce5c2db7bdb8bfccf1ad557761ad3cedc69310b99d2c8136b14c"
+    },
+    {
+      "version": "v1.30.13",
+      "digest": "40ea3f041303234bcc2231958ce7375e4fc610bd19d19789731019ed2eeab68f"
+    },
+    {
+      "version": "v1.33.0",
+      "digest": "34cdc4fb7af5ce9af4e97e8034aa184b8988d14ec581cf34b1700d35b3ea54d9"
+    },
+    {
+      "version": "v1.32.4",
+      "digest": "1714592f1cdb728a1f6f4e01b8960e156106c43209a311cc1cfc9231099dcee7"
+    },
+    {
+      "version": "v1.31.8",
+      "digest": "e8ab21a9c2b55146ba16b10199d94cb2aec13d28d1bd7ad1112926ee9fa31028"
+    },
+    {
+      "version": "v1.30.12",
+      "digest": "f6e4b19509526a5677c4082c8406cb4c4c636c6e38cb02b07101bd83664b1723"
+    },
+    {
+      "version": "v1.32.3",
+      "digest": "d7174af70fffb644424f4c4a972017f17a0f59732106f4da825d635be8210c94"
+    },
+    {
+      "version": "v1.31.7",
+      "digest": "7583cf148d1855a8e94a8ab74046c6d20cb241ff5e8a501b96675fdb2c477c43"
+    },
+    {
+      "version": "v1.30.11",
+      "digest": "4fe626da7dbc071b63bcb3b5ca89ed3c739f3e8ae70ea067305009c14b0f6f33"
+    },
+    {
+      "version": "v1.29.15",
+      "digest": "d021679d1c3e24a201a353991bd0423878a29a808b0f5ce105c6a26f401e3683"
+    },
+    {
+      "version": "v1.32.2",
+      "digest": "f2d8f403b73f0f81a1c58affbceee1fe1d3389e20ba4062f949cdf4abe04d635"
+    },
+    {
+      "version": "v1.31.6",
+      "digest": "34dc5fbac4d28ecc148214f97ba08d07b09bf11288eb3d3a9c73def0335423ae"
+    },
+    {
+      "version": "v1.30.10",
+      "digest": "e70519fe017afe20d7444aa4e204b15e9efe055f5863f573c5c56620bd49ddd5"
+    },
+    {
+      "version": "v1.29.14",
+      "digest": "f3ade82c830e163dddee29e34d80ca9ee6bb23117ad35a6ca85c15472eabedfd"
+    },
+    {
+      "version": "v1.32.1",
+      "digest": "081c80142fd450d93dd4a82330d182dd045dcb2fb0c220e65ef7158f13df12d8"
+    },
+    {
+      "version": "v1.31.5",
+      "digest": "11ac927e93f1eae5714527d309fa83e4bf82425ed63fabce6fbbb1d2c3165d4d"
+    },
+    {
+      "version": "v1.30.9",
+      "digest": "24e0a979a52cc42e42945bfb93ab66289e4a0300df9219613ce5661c3017c939"
+    },
+    {
+      "version": "v1.29.13",
+      "digest": "4775ed3a7ed2c2e6ec3eabedbb53603045d308a76fec566a0c4f8de43c3fb1cb"
+    },
+    {
+      "version": "v1.32.0",
+      "digest": "bf7847fdb130484f5e2ddf4e9059bffd4263f792cb759f204d131be1feafe922"
+    },
+    {
+      "version": "v1.31.4",
+      "digest": "75c09a54b03891b54af51feaea74b69f1bb9b997d4deabec6e89f4d6fa4e66c1"
+    },
+    {
+      "version": "v1.30.8",
+      "digest": "0cc283ba6c27c2f94d7ff6b38d0bbfb6c4f83b06bbf36291eecfb3fdc5a40747"
+    }
+  ]
+}
