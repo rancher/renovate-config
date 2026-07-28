@@ -12,6 +12,11 @@ on:
         required: false
         default: true
         type: boolean
+      includeReleaseBranches:
+        description: "Include release branches in Renovate configuration"
+        required: false
+        default: true
+        type: boolean
 permissions:
   id-token: write
 
@@ -65,6 +70,7 @@ jobs:
         env:
           DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
           REMOVE_DEPENDABOT: '${{ inputs.removeDependabot }}'
+          INCLUDE_RELEASE_BRANCHES: '${{ inputs.includeReleaseBranches }}'
           GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
         run: |
           BRANCH="deploy-renovate-$(date +%Y-%m-%d-%H-%M-%S)"
@@ -76,7 +82,15 @@ jobs:
           git checkout -b "${BRANCH}"
           mkdir -p .github/workflows
           TEMP_CONFIG=$(mktemp)
-          jq --arg default_branch "${DEFAULT_BRANCH}" '.baseBranchPatterns |= map(if . == "main" then $default_branch else . end)' ../main/files/renovate.json > "${TEMP_CONFIG}"
+          jq \
+            --arg default_branch "${DEFAULT_BRANCH}" \
+            --argjson include_release_branches "${INCLUDE_RELEASE_BRANCHES}" \
+            'if $include_release_branches then . else
+              .baseBranchPatterns |= map(select(startswith("release/") | not)) |
+              .packageRules |= map(select((.matchBaseBranches // []) | all(startswith("release/") | not)))
+            end |
+            .baseBranchPatterns |= map(if . == "main" then $default_branch else . end)' \
+            ../main/files/renovate.json > "${TEMP_CONFIG}"
 
           if [ ! -f .github/renovate.json ]; then
             mv "${TEMP_CONFIG}" .github/renovate.json
