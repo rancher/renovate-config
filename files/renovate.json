@@ -9,7 +9,6 @@
     "release/v2.12",
     "release/v2.11"
   ],
-  "prHourlyLimit": 2,
   "packageRules": [
     {
       "description": "Apply Rancher 2.15 update constraints to branch release/v2.15. Adapt baseBranchPatterns and matchBaseBranches if this repository uses different release branch names.",
