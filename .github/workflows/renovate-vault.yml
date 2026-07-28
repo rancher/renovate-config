@@ -110,7 +110,7 @@ jobs:
           private-key: ${{ env.PRIVATE_KEY }}
       - name: Assemble RENOVATE_FORCE
         env:
-          OVERRIDE_SCHEDULE: ${{ github.event.inputs.overrideSchedule }}
+          OVERRIDE_SCHEDULE: ${{ inputs.overrideSchedule }}
           MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge }}
         run: |
           FORCE='{}'
