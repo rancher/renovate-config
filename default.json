@@ -460,7 +460,7 @@
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true
-    }
+    },
     {
       "description": "Automerge security updates",
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
