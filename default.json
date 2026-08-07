@@ -546,7 +546,11 @@
     {
       "description": "Let Rancher teams manage internal product updates",
       "matchManagers": ["gomod"],
-      "matchPackageNames": ["github.com/rancher/**"],
+      "matchPackageNames": [
+        "github.com/rancher/**",
+        "!github.com/rancher/wrangler/v3",
+        "!github.com/rancher/lasso"
+      ],
       "matchJsonata": [
         "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
       ],
