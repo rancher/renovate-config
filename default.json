@@ -544,6 +544,15 @@
       "minimumReleaseAge": "3 days"
     },
     {
+      "description": "Let Rancher teams manage internal product updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/rancher/**"],
+      "matchJsonata": [
+        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
