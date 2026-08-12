@@ -531,7 +531,8 @@
         "renovate/renovate"
       ],
       "extractVersion": "(?<version>.*)-full$",
-      "groupName": "renovate-bumps"
+      "groupName": "renovate-bumps",
+      "separateMajorMinor": false
     },
     {
       "description": "Allow Wrangler and lasso updates to be created after 3 days because they are internal products",
