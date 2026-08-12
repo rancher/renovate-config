@@ -80,7 +80,7 @@ jobs:
     runs-on: ${{fromJSON(inputs.runner)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Validate and printout config
         run: jq -e . "${RENOVATE_CONFIG_FILE}"
       - name: Check token
@@ -104,7 +104,7 @@ jobs:
       - name: Get token
         if: steps.override.outputs.use-gh-app == 'true'
         id: get_token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
         with:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
@@ -124,7 +124,7 @@ jobs:
             echo "RENOVATE_FORCE=$FORCE" >> "$GITHUB_ENV"
           fi
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@0b17c4eb901eca44d018fb25744a50a74b2042df # v46.1.4
+        uses: renovatebot/github-action@316d7cd859606d6039a2182b7d69199e9b036835 # v46.2.1
         with:
           renovate-version: ${{ env.RENOVATE_VERSION }}
           configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
