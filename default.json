@@ -702,6 +702,12 @@
       "groupName": "ginkgo and gomega"
     },
     {
+      "description": "Group github.com/aws/ packages together",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/aws/**"],
+      "groupName": "AWS dependencies"
+    },
+    {
       "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["golang.org/x/**"],
