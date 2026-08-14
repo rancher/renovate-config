@@ -15,7 +15,6 @@
     "dependencies"
   ],
   "automergeStrategy": "merge-commit",
-  "prConcurrentLimit": 0,
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "postUpdateOptions": [
