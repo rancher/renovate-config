@@ -13,6 +13,7 @@
     },
     {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
+      "matchDepTypes": ["!golang"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
@@ -31,6 +32,7 @@
     },
     {
       "description": "Enable patch updates for Go packages",
+      "matchDepTypes": ["!golang"],
       "matchPackageNames": [
         "golang",
         "go",
@@ -42,9 +44,17 @@
     },
     {
       "description": "Enable patch updates for golang-version datasource",
+      "matchDepTypes": ["!golang"],
       "matchDatasources": ["golang-version"],
       "allowedVersions": "<1.27",
       "enabled": true
+    },
+    {
+      "description": "Apply Go version cap to module directives",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "allowedVersions": "<1.27"
     },
     {
       "description": "Enable patch updates for kubectl",
