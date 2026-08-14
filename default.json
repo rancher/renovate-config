@@ -607,6 +607,15 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Disable patch Go module directive updates",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "enabled": false
+    },
+    {
       "description": "Allow Go runtime updates after 2 days to get security releases faster",
       "matchDatasources": [
         "golang-version"
