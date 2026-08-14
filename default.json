@@ -15,7 +15,6 @@
     "dependencies"
   ],
   "automergeStrategy": "merge-commit",
-  "prConcurrentLimit": 0,
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "postUpdateOptions": [
@@ -456,16 +455,16 @@
   ],
   "packageRules": [
     {
-      "description": "Automerge patch and minor updates",
+      "description": "Disable automerge for patch and minor updates",
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true
+      "automerge": false
     },
     {
-      "description": "Automerge security updates",
+      "description": "Disable automerge for security updates",
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
       "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true
+      "automerge": false
     },
     {
       "description": "Create a grouped PR to pin GitHub Actions digests",

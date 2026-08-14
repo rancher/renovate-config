@@ -83,13 +83,11 @@ jobs:
           mkdir -p .github/workflows
           TEMP_CONFIG=$(mktemp)
           jq \
-            --arg default_branch "${DEFAULT_BRANCH}" \
             --argjson include_release_branches "${INCLUDE_RELEASE_BRANCHES}" \
             'if $include_release_branches then . else
               .baseBranchPatterns |= map(select(startswith("release/") | not)) |
               .packageRules |= map(select((.matchBaseBranches // []) | all(startswith("release/") | not)))
             end |
-            .baseBranchPatterns |= map(if . == "main" then $default_branch else . end) |
             if (.packageRules | length) == 0 then del(.packageRules) else . end' \
             ../main/files/renovate.json > "${TEMP_CONFIG}"
 
