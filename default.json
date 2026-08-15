@@ -606,6 +606,15 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Disable patch Go module directive updates",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "enabled": false
+    },
+    {
       "description": "Allow Go runtime updates after 2 days to get security releases faster",
       "matchDatasources": [
         "golang-version"
@@ -699,6 +708,18 @@
       "matchManagers": ["gomod"],
       "matchPackageNames": ["github.com/onsi/ginkgo/v2", "github.com/onsi/gomega"],
       "groupName": "ginkgo and gomega"
+    },
+    {
+      "description": "Group github.com/aws/ packages together",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/aws/**"],
+      "groupName": "AWS dependencies"
+    },
+    {
+      "description": "Group go.opentelemetry.io/ packages together",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["go.opentelemetry.io/**"],
+      "groupName": "OpenTelemetry dependencies"
     },
     {
       "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
