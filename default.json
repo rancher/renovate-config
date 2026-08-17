@@ -31,6 +31,19 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)\.github/workflows/.*\.ya?ml$/"
+      ],
+      "description": "Track Go toolchain versions configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOTOOLCHAIN=go(?<currentValue>\\d+\\.\\d+\\.\\d+)\\+auto"
+      ],
+      "autoReplaceStringTemplate": "GOTOOLCHAIN=go{{{newValue}}}+auto",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/\\.github/workflows/renovate.yml/",
         "/\\.github/workflows/renovate-vault.yml/"
       ],
@@ -624,6 +637,13 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
+      "groupName": "Go toolchain"
+    },
+    {
+      "description": "Group Go workflow toolchain updates with Go updates",
+      "matchManagers": ["custom.regex"],
+      "matchDatasources": ["golang-version"],
+      "matchPackageNames": ["go"],
       "groupName": "Go toolchain"
     },
     {
