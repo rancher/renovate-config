@@ -31,7 +31,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/(^|/)\.github/workflows/.*\.ya?ml$/"
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track Go toolchain versions configured in GitHub Actions workflows",
       "matchStrings": [
@@ -652,7 +652,6 @@
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
       "matchUpdateTypes": ["patch"],
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
     },
     {
