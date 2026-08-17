@@ -606,10 +606,11 @@
       "groupName": "Go toolchain"
     },
     {
-      "description": "Bump go directive on Go releases",
+      "description": "Bump go directive on minor Go releases",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
+      "matchJsonata": ["updateType = 'minor'"],
       "rangeStrategy": "bump",
       "groupName": "Go toolchain"
     },
