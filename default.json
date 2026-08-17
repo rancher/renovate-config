@@ -606,6 +606,26 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Bump go directive on Go releases",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "rangeStrategy": "bump",
+      "groupName": "Go toolchain"
+    },
+    {
+      "description": "Group Go Docker image updates with toolchain updates",
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "groupName": "Go toolchain"
+    },
+    {
       "description": "Disable patch Go module directive updates",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
