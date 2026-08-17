@@ -716,6 +716,12 @@
       "groupName": "AWS dependencies"
     },
     {
+      "description": "Group github.com/Azure/ packages together",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/Azure/**"],
+      "groupName": "Azure dependencies"
+    },
+    {
       "description": "Group go.opentelemetry.io/ packages together",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["go.opentelemetry.io/**"],
