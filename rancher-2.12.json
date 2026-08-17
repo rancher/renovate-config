@@ -122,6 +122,14 @@
       "prCreation": "immediate"
     },
     {
+      "description": "Disable patch Go module directive updates",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false
+    },
+    {
       "description": "Keep minor Helm and Kubernetes updates out of release branches",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": [
