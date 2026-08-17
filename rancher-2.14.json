@@ -13,7 +13,6 @@
     },
     {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
-      "matchDepTypes": ["!golang"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
@@ -121,6 +120,14 @@
       "prHourlyLimit": 0,
       "prPriority": 100,
       "prCreation": "immediate"
+    },
+    {
+      "description": "Disable patch Go module directive updates",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false
     },
     {
       "description": "Keep minor Helm and Kubernetes updates out of release branches",
