@@ -13,7 +13,6 @@
     },
     {
       "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
-      "matchDepTypes": ["!golang"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
