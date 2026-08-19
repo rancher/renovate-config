@@ -130,6 +130,14 @@
       "enabled": false
     },
     {
+      "description": "Enable Go module vulnerability updates",
+      "matchManagers": ["gomod"],
+      "matchDatasources": ["go"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "enabled": true
+    },
+    {
       "description": "Keep minor Helm and Kubernetes updates out of release branches",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": [
