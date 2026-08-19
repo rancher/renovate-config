@@ -39,6 +39,8 @@
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "allowedVersions": "<1.26",
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "enabled": true
     },
     {
@@ -46,6 +48,8 @@
       "matchDepTypes": ["!golang"],
       "matchDatasources": ["golang-version"],
       "allowedVersions": "<1.26",
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "enabled": true
     },
     {
@@ -63,6 +67,8 @@
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -74,6 +80,8 @@
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -94,6 +102,8 @@
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
