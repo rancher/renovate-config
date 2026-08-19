@@ -4,6 +4,28 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "description": "Apply Go package version cap to all updates",
+      "matchPackageNames": ["golang", "go", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "allowedVersions": "<1.27"
+    },
+    {
+      "description": "Apply Go datasource version cap to all updates",
+      "matchDatasources": ["golang-version"],
+      "allowedVersions": "<1.27"
+    },
+    {
+      "description": "Apply Kubernetes version caps to all updates",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "allowedVersions": "<1.37"
+    },
+    {
+      "description": "Apply k8s.io dependency version cap to all updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["!k8s.io/kubernetes", "!k8s.io/gengo", "!k8s.io/gengo/**", "!k8s.io/utils", "!k8s.io/utils/**", "!k8s.io/kube-openapi", "!k8s.io/kube-openapi/**", "k8s.io/**"],
+      "allowedVersions": "<0.37"
+    },
+    {
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<15.8",
       "matchPackageNames": [
