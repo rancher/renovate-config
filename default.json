@@ -31,6 +31,19 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)go\\.mod$/"
+      ],
+      "description": "Add a Go toolchain directive when go.mod has none",
+      "matchStrings": [
+        "go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\n\\n(?<nextDirective>replace|require) \\("
+      ],
+      "autoReplaceStringTemplate": "go {{{currentValue}}}\\ntoolchain go{{{newValue}}}\\n\\n{{{nextDirective}}} (",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track Go toolchain versions configured in GitHub Actions workflows",
