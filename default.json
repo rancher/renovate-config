@@ -481,6 +481,12 @@
   ],
   "packageRules": [
     {
+      "description": "Prioritize non-GitHub Actions patch and minor updates before major updates",
+      "matchManagers": ["!github-actions"],
+      "matchUpdateTypes": ["major"],
+      "prPriority": -1
+    },
+    {
       "description": "Disable automerge for patch and minor updates",
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "matchUpdateTypes": ["patch", "minor"],
