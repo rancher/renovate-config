@@ -487,18 +487,6 @@
       "prPriority": -1
     },
     {
-      "description": "Disable automerge for patch and minor updates",
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": false
-    },
-    {
-      "description": "Disable automerge for security updates",
-      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": false
-    },
-    {
       "description": "Create a grouped PR to pin GitHub Actions digests",
       "groupName": "Pin GitHub Actions",
       "matchManagers": ["github-actions"],
