@@ -24,16 +24,18 @@ their `renovate.json` as per below:
     "github>rancher/renovate-config//rancher-main#release"
   ],
   "baseBranchPatterns": [
-    "main"
+    "main",
+    "release/v0.16",
+    "release/v0.15"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["releases/v0.7.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
+      "matchBaseBranches": ["release/v0.16"],
+      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
     },
     {
-      "matchBaseBranches": ["releases/v0.6.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.13#release"]
+      "matchBaseBranches": ["release/v0.15"],
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
     }
   ]
 }
