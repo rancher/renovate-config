@@ -3,6 +3,14 @@
   "extends": ["github>rancher/renovate-config#release"],
   "packageRules": [
     {
+      "description": "Enable Go module vulnerability updates",
+      "matchManagers": ["gomod"],
+      "matchDatasources": ["go"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "enabled": true
+    },
+    {
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<16.1",
       "matchPackageNames": [
