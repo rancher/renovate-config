@@ -9,6 +9,16 @@
       "allowedVersions": "<1.26"
     },
     {
+      "description": "Apply golangci-lint version cap for Go 1.25",
+      "matchPackageNames": ["golangci/golangci-lint"],
+      "allowedVersions": "<2.12.0"
+    },
+    {
+      "description": "Apply golangci-lint action version cap for Go 1.25",
+      "matchPackageNames": ["golangci/golangci-lint-action"],
+      "allowedVersions": "<9.3.0"
+    },
+    {
       "description": "Apply Go datasource version cap to all updates",
       "matchDatasources": ["golang-version"],
       "allowedVersions": "<1.26"
@@ -70,6 +80,24 @@
       "matchDatasources": ["golang-version"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "prPriority": 50,
+      "enabled": true
+    },
+    {
+      "description": "Allow Go updates after two days on release branches",
+      "matchDatasources": ["golang-version"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Allow Go image updates after two days on release branches",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["golang", "go", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Enable golangci-lint updates",
+      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": true
     },
     {
