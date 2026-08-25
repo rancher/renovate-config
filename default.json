@@ -225,6 +225,21 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "[ ]{6}- uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{8}with:\\n(?:[ ]{10}[^\\n]*\\n)*?[ ]{10}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]{8}- uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{10}with:\\n(?:[ ]{12}[^\\n]*\\n)*?[ ]{12}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]{6}- name: [^\\n]*\\n(?:[ ]{8}(?:id|if|env|continue-on-error|timeout-minutes):[^\\n]*\\n)*[ ]{8}uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{8}with:\\n(?:[ ]{10}[^\\n]*\\n)*?[ ]{10}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]{8}- name: [^\\n]*\\n(?:[ ]{10}(?:id|if|env|continue-on-error|timeout-minutes):[^\\n]*\\n)*[ ]{10}uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{10}with:\\n(?:[ ]{12}[^\\n]*\\n)*?[ ]{12}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]+GOLANG_CI_LINT_VERSION:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)"
+      ],
+      "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
@@ -481,6 +496,15 @@
   ],
   "packageRules": [
     {
+      "description": "Bump the go directive with minor or major Go updates",
+      "matchManagers": ["gomod"],
+      "matchDepNames": ["go"],
+      "matchDepTypes": ["golang"],
+      "matchJsonata": ["updateType = 'minor' or updateType = 'major'"],
+      "rangeStrategy": "bump",
+      "groupName": "Go toolchain"
+    },
+    {
       "description": "Prioritize non-GitHub Actions patch and minor updates before major updates",
       "matchManagers": ["!github-actions"],
       "matchUpdateTypes": ["major"],
@@ -619,19 +643,9 @@
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Group Go and toolchain minor bumps into one PR",
+      "description": "Group Go and toolchain minor or major bumps into one PR",
       "matchManagers": ["gomod"],
-      "matchUpdateTypes": ["minor"],
       "matchDatasources": ["golang-version"],
-      "groupName": "Go toolchain"
-    },
-    {
-      "description": "Bump go directive on minor Go releases",
-      "matchManagers": ["gomod"],
-      "matchDepTypes": ["golang"],
-      "matchDatasources": ["golang-version"],
-      "matchJsonata": ["updateType = 'minor'"],
-      "rangeStrategy": "bump",
       "groupName": "Go toolchain"
     },
     {
@@ -654,32 +668,19 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Group golangci-lint updates with Go toolchain updates",
+      "matchManagers": ["custom.regex", "github-actions"],
+      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action"],
+      "groupName": "Go toolchain",
+      "minimumGroupSize": 1
+    },
+    {
       "description": "Disable patch Go module directive updates",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
       "matchUpdateTypes": ["patch"],
       "enabled": false
-    },
-    {
-      "description": "Allow Go runtime updates after 2 days to get security releases faster",
-      "matchDatasources": [
-        "golang-version"
-      ],
-      "minimumReleaseAge": "2 days"
-    },
-    {
-      "description": "Allow Go Docker image updates after 2 days to get security releases faster",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "golang",
-        "go",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang"
-      ],
-      "minimumReleaseAge": "2 days"
     },
     {
       "matchPackageNames": [

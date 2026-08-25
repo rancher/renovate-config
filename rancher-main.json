@@ -26,6 +26,11 @@
       "allowedVersions": "<1.28.0"
     },
     {
+      "description": "Allow golangci-lint action updates after seven days to be in sync with go bumps",
+      "matchPackageNames": ["golangci/golangci-lint-action"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "matchManagers": [
         "gomod",
         "custom.regex",
