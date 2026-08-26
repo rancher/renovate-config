@@ -24,60 +24,20 @@ their `renovate.json` as per below:
     "github>rancher/renovate-config//rancher-main#release"
   ],
   "baseBranchPatterns": [
-    "main",
-    "release/v0.16",
-    "release/v0.15"
+    "main"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["release/v0.16"],
-      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
+      "matchBaseBranches": ["releases/v0.7.x"],
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
     },
     {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
+      "matchBaseBranches": ["releases/v0.6.x"],
+      "extends": ["github>rancher/renovate-config//rancher-2.13#release"]
     }
   ]
 }
 ```
-
-## Opting into automerge
-
-Projects can opt into automerging patch and minor updates by extending the
-repository-agnostic `automerge.json` preset in a separate branch-scoped
-`extends` entry after the release preset entries:
-
-```json
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>rancher/renovate-config//rancher-main#release"
-  ],
-  "baseBranchPatterns": [
-    "main",
-    "release/v0.16",
-    "release/v0.15"
-  ],
-  "packageRules": [
-    {
-      "matchBaseBranches": ["release/v0.16"],
-      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
-    },
-    {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
-    },
-    {
-      "matchBaseBranches": ["main", "release/v0.16", "release/v0.15"],
-      "extends": ["github>rancher/renovate-config//automerge#release"]
-    }
-  ]
-}
-```
-
-Keep the release preset entries and automerge entry separate because Renovate
-flattens nested package rules. The preset does not enable updates or change
-allowed versions.
 
 ## Testing new changes
 
