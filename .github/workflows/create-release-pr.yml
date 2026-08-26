@@ -2,6 +2,7 @@
 name: Create release PR
 
 permissions:
+  contents: write
   pull-requests: write
 
 on:
@@ -13,26 +14,31 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Create PR
+      - name: Check out main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Rewrite main references for release
         run: |
-          git clone --branch release "${REPO_URL}"
-          cd renovate-config
-          git fetch origin main
-          git switch -c main --track origin/main
+          set -euo pipefail
+          while IFS= read -r -d '' config; do
+            sed -i 's/#main/#release/g' "${config}"
+          done < <(git ls-files -z -- '*.json')
 
-          set -x
-          if [[ $(git merge-base main release) == $(git rev-parse main) ]]; then
-              echo "No changes found in main, skip PR creation"
-              exit 0
-          fi
+          git ls-files -z -- '*.json' | git add --pathspec-from-file=- --pathspec-file-nul
 
-          PR=$(gh pr create --title "Release week $(date +%V)" --body "Automatically created PR to merge main into release" --base release --head main)
-          RETVAL=$?
-          if [ "${RETVAL}" -ne 0 ]; then
-              echo "Error while creating pull request, error: ${PR}" >> $GITHUB_STEP_SUMMARY
-          else
-              echo "Created pull request: ${PR}" >> $GITHUB_STEP_SUMMARY
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+      - name: Get current week
+        run: echo "RELEASE_WEEK=$(date -u +%V)" >> "${GITHUB_ENV}"
+
+      - name: Create release PR
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: release
+          branch: release-candidate-${{ github.run_id }}
+          commit-message: Promote main configuration to release
+          title: Release week ${{ env.RELEASE_WEEK }}
+          body: Automatically created PR to merge main into release
