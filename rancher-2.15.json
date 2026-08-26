@@ -64,6 +64,7 @@
     {
       "description": "Enable patch updates for Go packages",
       "matchDepTypes": ["!golang"],
+      "matchUpdateTypes": ["patch"],
       "matchPackageNames": [
         "golang",
         "go",
@@ -99,6 +100,29 @@
       "matchUpdateTypes": ["major", "minor", "patch", "pin"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": true
+    },
+    {
+      "description": "Group all Go toolchain update types on release branches",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action"],
+      "groupName": "Go toolchain",
+      "separateMajorMinor": false
+    },
+    {
+      "description": "Keep release Go patch updates independent of linter updates",
+      "matchUpdateTypes": ["patch"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "groupName": "Go patch updates"
+    },
+    {
+      "description": "Require golangci-lint updates with Go updates",
+      "matchPackageNames": ["golangci/golangci-lint"],
+      "minimumGroupSize": 2
+    },
+    {
+      "description": "Require golangci-lint action updates with Go and golangci-lint updates",
+      "matchPackageNames": ["golangci/golangci-lint-action"],
+      "minimumGroupSize": 3
     },
     {
       "description": "Apply Go version cap to module directives",
