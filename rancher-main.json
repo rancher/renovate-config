@@ -6,7 +6,6 @@
       "description": "Enable Go module vulnerability updates",
       "matchManagers": ["gomod"],
       "matchDatasources": ["go"],
-      "matchUpdateTypes": ["minor", "patch"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
       "enabled": true
     },
