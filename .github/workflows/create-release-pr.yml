@@ -27,12 +27,14 @@ jobs:
         run: |
           set -euo pipefail
 
+          gh auth setup-git
+
+          git fetch origin release:release
+
           if [[ $(git merge-base main release) == $(git rev-parse main) ]]; then
               echo "No changes found in main, skip PR creation"
               exit 0
           fi
-
-          gh auth setup-git
 
           branch="release-candidate-${GITHUB_RUN_ID}"
 
@@ -43,6 +45,8 @@ jobs:
           git ls-files -z -- '*.json' | git add --pathspec-from-file=- --pathspec-file-nul
 
           git switch -c "${branch}"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -m "Promote main configuration to release"
           git push --set-upstream origin "${branch}"
 
