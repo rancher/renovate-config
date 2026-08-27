@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config#release"],
+  "extends": ["github>rancher/renovate-config#main"],
   "packageRules": [
     {
       "description": "Enable Go module vulnerability updates",
