@@ -117,7 +117,7 @@
     {
       "description": "Require golangci-lint updates with Go updates",
       "matchPackageNames": ["golangci/golangci-lint"],
-      "minimumGroupSize": 2
+      "minimumGroupSize": 3
     },
     {
       "description": "Require golangci-lint action updates with Go and golangci-lint updates",
