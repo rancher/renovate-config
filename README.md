@@ -20,15 +20,16 @@ their `renovate.json` as per below:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>rancher/renovate-config//rancher-main#release"
-  ],
   "baseBranchPatterns": [
     "main",
     "release/v0.16",
     "release/v0.15"
   ],
   "packageRules": [
+    {
+      "matchBaseBranches": ["$default"],
+      "extends": ["github>rancher/renovate-config//rancher-main#release"]
+    },
     {
       "matchBaseBranches": ["release/v0.16"],
       "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
@@ -50,15 +51,16 @@ repository-agnostic `automerge.json` preset in a separate branch-scoped
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>rancher/renovate-config//rancher-main#release"
-  ],
   "baseBranchPatterns": [
     "main",
     "release/v0.16",
     "release/v0.15"
   ],
   "packageRules": [
+    {
+      "matchBaseBranches": ["$default"],
+      "extends": ["github>rancher/renovate-config//rancher-main#release"]
+    },
     {
       "matchBaseBranches": ["release/v0.16"],
       "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
