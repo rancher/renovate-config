@@ -10,7 +10,7 @@
     },
     {
       "description": "Apply golangci-lint version cap for Go 1.25",
-      "matchPackageNames": ["golangci/golangci-lint"],
+      "matchPackageNames": ["golangci/golangci-lint", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "allowedVersions": "<2.12.0"
     },
     {
@@ -96,7 +96,7 @@
     },
     {
       "description": "Enable golangci-lint updates",
-      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action"],
+      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "matchUpdateTypes": ["major", "minor", "patch", "pin"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": true
