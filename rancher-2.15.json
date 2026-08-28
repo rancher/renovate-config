@@ -106,7 +106,8 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
       "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action"],
       "groupName": "Go toolchain",
-      "separateMajorMinor": false
+      "separateMajorMinor": false,
+      "minimumGroupSize": 3
     },
     {
       "description": "Keep release Go patch updates independent of linter updates",
