@@ -104,7 +104,7 @@
     {
       "description": "Group all Go toolchain update types on release branches",
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
-      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "groupName": "Go toolchain",
       "separateMajorMinor": false,
       "minimumGroupSize": 3
