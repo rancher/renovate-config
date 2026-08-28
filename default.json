@@ -5,6 +5,7 @@
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
+    "enabled": true,
     "minimumReleaseAge": "2 days"
   },
   "baseBranchPatterns": [
