@@ -673,7 +673,7 @@
       "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action"],
       "groupName": "Go toolchain",
       "separateMajorMinor": false,
-      "minimumGroupSize": 2
+      "minimumGroupSize": 3
     },
     {
       "description": "Disable patch Go module directive updates",

@@ -115,16 +115,6 @@
       "groupName": "Go patch updates"
     },
     {
-      "description": "Require golangci-lint updates with Go updates",
-      "matchPackageNames": ["golangci/golangci-lint"],
-      "minimumGroupSize": 3
-    },
-    {
-      "description": "Require golangci-lint action updates with Go and golangci-lint updates",
-      "matchPackageNames": ["golangci/golangci-lint-action"],
-      "minimumGroupSize": 3
-    },
-    {
       "description": "Apply Go version cap to module directives",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
