@@ -671,7 +671,7 @@
     {
       "description": "Require three Go toolchain updates when golangci-lint changes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
-      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action"],
+      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint"],
       "groupName": "Go toolchain",
       "separateMajorMinor": false,
       "minimumGroupSize": 3
