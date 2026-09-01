@@ -498,6 +498,13 @@
   ],
   "packageRules": [
     {
+      "description": "Enable security updates for indirect Go modules",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "enabled": true
+    },
+    {
       "description": "Bump the go directive with minor or major Go updates",
       "matchManagers": ["gomod"],
       "matchDepNames": ["go"],
