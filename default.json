@@ -538,6 +538,15 @@
       "pinDigests": true
     },
     {
+      "description": "Group BCI image updates",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//"
+      ],
+      "groupName": "BCI images"
+    },
+    {
       "description": "Group GitHub Actions updates and require at least three actions",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
