@@ -607,7 +607,7 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
       "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
@@ -640,7 +640,7 @@
         "k8s.io/**"
       ],
       "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
@@ -648,7 +648,7 @@
       "matchManagers": ["gomod"],
       "matchPackageNames": ["sigs.k8s.io/**"],
       "groupName": "Kubernetes SIG dependencies",
-      "commitMessageTopic": "Update Kubernetes SIG dependencies",
+      "commitMessageTopic": "Kubernetes SIG dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
