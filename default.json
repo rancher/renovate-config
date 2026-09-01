@@ -498,6 +498,13 @@
   ],
   "packageRules": [
     {
+      "description": "Enable security updates for indirect Go modules",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "enabled": true
+    },
+    {
       "description": "Bump the go directive with minor or major Go updates",
       "matchManagers": ["gomod"],
       "matchDepNames": ["go"],
@@ -795,6 +802,13 @@
       "description": "Skip digest-only updates for slsactl GitHub Action",
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
+      "enabled": false
+    },
+    {
+      "description": "Disable non-security updates for indirect Go modules",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
     }
   ]
