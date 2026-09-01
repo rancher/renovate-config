@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends":[
-    "mergeConfidence:age-confidence-badges"
+    "mergeConfidence:age-confidence-badges",
+    "security:gomodIndirectSecurityUpdates"
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
