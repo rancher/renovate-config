@@ -4,6 +4,38 @@
   "vulnerabilityAlerts": { "enabled": true },
   "packageRules": [
     {
+      "description": "Apply Go package version cap to all updates",
+      "matchPackageNames": ["golang", "go", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "allowedVersions": "<1.26"
+    },
+    {
+      "description": "Apply golangci-lint version cap for Go 1.25",
+      "matchPackageNames": ["golangci/golangci-lint", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "allowedVersions": "<2.12.0"
+    },
+    {
+      "description": "Apply golangci-lint action version cap for Go 1.25",
+      "matchPackageNames": ["golangci/golangci-lint-action"],
+      "allowedVersions": "<9.3.0"
+    },
+    {
+      "description": "Apply Go datasource version cap to all updates",
+      "matchDatasources": ["golang-version"],
+      "allowedVersions": "<1.26"
+    },
+    {
+      "description": "Apply Kubernetes version caps to all updates",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "allowedVersions": "<1.33"
+    },
+    {
+      "description": "Apply k8s.io dependency version cap to all updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["!k8s.io/kubernetes", "!k8s.io/gengo", "!k8s.io/gengo/**", "!k8s.io/utils", "!k8s.io/utils/**", "!k8s.io/kube-openapi", "!k8s.io/kube-openapi/**", "k8s.io/**"],
+      "allowedVersions": "<0.33"
+    },
+    {
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<15.8",
       "matchPackageNames": [
@@ -32,21 +64,56 @@
     {
       "description": "Enable patch updates for Go packages",
       "matchDepTypes": ["!golang"],
+      "matchUpdateTypes": ["patch"],
       "matchPackageNames": [
         "golang",
         "go",
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "allowedVersions": "<1.26",
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "enabled": true
     },
     {
       "description": "Enable patch updates for golang-version datasource",
       "matchDepTypes": ["!golang"],
       "matchDatasources": ["golang-version"],
-      "allowedVersions": "<1.26",
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "enabled": true
+    },
+    {
+      "description": "Allow Go updates after two days on release branches",
+      "matchDatasources": ["golang-version"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Allow Go image updates after two days on release branches",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["golang", "go", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Enable golangci-lint updates",
+      "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "enabled": true
+    },
+    {
+      "description": "Group all Go toolchain update types on release branches",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "groupName": "Go toolchain",
+      "separateMajorMinor": false,
+      "minimumGroupSize": 3
+    },
+    {
+      "description": "Keep release Go patch updates independent of linter updates",
+      "matchUpdateTypes": ["patch"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "groupName": "Go patch updates"
     },
     {
       "description": "Apply Go version cap to module directives",
@@ -59,10 +126,12 @@
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
-      "allowedVersions": "<1.34",
+      "matchDepTypes": ["!indirect"],
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -70,10 +139,12 @@
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.34",
+      "matchDepTypes": ["!indirect"],
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -90,16 +161,19 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.34",
+      "matchDepTypes": ["!indirect"],
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchDepTypes": ["!indirect"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
     },
