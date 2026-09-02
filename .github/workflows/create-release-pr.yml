@@ -61,5 +61,3 @@ jobs:
             --head "${branch}" \
             --title "Release week $(date -u +%V)" \
             --body "Automatically created PR to merge main into release"
-
-          gh auth logout
