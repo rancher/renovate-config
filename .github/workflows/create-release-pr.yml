@@ -42,6 +42,10 @@ jobs:
             sed -i 's/#main/#release/g' "${config}"
           done < <(git ls-files -z -- '*.json')
 
+          # Requires Renovate >= 44.41.1 or renovate-vault.yml >= v1.0.7.
+          jq 'del(.extends[] | select(. == "security:gomodIndirectSecurityUpdates"))' default.json > default.json.tmp
+          mv default.json.tmp default.json
+
           git ls-files -z -- '*.json' | git add --pathspec-from-file=- --pathspec-file-nul
 
           git switch -c "${branch}"
