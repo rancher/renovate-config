@@ -538,11 +538,13 @@
       "pinDigests": true
     },
     {
-      "description": "Group BCI image updates",
+      "description": "Group non-Go BCI image updates",
       "matchDatasources": ["docker"],
       "matchPackageNames": [
         "/^registry\\.suse\\.com\\/bci\\//",
-        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//"
+        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//",
+        "!registry.suse.com/bci/golang",
+        "!registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "BCI images"
     },
