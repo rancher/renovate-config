@@ -245,6 +245,19 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
+      "description": "Track K3s versions configured in Dockerfile environment variables",
+      "matchStrings": [
+        "ENV CATTLE_K3S_VERSION[=\\s](?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)\\n"
+      ],
+      "depNameTemplate": "rancher/k3s",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
       "matchStrings": [
         "ENV CNI_PLUGINS_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
@@ -674,6 +687,12 @@
       "matchDatasources": ["golang-version"],
       "matchPackageNames": ["go"],
       "groupName": "Go toolchain"
+    },
+    {
+      "description": "Group K3s image and environment updates",
+      "matchManagers": ["custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/k3s"],
+      "groupName": "K3s"
     },
     {
       "description": "Require three Go toolchain updates when golangci-lint changes",
