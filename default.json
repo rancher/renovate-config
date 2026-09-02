@@ -538,6 +538,17 @@
       "pinDigests": true
     },
     {
+      "description": "Group non-Go BCI image updates",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//",
+        "!registry.suse.com/bci/golang",
+        "!registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "groupName": "BCI images"
+    },
+    {
       "description": "Group GitHub Actions updates and require at least three actions",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
