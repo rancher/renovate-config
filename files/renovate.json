@@ -11,7 +11,7 @@
   "packageRules": [
     {
       "matchBaseBranches": ["$default"],
-      "extends": ["github>rancher/renovate-config#main"]
+      "extends": ["github>rancher/renovate-config#release"]
     },
     {
       "description": "Apply Rancher 2.15 update constraints to branch release/v2.15. Adapt baseBranchPatterns and matchBaseBranches if this repository uses different release branch names.",
@@ -19,7 +19,7 @@
         "release/v2.15"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.15#main"
+        "github>rancher/renovate-config//rancher-2.15#release"
       ]
     },
     {
@@ -28,7 +28,7 @@
         "release/v2.14"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.14#main"
+        "github>rancher/renovate-config//rancher-2.14#release"
       ]
     },
     {
@@ -37,7 +37,7 @@
         "release/v2.13"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.13#main"
+        "github>rancher/renovate-config//rancher-2.13#release"
       ]
     },
     {
@@ -46,7 +46,7 @@
         "release/v2.12"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.12#main"
+        "github>rancher/renovate-config//rancher-2.12#release"
       ]
     },
     {
@@ -55,7 +55,7 @@
         "release/v2.11"
       ],
       "extends": [
-        "github>rancher/renovate-config//rancher-2.11#main"
+        "github>rancher/renovate-config//rancher-2.11#release"
       ]
     }
   ]
