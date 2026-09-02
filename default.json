@@ -1,10 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends":[
+  "extends": [
     "mergeConfidence:age-confidence-badges"
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
+    "enabled": true,
     "minimumReleaseAge": "2 days"
   },
   "baseBranchPatterns": [
@@ -96,7 +97,7 @@
       ],
       "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?<lineEnding>[ \\t]*(?:#.*)?(?:\\r?\\n|$))"
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?<lineEnding>[ \\t]*(?:#[^\\r\\n]*)?(?:\\r?\\n|$))"
       ],
       "currentValueTemplate": "latest",
       "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}{{{lineEnding}}}",
@@ -220,6 +221,34 @@
         "GOLANGCI_(LINT|LINT_VER|VERSION)(:|\\?|\\s)*=\\s*(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "[ ]{6}- uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{8}with:\\n(?:[ ]{10}[^\\n]*\\n)*?[ ]{10}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]{8}- uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{10}with:\\n(?:[ ]{12}[^\\n]*\\n)*?[ ]{12}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]{6}- name: [^\\n]*\\n(?:[ ]{8}(?:id|if|env|continue-on-error|timeout-minutes):[^\\n]*\\n)*[ ]{8}uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{8}with:\\n(?:[ ]{10}[^\\n]*\\n)*?[ ]{10}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]{8}- name: [^\\n]*\\n(?:[ ]{10}(?:id|if|env|continue-on-error|timeout-minutes):[^\\n]*\\n)*[ ]{10}uses: golangci/golangci-lint-action@[^\\n]+\\n[ ]{10}with:\\n(?:[ ]{12}[^\\n]*\\n)*?[ ]{12}version:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)",
+        "[ ]+GOLANG_CI_LINT_VERSION:\\s+v(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)"
+      ],
+      "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track K3s versions configured in Dockerfile environment variables",
+      "matchStrings": [
+        "ENV CATTLE_K3S_VERSION[=\\s](?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)\\n"
+      ],
+      "depNameTemplate": "rancher/k3s",
       "datasourceTemplate": "github-releases"
     },
     {
@@ -481,63 +510,135 @@
   ],
   "packageRules": [
     {
-      "description": "Disable automerge for patch and minor updates",
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": false
+      "description": "Enable security updates for indirect Go modules",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
+      ],
+      "enabled": true
     },
     {
-      "description": "Disable automerge for security updates",
-      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": false
+      "description": "Bump the go directive with minor or major Go updates",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepNames": [
+        "go"
+      ],
+      "matchDepTypes": [
+        "golang"
+      ],
+      "matchJsonata": [
+        "updateType = 'minor' or updateType = 'major'"
+      ],
+      "rangeStrategy": "bump",
+      "groupName": "Go toolchain"
+    },
+    {
+      "description": "Prioritize non-GitHub Actions patch and minor updates before major updates",
+      "matchManagers": [
+        "!github-actions"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "prPriority": -1
     },
     {
       "description": "Create a grouped PR to pin GitHub Actions digests",
       "groupName": "Pin GitHub Actions",
-      "matchManagers": ["github-actions"],
-      "matchDepTypes": ["action"],
-      "matchDatasources": ["github-tags", "github-releases"],
-      "matchUpdateTypes": ["pinDigest"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchDepTypes": [
+        "action"
+      ],
+      "matchDatasources": [
+        "github-tags",
+        "github-releases"
+      ],
+      "matchUpdateTypes": [
+        "pinDigest"
+      ],
       "pinDigests": true,
       "minimumReleaseAge": "5 days"
     },
     {
       "description": "Track and pin Rancher CI container images",
-      "matchManagers": ["custom.regex"],
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/rancher/ci-image/**"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/rancher/ci-image/**"
+      ],
       "groupName": "Rancher CI images",
       "pinDigests": true
     },
     {
+      "description": "Group non-Go BCI image updates",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//",
+        "!registry.suse.com/bci/golang",
+        "!registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "groupName": "BCI images"
+    },
+    {
       "description": "Group GitHub Actions updates and require at least three actions",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "GitHub Actions",
       "minimumGroupSize": 3
     },
     {
       "description": "Allow security fixes for GitHub Actions without the group-size threshold",
-      "matchManagers": ["github-actions"],
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion)"
+      ],
       "minimumGroupSize": 1
     },
     {
       "description": "Prioritize vulnerability fix updates across all branches",
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion)"
+      ],
       "prPriority": 100,
       "prCreation": "immediate"
     },
     {
       "description": "Update renovate-vault workflow references after two days without a group-size restriction",
-      "matchManagers": ["github-actions"],
-      "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "rancher/renovate-config",
+        "rancher/renovate-config/**"
+      ],
       "minimumReleaseAge": "2 days",
       "minimumGroupSize": 1
     },
     {
       "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
-      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
+      "matchPackageNames": [
+        "rancherlabs/slsactl",
+        "rancherlabs/slsactl/**"
+      ],
       "minimumReleaseAge": "0 days"
     },
     {
@@ -561,7 +662,9 @@
     },
     {
       "description": "Allow Wrangler and lasso updates to be created after 3 days because they are internal products",
-      "matchManagers": ["gomod"],
+      "matchManagers": [
+        "gomod"
+      ],
       "groupName": "wrangler-lasso",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
@@ -571,7 +674,9 @@
     },
     {
       "description": "Let Rancher teams manage internal product updates",
-      "matchManagers": ["gomod"],
+      "matchManagers": [
+        "gomod"
+      ],
       "matchPackageNames": [
         "github.com/rancher/**",
         "!github.com/rancher/wrangler/v3",
@@ -584,33 +689,56 @@
     },
     {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
-      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
+      "matchManagers": [
+        "gomod",
+        "custom.regex",
+        "dockerfile"
+      ],
+      "matchPackageNames": [
+        "rancher/kubectl",
+        "kubernetes/kubernetes",
+        "k8s.io/kubernetes",
+        "kubectl-amd64",
+        "kubectl-arm64"
+      ],
       "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Group helm version and checksum dependencies in Dockerfiles",
-      "matchManagers": ["custom.regex"],
-      "matchPackageNames": ["helm/helm", "helm-amd64", "helm-arm64"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchPackageNames": [
+        "helm/helm",
+        "helm-amd64",
+        "helm-arm64"
+      ],
       "groupName": "helm",
       "commitMessageTopic": "helm",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Group yq version and checksum dependencies in Dockerfiles",
-      "matchManagers": ["custom.regex"],
-      "matchPackageNames": ["mikefarah/yq", "yq-amd64", "yq-arm64"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchPackageNames": [
+        "mikefarah/yq",
+        "yq-amd64",
+        "yq-arm64"
+      ],
       "groupName": "yq",
       "commitMessageTopic": "yq",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Group other k8s.io and sigs.k8s.io dependencies",
-      "matchManagers": ["gomod"],
+      "description": "Group other k8s.io dependencies",
+      "matchManagers": [
+        "gomod"
+      ],
       "matchPackageNames": [
-        "sigs.k8s.io/**",
         "!k8s.io/kubernetes",
         "!k8s.io/gengo",
         "!k8s.io/gengo/**",
@@ -621,29 +749,27 @@
         "k8s.io/**"
       ],
       "groupName": "Kubernetes dependencies",
-      "commitMessageTopic": "Update Kubernetes dependencies",
+      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Group Go and toolchain minor bumps into one PR",
-      "matchManagers": ["gomod"],
-      "matchUpdateTypes": ["minor"],
-      "matchDatasources": ["golang-version"],
-      "groupName": "Go toolchain"
-    },
-    {
-      "description": "Bump go directive on minor Go releases",
-      "matchManagers": ["gomod"],
-      "matchDepTypes": ["golang"],
-      "matchDatasources": ["golang-version"],
-      "matchJsonata": ["updateType = 'minor'"],
-      "rangeStrategy": "bump",
+      "description": "Group Go and toolchain minor or major bumps into one PR",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDatasources": [
+        "golang-version"
+      ],
       "groupName": "Go toolchain"
     },
     {
       "description": "Group Go Docker image updates with toolchain updates",
-      "matchManagers": ["dockerfile"],
-      "matchDatasources": ["docker"],
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
       "matchPackageNames": [
         "golang",
         "go",
@@ -654,38 +780,61 @@
     },
     {
       "description": "Group Go workflow toolchain updates with Go updates",
-      "matchManagers": ["custom.regex"],
-      "matchDatasources": ["golang-version"],
-      "matchPackageNames": ["go"],
-      "groupName": "Go toolchain"
-    },
-    {
-      "description": "Disable patch Go module directive updates",
-      "matchManagers": ["gomod"],
-      "matchDepTypes": ["golang"],
-      "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["patch"],
-      "enabled": false
-    },
-    {
-      "description": "Allow Go runtime updates after 2 days to get security releases faster",
+      "matchManagers": [
+        "custom.regex"
+      ],
       "matchDatasources": [
         "golang-version"
       ],
-      "minimumReleaseAge": "2 days"
+      "matchPackageNames": [
+        "go"
+      ],
+      "groupName": "Go toolchain"
     },
     {
-      "description": "Allow Go Docker image updates after 2 days to get security releases faster",
-      "matchDatasources": [
-        "docker"
+      "description": "Group K3s image and environment updates",
+      "matchManagers": [
+        "custom.regex",
+        "dockerfile"
       ],
       "matchPackageNames": [
-        "golang",
-        "go",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang"
+        "rancher/k3s"
       ],
-      "minimumReleaseAge": "2 days"
+      "groupName": "K3s"
+    },
+    {
+      "description": "Require three Go toolchain updates when golangci-lint changes",
+      "matchManagers": [
+        "gomod",
+        "custom.regex",
+        "dockerfile",
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "golangci/golangci-lint",
+        "golangci/golangci-lint-action",
+        "github.com/golangci/golangci-lint",
+        "github.com/golangci/golangci-lint/v2"
+      ],
+      "groupName": "Go toolchain",
+      "separateMajorMinor": false,
+      "minimumGroupSize": 3
+    },
+    {
+      "description": "Disable patch Go module directive updates",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "golang"
+      ],
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false
     },
     {
       "matchPackageNames": [
@@ -727,6 +876,9 @@
         "golang.org/x/crypto/x509roots/fallback",
         "golang.org/x/exp"
       ],
+      "matchDepTypes": [
+        "!indirect"
+      ],
       "matchUpdateTypes": [
         "patch",
         "digest"
@@ -745,51 +897,82 @@
     },
     {
       "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
-      "matchPackageNames": ["rancherlabs/slsactl"],
+      "matchPackageNames": [
+        "rancherlabs/slsactl"
+      ],
       "groupName": "slsactl",
       "minimumGroupSize": 2
     },
     {
       "description": "Group slsactl GitHub Action (with digest)",
-      "matchPackageNames": ["rancherlabs/slsactl/**"],
+      "matchPackageNames": [
+        "rancherlabs/slsactl/**"
+      ],
       "groupName": "slsactl",
-      "matchUpdateTypes": ["pinDigest"],
+      "matchUpdateTypes": [
+        "pinDigest"
+      ],
       "minimumGroupSize": 2
     },
     {
       "description": "Group ginkgo and gomega together as ginkgo bumps gomega",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["github.com/onsi/ginkgo/v2", "github.com/onsi/gomega"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "github.com/onsi/ginkgo/v2",
+        "github.com/onsi/gomega"
+      ],
       "groupName": "ginkgo and gomega"
     },
     {
       "description": "Group github.com/aws/ packages together",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["github.com/aws/**"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "github.com/aws/**"
+      ],
       "groupName": "AWS dependencies"
     },
     {
       "description": "Group github.com/Azure/ packages together",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["github.com/Azure/**"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "github.com/Azure/**"
+      ],
       "groupName": "Azure dependencies"
     },
     {
       "description": "Group go.opentelemetry.io/ packages together",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["go.opentelemetry.io/**"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "go.opentelemetry.io/**"
+      ],
       "groupName": "OpenTelemetry dependencies"
     },
     {
       "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["golang.org/x/**"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "golang.org/x/**"
+      ],
       "groupName": "golang.org/x dependencies"
     },
     {
       "description": "Skip digest-only updates for slsactl GitHub Action",
-      "matchPackageNames": ["rancherlabs/slsactl/**"],
-      "matchUpdateTypes": ["digest"],
+      "matchPackageNames": [
+        "rancherlabs/slsactl/**"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
       "enabled": false
     }
   ]
