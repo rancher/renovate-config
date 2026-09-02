@@ -31,12 +31,10 @@ jobs:
 
           git fetch origin release:release
 
-          if [[ $(git merge-base main release) == $(git rev-parse main) ]]; then
-              echo "No changes found in main, skip PR creation"
-              exit 0
-          fi
-
           branch="release-candidate-${GITHUB_RUN_ID}"
+
+          git switch -c "${branch}" release
+          git read-tree -u -m main
 
           while IFS= read -r -d '' config; do
             sed -i 's/#main/#release/g' "${config}"
@@ -46,9 +44,13 @@ jobs:
           jq 'del(.extends[] | select(. == "security:gomodIndirectSecurityUpdates"))' default.json > default.json.tmp
           mv default.json.tmp default.json
 
-          git ls-files -z -- '*.json' | git add --pathspec-from-file=- --pathspec-file-nul
+          git add --all
 
-          git switch -c "${branch}"
+          if git diff --cached --quiet; then
+            echo "No configuration changes found in main, skip PR creation"
+            exit 0
+          fi
+
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -m "Promote main configuration to release"
