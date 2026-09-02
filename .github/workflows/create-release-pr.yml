@@ -40,7 +40,7 @@ jobs:
             sed -i 's/#main/#release/g' "${config}"
           done < <(git ls-files -z -- '*.json')
 
-          # Requires Renovate >= 44.41.1 or renovate-vault.yml >= v1.0.7.
+          # `security:gomodIndirectSecurityUpdates` requires Renovate >= 44.41.1 (or renovate-vault.yml >= v1.0.7); strip it when promoting to `release` for backwards compatibility.
           jq 'del(.extends[] | select(. == "security:gomodIndirectSecurityUpdates"))' default.json > default.json.tmp
           mv default.json.tmp default.json
 
