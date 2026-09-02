@@ -651,14 +651,6 @@
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Group sigs.k8s.io dependencies separately from core Kubernetes dependencies",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": ["sigs.k8s.io/**"],
-      "groupName": "Kubernetes SIG dependencies",
-      "commitMessageTopic": "Kubernetes SIG dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
-    },
-    {
       "description": "Group Go and toolchain minor or major bumps into one PR",
       "matchManagers": ["gomod"],
       "matchDatasources": ["golang-version"],
