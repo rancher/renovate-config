@@ -11,7 +11,7 @@ This repository contains the centralized Renovate preset (`default.json`) and th
 
 For easier alignment of versions across projects around the Rancher Manager
 ecosystem, a few presets were created that enforce version constraints for each
-Rancher minor version.
+Rancher minor version. These presets mostly restrict bumps to security-related updates, with the exception of patch-level bumps for Go and Kubernetes.
 
 The presets are available at the root of this repository and follow the naming
 convention: `rancher-<version>.json`. To use these presets, a project can configure
@@ -21,7 +21,7 @@ their `renovate.json` as per below:
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "baseBranchPatterns": [
-    "main",
+    "$default",
     "release/v0.16",
     "release/v0.15"
   ],
@@ -42,17 +42,31 @@ their `renovate.json` as per below:
 }
 ```
 
+The `rancher-main.json` preset contains additional configuration for the
+`rancher/rancher` main branch and its subprojects, like providing Go and Kubernetes version restrictions, but not much more than that.
+Other repositories can skip the following `$default` package rule that extends `rancher-main`:
+
+```json
+{
+  "matchBaseBranches": ["$default"],
+  "extends": ["github>rancher/renovate-config//rancher-main#release"]
+}
+```
+
+Branches that are part of `baseBranchPatterns` and do not have a dedicated `packageRule` will get almost all updates Renovate provides, including major bumps.
+That is also true for `rancher-main` besides the restrictions mentioned above.
+
 ## Opting into automerge
 
-Projects can opt into automerging patch and minor updates by extending the
-repository-agnostic `automerge.json` preset in a separate branch-scoped
+Projects can opt into automerging eligible patch and minor updates by extending
+the repository-agnostic `automerge.json` preset in a separate branch-scoped
 `extends` entry after the release preset entries:
 
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "baseBranchPatterns": [
-    "main",
+    "$default",
     "release/v0.16",
     "release/v0.15"
   ],
@@ -71,7 +85,7 @@ repository-agnostic `automerge.json` preset in a separate branch-scoped
     },
     {
       "matchBaseBranches": [
-        "main",
+        "$default",
         "release/v0.16",
         "release/v0.15"
       ],
@@ -84,6 +98,50 @@ repository-agnostic `automerge.json` preset in a separate branch-scoped
 Keep the release preset entries and automerge entry separate because Renovate
 flattens nested package rules. The preset does not enable updates or change
 allowed versions.
+
+To enable security automerge only without using the shared preset, use this
+branch-scoped configuration. It includes the release preset entries before the
+security package rule:
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranchPatterns": [
+    "$default",
+    "release/v0.16",
+    "release/v0.15"
+  ],
+  "packageRules": [
+    {
+      "matchBaseBranches": ["$default"],
+      "extends": ["github>rancher/renovate-config//rancher-main#release"]
+    },
+    {
+      "matchBaseBranches": ["release/v0.16"],
+      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
+    },
+    {
+      "matchBaseBranches": ["release/v0.15"],
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
+    },
+    {
+      "matchBaseBranches": [
+        "$default",
+        "release/v0.16",
+        "release/v0.15"
+      ],
+      "description": "Automerge eligible security updates",
+      "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
+      ],
+      "matchUpdateTypes": ["patch", "minor"],
+      "enabled": true,
+      "automerge": true
+    }
+  ]
+}
+```
 
 If your repository requires an approving review before merging, add the
 [`auto-approve-bot-prs.yml`](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml)
