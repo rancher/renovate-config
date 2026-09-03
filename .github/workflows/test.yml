@@ -10,11 +10,18 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      # Release configs must remain compatible with older consumer Renovate versions.
+      # So Validate release prs against an older static Renovate version.
+      RENOVATE_TAG: ${{ github.base_ref == 'release' && '43.225.0' || 'full' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
-    - run: make validate
+    - name: Validate configurations with Renovate ${{ env.RENOVATE_TAG }}
+      run: |
+        echo "Renovate tag: ${RENOVATE_TAG}" >> "$GITHUB_STEP_SUMMARY"
+        make validate
 
   call-workflow-push:
     if: github.ref == 'refs/heads/main'
