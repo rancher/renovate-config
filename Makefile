@@ -1,5 +1,6 @@
 TMP_DIR := $(shell mkdir -p build/tmp && realpath build/tmp)
-RENOVATE_IMG := renovate/renovate:full
+RENOVATE_TAG ?= full
+RENOVATE_IMG := renovate/renovate:$(RENOVATE_TAG)
 RENOVATE_CONFIGS := $(shell find . .github files -maxdepth 1 -name '*.json' 2>/dev/null)
 
 VALIDATE_FILE := docker run --rm -v $(shell pwd):/repo:Z -e LOG_LEVEL=debug \

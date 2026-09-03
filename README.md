@@ -20,24 +20,78 @@ their `renovate.json` as per below:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>rancher/renovate-config//rancher-main#release"
-  ],
   "baseBranchPatterns": [
-    "main"
+    "main",
+    "release/v0.16",
+    "release/v0.15"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["releases/v0.7.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
+      "matchBaseBranches": ["$default"],
+      "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
-      "matchBaseBranches": ["releases/v0.6.x"],
-      "extends": ["github>rancher/renovate-config//rancher-2.13#release"]
+      "matchBaseBranches": ["release/v0.16"],
+      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
+    },
+    {
+      "matchBaseBranches": ["release/v0.15"],
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
     }
   ]
 }
 ```
+
+## Opting into automerge
+
+Projects can opt into automerging patch and minor updates by extending the
+repository-agnostic `automerge.json` preset in a separate branch-scoped
+`extends` entry after the release preset entries:
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranchPatterns": [
+    "main",
+    "release/v0.16",
+    "release/v0.15"
+  ],
+  "packageRules": [
+    {
+      "matchBaseBranches": ["$default"],
+      "extends": ["github>rancher/renovate-config//rancher-main#release"]
+    },
+    {
+      "matchBaseBranches": ["release/v0.16"],
+      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
+    },
+    {
+      "matchBaseBranches": ["release/v0.15"],
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
+    },
+    {
+      "matchBaseBranches": [
+        "main",
+        "release/v0.16",
+        "release/v0.15"
+      ],
+      "extends": ["github>rancher/renovate-config//automerge#release"]
+    }
+  ]
+}
+```
+
+Keep the release preset entries and automerge entry separate because Renovate
+flattens nested package rules. The preset does not enable updates or change
+allowed versions.
+
+If your repository requires an approving review before merging, add the
+[`auto-approve-bot-prs.yml`](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml)
+workflow to approve eligible Renovate pull requests automatically. The
+workflow approves a pull request only when it has an auto-merge
+request, comes from the configured Renovate bot in the same repository, uses a
+`renovate/*` head branch, includes `**Automerge**: Enabled` in its body, has
+met the configured minimum working-day age, and all checks pass.
 
 ## Testing new changes
 
