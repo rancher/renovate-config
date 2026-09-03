@@ -1,7 +1,6 @@
 name: Tests
 
 on:
-  push:
   pull_request:
 
 permissions:
@@ -25,8 +24,7 @@ jobs:
           echo "Renovate tag: ${RENOVATE_TAG}" >> "$GITHUB_STEP_SUMMARY"
           make validate
 
-  call-workflow-push:
-    if: github.ref == 'refs/heads/main'
+  renovate-dry-run:
     permissions:
       contents: read
       id-token: write
@@ -34,24 +32,8 @@ jobs:
     uses: ./.github/workflows/renovate-vault.yml
     with:
       logLevel: 'debug'
-      overrideSchedule: "{'schedule':null}'"
-      renovateConfig: ".github/renovate.json"
-      dryRun: 'full'
-
-  # If the PR comes from a fork, the token will be a read-only and without
-  # `id-token`, so we pass (override) this token to allow properly testing the
-  # PR and skipping the Vault step.
-  call-workflow-pr:
-    if: github.event.pull_request.head.repo.fork
-    permissions:
-      contents: read
-      id-token: write
-
-    uses: ./.github/workflows/renovate-vault.yml
-    with:
-      logLevel: 'debug'
-      overrideSchedule: "{'schedule':null}'"
       renovateConfig: ".github/renovate.json"
       dryRun: 'full'
     secrets:
-      override-token: ${{ secrets.GITHUB_TOKEN }}
+      # Fork PRs cannot access Vault/App credentials, so use read-only token.
+      override-token: ${{ github.event.pull_request.head.repo.fork && secrets.GITHUB_TOKEN || '' }}
