@@ -568,18 +568,6 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Allow security fixes for GitHub Actions without the group-size threshold",
-      "matchManagers": ["github-actions"],
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
-      "minimumGroupSize": 1
-    },
-    {
-      "description": "Prioritize vulnerability fix updates across all branches",
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
-      "prPriority": 100,
-      "prCreation": "immediate"
-    },
-    {
       "description": "Update renovate-vault workflow references after two days without a group-size restriction",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
@@ -826,6 +814,11 @@
       "matchPackageNames": ["rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["digest"],
       "enabled": false
+    },
+    {
+      "description": "Ignore group-size requirements for security updates",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "minimumGroupSize": 1
     }
   ]
 }
