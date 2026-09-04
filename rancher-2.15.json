@@ -126,7 +126,6 @@
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
-      "matchDepTypes": ["!indirect"],
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
@@ -139,7 +138,6 @@
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "matchDepTypes": ["!indirect"],
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
@@ -161,7 +159,6 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "matchDepTypes": ["!indirect"],
       "enabled": true,
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 15,
@@ -173,7 +170,6 @@
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
-      "matchDepTypes": ["!indirect"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
     },
