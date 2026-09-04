@@ -1,0 +1,164 @@
+name: Deploy Renovate
+on:
+  workflow_dispatch:
+    inputs:
+      deployRepository:
+        description: "The repository to deploy Renovate to"
+        required: true
+        default: "rancher/"
+        type: string
+      removeDependabot:
+        description: "Remove existing Dependabot configuration"
+        required: false
+        default: true
+        type: boolean
+      includeReleaseBranches:
+        description: "Include release branches in Renovate configuration"
+        required: false
+        default: true
+        type: boolean
+permissions:
+  id-token: write
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    outputs:
+      owner: ${{ steps.set_values.outputs.owner }}
+      repositories: ${{ steps.set_values.outputs.repositories }}
+    steps:
+      - name: Set owner and repositories values
+        id: set_values
+        env:
+          DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
+        run: |
+          owner=$(echo "${DEPLOY_REPOSITORY}" | cut -d '/' -f1)
+          repositories=$(echo "${DEPLOY_REPOSITORY}" | cut -d '/' -f2)
+          echo "owner=$owner" >> "$GITHUB_OUTPUT"
+          echo "repositories=$repositories" >> "$GITHUB_OUTPUT"
+      - name: Load Secrets from Vault
+        uses: rancher-eio/read-vault-secrets@7282bf97898cd1c16c89f837e0bb442e6d384c89 # main
+        with:
+          secrets: |
+            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
+            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
+      - name: Get token
+        id: get_token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+        with:
+          app-id: ${{ env.APP_ID }}
+          private-key: ${{ env.PRIVATE_KEY }}
+          owner: ${{ steps.set_values.outputs.owner }}
+          repositories: ${{ steps.set_values.outputs.repositories }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          token: '${{ steps.get_token.outputs.token }}'
+          path: main
+          persist-credentials: false
+      - name: Checkout deploy repo
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          repository: '${{ github.event.inputs.deployRepository }}'
+          token: '${{ steps.get_token.outputs.token }}'
+          path: deploy-repo
+          persist-credentials: false
+      - name: Create branch, commit and PR
+        env:
+          DEPLOY_REPOSITORY: '${{ github.event.inputs.deployRepository }}'
+          REMOVE_DEPENDABOT: '${{ inputs.removeDependabot }}'
+          INCLUDE_RELEASE_BRANCHES: '${{ inputs.includeReleaseBranches }}'
+          GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
+        run: |
+          BRANCH="deploy-renovate-$(date +%Y-%m-%d-%H-%M-%S)"
+          cd deploy-repo
+
+          DEFAULT_BRANCH=$(gh api "repos/${DEPLOY_REPOSITORY}" --jq '.default_branch')
+          PARENT_SHA=$(gh api "repos/${DEPLOY_REPOSITORY}/git/ref/heads/${DEFAULT_BRANCH}" --jq '.object.sha')
+          BASE_TREE_SHA=$(gh api "repos/${DEPLOY_REPOSITORY}/git/commits/${PARENT_SHA}" --jq '.tree.sha')
+
+          mkdir -p .github/workflows
+          TEMP_CONFIG=$(mktemp)
+          jq \
+            --argjson include_release_branches "${INCLUDE_RELEASE_BRANCHES}" \
+            'if $include_release_branches then . else
+              .baseBranchPatterns |= map(select(startswith("release/") | not)) |
+              .packageRules = ((.packageRules // []) | map(select((.matchBaseBranches // []) | all(startswith("release/") | not))))
+            end |
+            if (.packageRules | length) == 0 then del(.packageRules) else . end' \
+            ../main/files/renovate.json > "${TEMP_CONFIG}"
+
+          ADD_RENOVATE_JSON=false
+          if [ ! -f .github/renovate.json ]; then
+            mv "${TEMP_CONFIG}" .github/renovate.json
+            ADD_RENOVATE_JSON=true
+          fi
+
+          STATIC_SHA="f62bbe9fec9bef07a9f15addc2f9c6ea278ac736"
+          STATIC_TAG="v1.0.0"
+          LATEST_TAG=$(gh api repos/rancher/renovate-config/tags \
+            --jq '[.[].name | select(test("^v[0-9]+\\.[0-9]+\\.[0-9]+$"))] | first' 2>/dev/null || true)
+          if [ -n "${LATEST_TAG}" ] && [ "${LATEST_TAG}" != "null" ]; then
+            TAG_OBJ=$(gh api "repos/rancher/renovate-config/git/refs/tags/${LATEST_TAG}" 2>/dev/null || true)
+            TAG_SHA=$(echo "${TAG_OBJ}" | jq -r '.object.sha // empty')
+            TAG_TYPE=$(echo "${TAG_OBJ}" | jq -r '.object.type // empty')
+            if [ "${TAG_TYPE}" = "tag" ]; then
+              TAG_SHA=$(gh api "repos/rancher/renovate-config/git/tags/${TAG_SHA}" \
+                --jq '.object.sha // empty' 2>/dev/null || true)
+            fi
+          fi
+          if [ -z "${TAG_SHA}" ] || [ "${TAG_SHA}" = "null" ]; then
+            TAG_SHA="${STATIC_SHA}"
+            LATEST_TAG="${STATIC_TAG}"
+          fi
+          cp ../main/files/renovate-vault.yml .github/workflows/renovate-vault.yml
+          sed -i -E "s~/.github/workflows/renovate-vault.yml@(release|[a-f0-9]{40})( # .*)?~/.github/workflows/renovate-vault.yml@${TAG_SHA} # ${LATEST_TAG}~" \
+            .github/workflows/renovate-vault.yml
+
+          # Construct Git Tree Array
+          TREE_ITEMS="[]"
+
+          if [ "${ADD_RENOVATE_JSON}" = true ]; then
+            JSON_B64=$(base64 -w0 .github/renovate.json)
+            JSON_BLOB=$(gh api "repos/${DEPLOY_REPOSITORY}/git/blobs" -X POST -f content="$JSON_B64" -f encoding="base64" --jq '.sha')
+            TREE_ITEMS=$(echo "$TREE_ITEMS" | jq --arg sha "$JSON_BLOB" '. + [{"path": ".github/renovate.json", "mode": "100644", "type": "blob", "sha": $sha}]')
+          fi
+
+          VAULT_B64=$(base64 -w0 .github/workflows/renovate-vault.yml)
+          VAULT_BLOB=$(gh api "repos/${DEPLOY_REPOSITORY}/git/blobs" -X POST -f content="$VAULT_B64" -f encoding="base64" --jq '.sha')
+          TREE_ITEMS=$(echo "$TREE_ITEMS" | jq --arg sha "$VAULT_BLOB" '. + [{"path": ".github/workflows/renovate-vault.yml", "mode": "100644", "type": "blob", "sha": $sha}]')
+
+          FILES_TO_REMOVE=".github/workflows/renovate.yml"
+          if [[ "${REMOVE_DEPENDABOT}" == "true" ]]; then
+            FILES_TO_REMOVE=".github/dependabot.yaml .github/dependabot.yml ${FILES_TO_REMOVE}"
+          fi
+          for FILE_TO_REMOVE in $FILES_TO_REMOVE; do
+            if [ -f "${FILE_TO_REMOVE}" ]; then
+              TREE_ITEMS=$(echo "$TREE_ITEMS" | jq --arg path "$FILE_TO_REMOVE" '. + [{"path": $path, "mode": "100644", "type": "blob", "sha": null}]')
+            fi
+          done
+
+          # Create Tree, Commit, Ref and PR via GitHub API
+          NEW_TREE_SHA=$(gh api "repos/${DEPLOY_REPOSITORY}/git/trees" -X POST \
+            -f base_tree="${BASE_TREE_SHA}" \
+            --input <(jq -n --argjson tree "$TREE_ITEMS" '{tree: $tree}') --jq '.sha')
+
+          NEW_COMMIT_SHA=$(gh api "repos/${DEPLOY_REPOSITORY}/git/commits" -X POST \
+            -f message="Add initial Renovate configuration" \
+            -f tree="${NEW_TREE_SHA}" \
+            -f "parents[]=${PARENT_SHA}" --jq '.sha')
+
+          gh api "repos/${DEPLOY_REPOSITORY}/git/refs" -X POST \
+            -f ref="refs/heads/${BRANCH}" \
+            -f sha="${NEW_COMMIT_SHA}"
+
+          CREATED_PR=$(gh pr create -R "${DEPLOY_REPOSITORY}" --title "Add initial Renovate configuration" --body "Add initial Renovate configuration, includes Renovate configuration file and GitHub Actions workflow. This automatically created PR has been initiated by @${GITHUB_ACTOR}" --base "${DEFAULT_BRANCH}" --head "${BRANCH}")
+          {
+            echo "Inputs:"
+            echo "- deployRepository: [${DEPLOY_REPOSITORY}](https://github.com/${DEPLOY_REPOSITORY})"
+            echo ""
+            echo "Created PR: ${CREATED_PR}"
+          } >> "$GITHUB_STEP_SUMMARY"
