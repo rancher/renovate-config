@@ -99,9 +99,21 @@ Keep the release preset entries and automerge entry separate because Renovate
 flattens nested package rules. The preset does not enable updates or change
 allowed versions.
 
+### GitHub requirements for automerge
+
+Enforce successful CI status with branch protection rules so GitHub automerge
+waits for CI to complete successfully before merging.
+
+- Enable auto-merge for the repository in GitHub.
+- Add the `renovate-rancher` app user to `Restrict who can push to matching branches` in `Branch protection rules` for the main and release branches.
+- Require an approving review, either from a [GitHub Action](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml) or by not requiring approvals.
+
+The [GitHub Action](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml) approves a pull request only when it has an auto-merge request, comes from the configured Renovate bot in the same repository, uses a `renovate/*` head branch, includes `**Automerge**: Enabled` in its body, has met the configured minimum working-day age, and all checks pass.
+
+### Fine-grained automerge configuration
+
 To enable security automerge only without using the shared preset, use this
-branch-scoped configuration. It includes the release preset entries before the
-security package rule:
+branch-scoped configuration:
 
 ```json
 {
@@ -136,20 +148,11 @@ security package rule:
         "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
       ],
       "matchUpdateTypes": ["patch", "minor"],
-      "enabled": true,
       "automerge": true
     }
   ]
 }
 ```
-
-If your repository requires an approving review before merging, add the
-[`auto-approve-bot-prs.yml`](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml)
-workflow to approve eligible Renovate pull requests automatically. The
-workflow approves a pull request only when it has an auto-merge
-request, comes from the configured Renovate bot in the same repository, uses a
-`renovate/*` head branch, includes `**Automerge**: Enabled` in its body, has
-met the configured minimum working-day age, and all checks pass.
 
 ## Testing new changes
 
