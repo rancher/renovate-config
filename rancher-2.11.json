@@ -72,7 +72,6 @@
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
       "enabled": true
     },
     {
@@ -80,7 +79,6 @@
       "matchDepTypes": ["!golang"],
       "matchDatasources": ["golang-version"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
       "enabled": true
     },
     {
@@ -127,24 +125,14 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
       "enabled": true,
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
     {
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
       "enabled": true,
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
     {
       "description": "Enable patch updates for k8s.io dependencies",
@@ -160,12 +148,7 @@
         "k8s.io/**"
       ],
       "enabled": true,
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",

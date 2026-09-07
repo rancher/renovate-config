@@ -43,11 +43,7 @@
         "kubectl-amd64",
         "kubectl-arm64"
       ],
-      "allowedVersions": "<1.38.0",
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "allowedVersions": "<1.38.0"
     },
     {
       "matchManagers": [
@@ -63,11 +59,7 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.38.0",
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "allowedVersions": "<0.38.0"
     },
     {
       "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
