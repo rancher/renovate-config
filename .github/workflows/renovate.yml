@@ -34,7 +34,7 @@ env:
   # Git commit author used, must match GitHub App
   RENOVATE_GIT_AUTHOR: "renovate-rancher <119870437+renovate-rancher[bot]@users.noreply.github.com>"
   # Use GitHub API to create commits (this allows for signed commits from GitHub App)
-  RENOVATE_PLATFORM_COMMIT: "true"
+  RENOVATE_PLATFORM_COMMIT: "enabled"
   # Override schedule if set
   RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
   # Override loglevel if set
