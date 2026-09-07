@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "release/v2.15",
     "release/v2.14",
     "release/v2.13",
@@ -10,7 +10,7 @@
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["$default"],
+      "matchBaseBranches": ["main"],
       "extends": ["github>rancher/renovate-config#release"]
     },
     {

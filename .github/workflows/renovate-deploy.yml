@@ -89,7 +89,11 @@ jobs:
           TEMP_CONFIG=$(mktemp)
 
           jq --arg default_branch "${DEFAULT_BRANCH}" \
-            '(.. | strings | select(. == "$default")) |= $default_branch' \
+            '.baseBranchPatterns |= map(if . == "main" then $default_branch else . end) |
+             .packageRules |= map(if (.matchBaseBranches // []) | any(. == "main")
+               then .matchBaseBranches |= map(if . == "main" then $default_branch else . end)
+               else .
+               end)' \
             ../main/files/renovate.json > "${TEMP_CONFIG}"
 
           if [[ "${INCLUDE_RELEASE_BRANCHES}" != "true" ]]; then
