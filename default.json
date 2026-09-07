@@ -673,6 +673,20 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Prioritize Go toolchain updates",
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang",
+        "golangci/golangci-lint",
+        "golangci/golangci-lint-action",
+        "github.com/golangci/golangci-lint",
+        "github.com/golangci/golangci-lint/v2"
+      ],
+      "prPriority": 50
+    },
+    {
       "description": "Group Go Docker image updates with toolchain updates",
       "matchManagers": ["dockerfile"],
       "matchDatasources": ["docker"],

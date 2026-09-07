@@ -72,7 +72,6 @@
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
       "enabled": true
     },
     {
@@ -80,7 +79,6 @@
       "matchDepTypes": ["!golang"],
       "matchDatasources": ["golang-version"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
       "enabled": true
     },
     {
