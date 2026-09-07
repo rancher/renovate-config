@@ -626,7 +626,7 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
       "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
+      "minimumGroupSize": 1,
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
@@ -661,7 +661,7 @@
         "k8s.io/**"
       ],
       "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
+      "minimumGroupSize": 7,
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
