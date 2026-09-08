@@ -56,7 +56,7 @@ jobs:
       renovateConfig: ${{ github.event.inputs.renovateConfig || '.github/renovate.json' }}
       minimumReleaseAge: ${{ github.event.inputs.minimumReleaseAge || 'null' }}
     secrets:
-      # Optional: RENOVATE_FORK_GH_TOKEN allows this action to run on repository forks where 
-      # Vault/App token generation is unavailable. Defaulting to '' allows the caller 
+      # Optional: RENOVATE_FORK_GH_TOKEN allows this action to run on repository forks where
+      # Vault/App token generation is unavailable. Defaulting to '' allows the caller
       # to fall back gracefully on standard runs without failing secret evaluation.
       override-token: "${{ secrets.RENOVATE_FORK_GH_TOKEN || '' }}"
