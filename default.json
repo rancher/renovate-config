@@ -662,7 +662,6 @@
       ],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 5,
-      "recreateWhen": "always",
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
