@@ -128,6 +128,8 @@ jobs:
             LATEST_TAG="${STATIC_TAG}"
           fi
           cp ../main/files/renovate-vault.yml .github/workflows/renovate-vault.yml
+          sed -i -E 's/[[:blank:]]+$//' .github/workflows/renovate-vault.yml
+          sed -i -E 's/ # zizmor: ignore\[unpinned-uses\].*$//' .github/workflows/renovate-vault.yml
           sed -i -E "s~/.github/workflows/renovate-vault.yml@(release|[a-f0-9]{40})( # .*)?~/.github/workflows/renovate-vault.yml@${TAG_SHA} # ${LATEST_TAG}~" \
             .github/workflows/renovate-vault.yml
 

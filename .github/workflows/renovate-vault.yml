@@ -71,16 +71,19 @@ env:
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 jobs:
   renovate:
+    permissions:
+      contents: read
+      id-token: write # Required for Vault OIDC authentication.
     runs-on: ${{fromJSON(inputs.runner)}}
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
       - name: Validate and printout config
         run: jq -e . "${RENOVATE_CONFIG_FILE}"
       - name: Check token
@@ -108,6 +111,9 @@ jobs:
         with:
           app-id: ${{ env.APP_ID }}
           private-key: ${{ env.PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
       - name: Assemble RENOVATE_FORCE
         env:
           OVERRIDE_SCHEDULE: ${{ inputs.overrideSchedule }}
