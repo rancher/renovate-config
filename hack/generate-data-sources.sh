@@ -102,16 +102,23 @@ rancher_archive_fetch_data() {
   local repository="$2"
   local asset_name="$3"
   local versions
+  local entries_file
+  entries_file=$(mktemp)
+  trap 'rm -f "${entries_file}"' RETURN
   versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
-  local version_json='{ "releases": ['
   while IFS=$'\t' read -r version created_at; do
-    checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${asset_name}" | sha256sum | awk '{print $1}')
-    version_json+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/${repository}/releases/tag/${version}\"},"
+    if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${asset_name}" | sha256sum | awk '{print $1}'); then
+      continue
+    fi
+    if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      continue
+    fi
+    jq -cn --arg version "${version}" --arg checksum "${checksum}" --arg created_at "${created_at}" --arg repository "${repository}" \
+      '{version: $version, digest: $checksum, releaseTimestamp: $created_at, changelogUrl: ("https://github.com/" + $repository + "/releases/tag/" + $version)}' >>"${entries_file}"
   done <<<"${versions}"
-  version_json="${version_json%,}] }"
-  echo "${version_json}" >"${DATA_DIR}/${package_name}.json"
+  jq -s '{releases: .}' "${entries_file}" >"${DATA_DIR}/${package_name}.json"
 }
 
 rancher_checksum_fetch_data() {
@@ -120,20 +127,24 @@ rancher_checksum_fetch_data() {
   local checksum_file="$3"
   local asset_name="$4"
   local versions
+  local entries_file
+  entries_file=$(mktemp)
+  trap 'rm -f "${entries_file}"' RETURN
   versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
-  local version_json='{ "releases": ['
   while IFS=$'\t' read -r version created_at; do
-    checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${checksum_file}" |
-      awk -v asset_name="${asset_name}" '$0 ~ " " asset_name "$" {print $1; exit}')
+    if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${checksum_file}" |
+      awk -v asset_name="${asset_name}" '$0 ~ " " asset_name "$" {print $1; exit}'); then
+      continue
+    fi
     if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
       continue
     fi
-    version_json+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/${repository}/releases/tag/${version}\"},"
+    jq -cn --arg version "${version}" --arg checksum "${checksum}" --arg created_at "${created_at}" --arg repository "${repository}" \
+      '{version: $version, digest: $checksum, releaseTimestamp: $created_at, changelogUrl: ("https://github.com/" + $repository + "/releases/tag/" + $version)}' >>"${entries_file}"
   done <<<"${versions}"
-  version_json="${version_json%,}] }"
-  echo "${version_json}" >"${DATA_DIR}/${package_name}.json"
+  jq -s '{releases: .}' "${entries_file}" >"${DATA_DIR}/${package_name}.json"
 }
 
 rancher_fetch_data() {
@@ -254,7 +265,7 @@ main() {
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "YQ_CHECKSUM_amd64" -e "YQ_CHECKSUM_arm64" ./; then
     yq_fetch_data
   fi
-  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git -e "CATTLE_MACHINE_CHECKSUM" -e "CATTLE_WINS_AGENT_CHECKSUM" -e "CATTLE_SYSTEM_AGENT_CHECKSUM" ./; then
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "CATTLE_MACHINE_CHECKSUM" -e "CATTLE_WINS_AGENT_CHECKSUM" -e "CATTLE_SYSTEM_AGENT_CHECKSUM" ./; then
     rancher_fetch_data
   fi
 }
