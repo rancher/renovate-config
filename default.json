@@ -287,7 +287,7 @@
       ],
       "description": "Track Rancher Machine amd64 checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "packageNameTemplate": "machine-amd64",
       "depNameTemplate": "rancher/machine",
@@ -301,7 +301,7 @@
       ],
       "description": "Track Rancher Machine arm64 checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "packageNameTemplate": "machine-arm64",
       "depNameTemplate": "rancher/machine",
@@ -340,7 +340,9 @@
       ],
       "description": "Track Wins checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_WINS_AGENT_CHECKSUM(?:_(?<artifact>install|uninstall))?(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_WINS_AGENT_CHECKSUM(?<artifact>)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_WINS_AGENT_CHECKSUM_(?<artifact>install)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_WINS_AGENT_CHECKSUM_(?<artifact>uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "packageNameTemplate": "wins-{{#if artifact}}{{artifact}}{{else}}exe{{/if}}",
       "depNameTemplate": "rancher/wins",
@@ -367,7 +369,10 @@
       ],
       "description": "Track System Agent checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>amd64|arm64|install|uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>amd64)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>arm64)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>install)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "packageNameTemplate": "system-agent-{{{artifact}}}",
       "depNameTemplate": "rancher/system-agent",
