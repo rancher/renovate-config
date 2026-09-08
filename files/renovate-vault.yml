@@ -40,12 +40,14 @@ on:
   schedule:
     - cron: '30 4,6 * * 1-5'
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 jobs:
   call-workflow:
+    permissions:
+      contents: read
+      id-token: write # Required for Vault OIDC authentication.
+    # https://github.com/rancher/renovate-config/releases
     uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@release # zizmor: ignore[unpinned-uses] Deployment replaces @release with resolved tag commit SHA.
     # Note: github.event.inputs.<name> with '||' fallbacks is used across all inputs
     # so that scheduled cron runs (where github.event.inputs is null) safely default.
