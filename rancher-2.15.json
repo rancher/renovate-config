@@ -157,6 +157,27 @@
       "enabled": true
     },
     {
+      "description": "Enable and group Rancher Machine updates",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
+      "groupName": "machine",
+      "enabled": true
+    },
+    {
+      "description": "Enable and group Wins and System Agent updates",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["rancher/wins", "rancher/system-agent", "wins-exe", "wins-install", "wins-uninstall", "system-agent-amd64", "system-agent-arm64", "system-agent-install", "system-agent-uninstall"],
+      "groupName": "Wins and System Agent",
+      "enabled": true
+    },
+    {
+      "description": "Restrict Rancher dependency updates to patches on release branches",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["rancher/k3s", "github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64", "rancher/wins", "rancher/system-agent", "wins-exe", "wins-install", "wins-uninstall", "system-agent-amd64", "system-agent-arm64", "system-agent-install", "system-agent-uninstall"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
       "allowedVersions": "<=v0.1.36",

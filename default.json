@@ -258,6 +258,156 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
+      "description": "Track Rancher K3s image versions in Dockerfiles",
+      "matchStrings": [
+        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+-k3s\\d+)"
+      ],
+      "depNameTemplate": "rancher/k3s",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher Machine versions in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "rancher/machine",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher Machine amd64 checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "machine-amd64",
+      "depNameTemplate": "rancher/machine",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher Machine arm64 checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "machine-arm64",
+      "depNameTemplate": "rancher/machine",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)pkg/settings/.*\\.go$/"
+      ],
+      "description": "Track Rancher Machine provision image versions in Go settings",
+      "matchStrings": [
+        "rancher/machine:(?<currentValue>v[^\\\"\\s]+)"
+      ],
+      "depNameTemplate": "rancher/machine",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Wins versions in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "rancher/wins",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Wins checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_WINS_AGENT_CHECKSUM(?<artifact>)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_WINS_AGENT_CHECKSUM_(?<artifact>install)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_WINS_AGENT_CHECKSUM_(?<artifact>uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "wins-{{#if artifact}}{{artifact}}{{else}}exe{{/if}}",
+      "depNameTemplate": "rancher/wins",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track System Agent versions in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
+      ],
+      "depNameTemplate": "rancher/system-agent",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track System Agent checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>amd64)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>arm64)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>install)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "system-agent-{{{artifact}}}",
+      "depNameTemplate": "rancher/system-agent",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)pkg/settings/.*\\.go$/"
+      ],
+      "description": "Track Wins install script versions in Go settings",
+      "matchStrings": [
+        "raw\\.githubusercontent\\.com/rancher/wins/(?<currentValue>v[^/\\\"\\s]+)/"
+      ],
+      "depNameTemplate": "rancher/wins",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)pkg/settings/.*\\.go$/"
+      ],
+      "description": "Track System Agent install script versions in Go settings",
+      "matchStrings": [
+        "github\\.com/rancher/system-agent/releases/download/(?<currentValue>v[^/\\\"\\s]+)/"
+      ],
+      "depNameTemplate": "rancher/system-agent",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
       "matchStrings": [
         "ENV CNI_PLUGINS_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
@@ -623,6 +773,22 @@
       "enabled": false
     },
     {
+      "description": "Enable and group Rancher Machine updates",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
+      "groupName": "machine",
+      "minimumReleaseAge": "2 days",
+      "enabled": true
+    },
+    {
+      "description": "Enable and group Wins and System Agent updates",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["rancher/wins", "rancher/system-agent", "wins-exe", "wins-install", "wins-uninstall", "system-agent-amd64", "system-agent-arm64", "system-agent-install", "system-agent-uninstall"],
+      "groupName": "Wins and System Agent",
+      "minimumReleaseAge": "2 days",
+      "enabled": true
+    },
+    {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
@@ -707,10 +873,14 @@
       "groupName": "Go toolchain"
     },
     {
-      "description": "Group K3s image and environment updates",
-      "matchManagers": ["custom.regex", "dockerfile"],
+      "description": "Group K3s updates with Kubernetes dependencies",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/k3s"],
-      "groupName": "K3s"
+      "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 1,
+      "prPriority": 50,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Require three Go toolchain updates when golangci-lint changes",
