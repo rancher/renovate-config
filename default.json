@@ -272,14 +272,40 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
-      "description": "Track Rancher Machine versions and checksums in Dockerfiles",
-      "matchStringsStrategy": "recursive",
+      "description": "Track Rancher Machine versions in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV CATTLE_MACHINE_CHECKSUM_(?:amd64|arm64)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
       ],
       "depNameTemplate": "rancher/machine",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher Machine amd64 checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "machine-amd64",
+      "depNameTemplate": "rancher/machine",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher Machine arm64 checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "machine-arm64",
+      "depNameTemplate": "rancher/machine",
+      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
@@ -299,11 +325,9 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
-      "description": "Track Wins versions and checksums in Dockerfiles",
-      "matchStringsStrategy": "recursive",
+      "description": "Track Wins versions in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV CATTLE_WINS_AGENT_CHECKSUM(?:_(?:install|uninstall))?(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
       ],
       "depNameTemplate": "rancher/wins",
       "datasourceTemplate": "github-releases"
@@ -314,14 +338,40 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
-      "description": "Track System Agent versions and checksums in Dockerfiles",
-      "matchStringsStrategy": "recursive",
+      "description": "Track Wins checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?:amd64|arm64|install|uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_WINS_AGENT_CHECKSUM(?:_(?<artifact>install|uninstall))?(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "wins-{{#if artifact}}{{artifact}}{{else}}exe{{/if}}",
+      "depNameTemplate": "rancher/wins",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track System Agent versions in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
       ],
       "depNameTemplate": "rancher/system-agent",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track System Agent checksums in Dockerfiles",
+      "matchStrings": [
+        "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?<artifact>amd64|arm64|install|uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+      ],
+      "packageNameTemplate": "system-agent-{{{artifact}}}",
+      "depNameTemplate": "rancher/system-agent",
+      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
@@ -719,7 +769,7 @@
     {
       "description": "Enable and group Rancher Machine updates",
       "matchManagers": ["gomod", "custom.regex"],
-      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine"],
+      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
       "groupName": "machine",
       "minimumReleaseAge": "2 days",
       "enabled": true
@@ -727,7 +777,7 @@
     {
       "description": "Enable and group Wins and System Agent updates",
       "matchManagers": ["custom.regex"],
-      "matchPackageNames": ["rancher/wins", "rancher/system-agent"],
+      "matchPackageNames": ["rancher/wins", "rancher/system-agent", "wins-exe", "wins-install", "wins-uninstall", "system-agent-amd64", "system-agent-arm64", "system-agent-install", "system-agent-uninstall"],
       "groupName": "Wins and System Agent",
       "minimumReleaseAge": "2 days",
       "enabled": true
