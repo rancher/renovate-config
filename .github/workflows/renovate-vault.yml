@@ -71,12 +71,13 @@ env:
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
   RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 jobs:
   renovate:
+    permissions:
+      contents: read
+      id-token: write # Required for Vault OIDC authentication.
     runs-on: ${{fromJSON(inputs.runner)}}
     steps:
       - name: Checkout
