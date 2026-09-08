@@ -104,7 +104,6 @@ rancher_archive_fetch_data() {
   local versions
   local entries_file
   entries_file=$(mktemp)
-  trap 'rm -f "${entries_file}"' RETURN
   versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
@@ -119,6 +118,7 @@ rancher_archive_fetch_data() {
       '{version: $version, digest: $checksum, releaseTimestamp: $created_at, changelogUrl: ("https://github.com/" + $repository + "/releases/tag/" + $version)}' >>"${entries_file}"
   done <<<"${versions}"
   jq -s '{releases: .}' "${entries_file}" >"${DATA_DIR}/${package_name}.json"
+  rm -f "${entries_file}"
 }
 
 rancher_checksum_fetch_data() {
@@ -129,13 +129,12 @@ rancher_checksum_fetch_data() {
   local versions
   local entries_file
   entries_file=$(mktemp)
-  trap 'rm -f "${entries_file}"' RETURN
   versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
   while IFS=$'\t' read -r version created_at; do
     if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${checksum_file}" |
-      awk -v asset_name="${asset_name}" '$0 ~ " " asset_name "$" {print $1; exit}'); then
+      awk -v asset_name="${asset_name}" '$2 == asset_name {print $1; exit}'); then
       continue
     fi
     if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
@@ -145,6 +144,7 @@ rancher_checksum_fetch_data() {
       '{version: $version, digest: $checksum, releaseTimestamp: $created_at, changelogUrl: ("https://github.com/" + $repository + "/releases/tag/" + $version)}' >>"${entries_file}"
   done <<<"${versions}"
   jq -s '{releases: .}' "${entries_file}" >"${DATA_DIR}/${package_name}.json"
+  rm -f "${entries_file}"
 }
 
 rancher_fetch_data() {
