@@ -157,6 +157,27 @@
       "enabled": true
     },
     {
+      "description": "Enable and group Rancher Machine updates",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine"],
+      "groupName": "machine",
+      "enabled": true
+    },
+    {
+      "description": "Enable and group Wins and System Agent updates",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["rancher/wins", "rancher/system-agent"],
+      "groupName": "Wins and System Agent",
+      "enabled": true
+    },
+    {
+      "description": "Restrict Rancher dependency updates to patches on release branches",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "rancher/wins", "rancher/system-agent"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
       "allowedVersions": "<=v0.1.22",
