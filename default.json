@@ -258,6 +258,20 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
+      "description": "Track Rancher K3s image versions in Dockerfiles",
+      "matchStrings": [
+        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+-k3s\\d+)"
+      ],
+      "depNameTemplate": "rancher/k3s",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
       "description": "Track Rancher Machine versions and checksums in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
@@ -289,7 +303,7 @@
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "ENV CATTLE_WINS_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV CATTLE_WINS_AGENT_CHECKSUM(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_WINS_AGENT_CHECKSUM(?:_(?:install|uninstall))?(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "depNameTemplate": "rancher/wins",
       "datasourceTemplate": "github-releases"
@@ -304,7 +318,7 @@
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "ENV CATTLE_SYSTEM_AGENT_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?:amd64|arm64)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_SYSTEM_AGENT_CHECKSUM_(?:amd64|arm64|install|uninstall)(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "depNameTemplate": "rancher/system-agent",
       "datasourceTemplate": "github-releases"
