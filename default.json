@@ -776,6 +776,7 @@
       "description": "Enable and group Rancher Machine updates",
       "matchManagers": ["gomod", "custom.regex"],
       "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
+      "allowedVersions": "/^v\\d+\\.\\d+\\.\\d+-rancher\\d+(\\.\\d+)?$/",
       "groupName": "machine",
       "minimumReleaseAge": "2 days",
       "enabled": true
