@@ -173,7 +173,7 @@
     {
       "description": "Restrict Rancher dependency updates to patches on release branches",
       "matchManagers": ["gomod", "custom.regex"],
-      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "rancher/wins", "rancher/system-agent"],
+      "matchPackageNames": ["rancher/k3s", "github.com/rancher/machine", "rancher/machine", "rancher/wins", "rancher/system-agent"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },

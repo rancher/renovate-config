@@ -803,6 +803,16 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Group K3s updates with Kubernetes dependencies",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["rancher/k3s"],
+      "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 1,
+      "prPriority": 50,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
       "description": "Require three Go toolchain updates when golangci-lint changes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
       "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
