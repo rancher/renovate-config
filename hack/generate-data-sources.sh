@@ -105,7 +105,7 @@ rancher_archive_fetch_data() {
   local entries_file
   entries_file=$(mktemp)
   versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
-    jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
+    jq -r '.[] | "\(.tag_name)\t\(.created_at)"')
 
   while IFS=$'\t' read -r version created_at; do
     if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${asset_name}" | sha256sum | awk '{print $1}'); then
@@ -130,7 +130,7 @@ rancher_checksum_fetch_data() {
   local entries_file
   entries_file=$(mktemp)
   versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
-    jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
+    jq -r '.[] | "\(.tag_name)\t\(.created_at)"')
 
   while IFS=$'\t' read -r version created_at; do
     if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${checksum_file}" |
