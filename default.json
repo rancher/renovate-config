@@ -249,7 +249,7 @@
       "matchStrings": [
         "ENV CATTLE_K3S_VERSION[=\\s](?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)\\n"
       ],
-      "depNameTemplate": "rancher/k3s",
+      "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases"
     },
     {
@@ -880,7 +880,7 @@
     {
       "description": "Group K3s updates with Kubernetes dependencies",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/k3s"],
+      "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 1,
       "prPriority": 50,
