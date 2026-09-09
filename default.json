@@ -16,7 +16,6 @@
   "labels": [
     "dependencies"
   ],
-  "automergeStrategy": "merge-commit",
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "postUpdateOptions": [
