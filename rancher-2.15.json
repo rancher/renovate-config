@@ -72,7 +72,6 @@
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
       "enabled": true
     },
     {
@@ -80,7 +79,6 @@
       "matchDepTypes": ["!golang"],
       "matchDatasources": ["golang-version"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
       "enabled": true
     },
     {
@@ -126,27 +124,15 @@
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
-      "matchDepTypes": ["!indirect"],
       "enabled": true,
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
     {
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "matchDepTypes": ["!indirect"],
       "enabled": true,
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
     {
       "description": "Enable patch updates for k8s.io dependencies",
@@ -161,39 +147,41 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "matchDepTypes": ["!indirect"],
       "enabled": true,
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
-      "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
       "matchPackageNames": ["rancher/kuberlr-kubectl"],
-      "matchDepTypes": ["!indirect"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
+    },
+    {
+      "description": "Enable and group Rancher Machine updates",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
+      "groupName": "machine",
+      "enabled": true
+    },
+    {
+      "description": "Enable and group Wins and System Agent updates",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["rancher/wins", "rancher/system-agent", "wins-exe", "wins-install", "wins-uninstall", "system-agent-amd64", "system-agent-arm64", "system-agent-install", "system-agent-uninstall"],
+      "groupName": "Wins and System Agent",
+      "enabled": true
+    },
+    {
+      "description": "Restrict Rancher dependency updates to patches on release branches",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["rancher/k3s", "k3s-io/k3s", "github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64", "rancher/wins", "rancher/system-agent", "wins-exe", "wins-install", "wins-uninstall", "system-agent-amd64", "system-agent-arm64", "system-agent-install", "system-agent-uninstall"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
     },
     {
       "matchPackageNames": ["rancherlabs/slsactl"],
       "groupName": "slsactl",
       "allowedVersions": "<=v0.1.36",
       "minimumGroupSize": 2
-    },
-    {
-      "description": "Create patch vulnerability updates independently",
-      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
-      "matchUpdateTypes": ["patch"],
-      "enabled": true,
-      "minimumGroupSize": 1,
-      "branchConcurrentLimit": 0,
-      "prConcurrentLimit": 0,
-      "prHourlyLimit": 0,
-      "prPriority": 100,
-      "prCreation": "immediate"
     },
     {
       "description": "Disable patch Go module directive updates",
@@ -215,6 +203,11 @@
       ],
       "matchUpdateTypes": ["minor"],
       "enabled": false
+    },
+    {
+      "description": "Ignore group-size requirements for security updates",
+      "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
+      "minimumGroupSize": 1
     }
   ]
 }

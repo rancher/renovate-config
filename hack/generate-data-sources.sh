@@ -97,6 +97,68 @@ yq_fetch_data() {
   done
 }
 
+rancher_archive_fetch_data() {
+  local package_name="$1"
+  local repository="$2"
+  local asset_name="$3"
+  local versions
+  local entries_file
+  entries_file=$(mktemp)
+  versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
+    jq -r '.[] | "\(.tag_name)\t\(.created_at)"')
+
+  while IFS=$'\t' read -r version created_at; do
+    if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${asset_name}" | sha256sum | awk '{print $1}'); then
+      continue
+    fi
+    if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      continue
+    fi
+    jq -cn --arg version "${version}" --arg checksum "${checksum}" --arg created_at "${created_at}" --arg repository "${repository}" \
+      '{version: $version, digest: $checksum, releaseTimestamp: $created_at, changelogUrl: ("https://github.com/" + $repository + "/releases/tag/" + $version)}' >>"${entries_file}"
+  done <<<"${versions}"
+  jq -s '{releases: .}' "${entries_file}" >"${DATA_DIR}/${package_name}.json"
+  rm -f "${entries_file}"
+}
+
+rancher_checksum_fetch_data() {
+  local package_name="$1"
+  local repository="$2"
+  local checksum_file="$3"
+  local asset_name="$4"
+  local versions
+  local entries_file
+  entries_file=$(mktemp)
+  versions=$(curl --silent --retry 3 --retry-connrefused -L "https://api.github.com/repos/${repository}/releases?per_page=100" |
+    jq -r '.[] | "\(.tag_name)\t\(.created_at)"')
+
+  while IFS=$'\t' read -r version created_at; do
+    if ! checksum=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/${repository}/releases/download/${version}/${checksum_file}" |
+      awk -v asset_name="${asset_name}" '$2 == asset_name {print $1; exit}'); then
+      continue
+    fi
+    if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      continue
+    fi
+    jq -cn --arg version "${version}" --arg checksum "${checksum}" --arg created_at "${created_at}" --arg repository "${repository}" \
+      '{version: $version, digest: $checksum, releaseTimestamp: $created_at, changelogUrl: ("https://github.com/" + $repository + "/releases/tag/" + $version)}' >>"${entries_file}"
+  done <<<"${versions}"
+  jq -s '{releases: .}' "${entries_file}" >"${DATA_DIR}/${package_name}.json"
+  rm -f "${entries_file}"
+}
+
+rancher_fetch_data() {
+  rancher_archive_fetch_data machine-amd64 rancher/machine rancher-machine-amd64.tar.gz
+  rancher_archive_fetch_data machine-arm64 rancher/machine rancher-machine-arm64.tar.gz
+  rancher_checksum_fetch_data wins-exe rancher/wins sha256.txt wins.exe
+  rancher_checksum_fetch_data wins-install rancher/wins sha256.txt install.ps1
+  rancher_checksum_fetch_data wins-uninstall rancher/wins sha256.txt uninstall.ps1
+  rancher_checksum_fetch_data system-agent-amd64 rancher/system-agent sha256sum.txt rancher-system-agent-amd64
+  rancher_checksum_fetch_data system-agent-arm64 rancher/system-agent sha256sum.txt rancher-system-agent-arm64
+  rancher_checksum_fetch_data system-agent-install rancher/system-agent sha256sum.txt install.sh
+  rancher_checksum_fetch_data system-agent-uninstall rancher/system-agent sha256sum.txt system-agent-uninstall.sh
+}
+
 ghcli_fetch_data() {
   versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/cli/cli/releases?per-page=100 | jq -r 'map(select(.tag_name | test("alpha|rc|beta|nightly") | not))[] | "\(.tag_name)\t\(.created_at)"')
 
@@ -176,6 +238,7 @@ main() {
     ghcli_fetch_data
     helm_fetch_data
     yq_fetch_data
+    rancher_fetch_data
     return
   fi
 
@@ -201,6 +264,9 @@ main() {
   fi
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "YQ_CHECKSUM_amd64" -e "YQ_CHECKSUM_arm64" ./; then
     yq_fetch_data
+  fi
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "CATTLE_MACHINE_CHECKSUM" -e "CATTLE_WINS_AGENT_CHECKSUM" -e "CATTLE_SYSTEM_AGENT_CHECKSUM" ./; then
+    rancher_fetch_data
   fi
 }
 
