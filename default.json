@@ -4,11 +4,6 @@
     "mergeConfidence:age-confidence-badges",
     "security:gomodIndirectSecurityUpdates"
   ],
-  "hostRules": [
-    {
-      "matchHost": "proxy.golang.org"
-    }
-  ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
