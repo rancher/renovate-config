@@ -20,6 +20,7 @@ their `renovate.json` as per below:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "$default",
     "release/v0.16",
@@ -41,6 +42,8 @@ their `renovate.json` as per below:
   ]
 }
 ```
+
+When using the `#main` presets, extend `default#main` once at top level. Do not add `default` to each branch preset. The release workflow rewrites `#main` to `#release` and adds the root preset to `rancher-*.json` for older consumers that do not yet have a top-level extension.
 
 The `rancher-main.json` preset contains additional configuration for the
 `rancher/rancher` main branch and its subprojects, like providing Go and Kubernetes version restrictions, but not much more than that.
@@ -65,6 +68,7 @@ the repository-agnostic `automerge.json` preset in a separate branch-scoped
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "$default",
     "release/v0.16",
@@ -118,6 +122,7 @@ branch-scoped configuration:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "$default",
     "release/v0.16",
