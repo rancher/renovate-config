@@ -4,11 +4,6 @@
     "mergeConfidence:age-confidence-badges",
     "security:gomodIndirectSecurityUpdates"
   ],
-  "hostRules": [
-    {
-      "matchHost": "proxy.golang.org"
-    }
-  ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
@@ -781,6 +776,7 @@
       "matchManagers": ["gomod", "custom.regex"],
       "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
       "allowedVersions": "/^v\\d+\\.\\d+\\.\\d+-rancher\\d+(\\.\\d+)?(-(alpha|beta|rc)\\.\\d+)?$/",
+      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.\\d+-rancher(?<patch>\\d+)(?:\\.(?<build>\\d+))?(?:-(?<prerelease>.+))?$",
       "groupName": "machine",
       "minimumReleaseAge": "0 days",
       "ignoreUnstable": false,
