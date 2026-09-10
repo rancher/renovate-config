@@ -103,6 +103,10 @@ Keep the release preset entries and automerge entry separate because Renovate
 flattens nested package rules. The preset does not enable updates or change
 allowed versions.
 
+For a consumer tracking `main`, use `#main` for all presets and extend
+`default#main` once at top level; add `automerge#main` as a separate top-level
+extension when automerge is desired.
+
 ### GitHub requirements for automerge
 
 Enforce successful CI status with branch protection rules so GitHub automerge
