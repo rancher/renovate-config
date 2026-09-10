@@ -125,6 +125,7 @@ jobs:
           private-key: ${{ env.PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
+          permission-statuses: write
           permission-workflows: write
       - name: Assemble RENOVATE_FORCE
         env:
