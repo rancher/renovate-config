@@ -763,19 +763,6 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "description": "Let Rancher teams manage internal product updates",
-      "matchManagers": ["gomod"],
-      "matchPackageNames": [
-        "github.com/rancher/**",
-        "!github.com/rancher/wrangler/v3",
-        "!github.com/rancher/lasso"
-      ],
-      "matchJsonata": [
-        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
-      ],
-      "enabled": false
-    },
-    {
       "description": "Enable and group Rancher Machine updates",
       "matchManagers": ["gomod", "custom.regex"],
       "matchPackageNames": ["github.com/rancher/machine", "rancher/machine", "machine-amd64", "machine-arm64"],
