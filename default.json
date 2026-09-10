@@ -286,8 +286,10 @@
       ],
       "description": "Track Rancher Machine amd64 checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
+      "matchStringsStrategy": "combination",
       "packageNameTemplate": "machine-amd64",
       "depNameTemplate": "rancher/machine",
       "datasourceTemplate": "custom.local"
@@ -300,8 +302,10 @@
       ],
       "description": "Track Rancher Machine arm64 checksums in Dockerfiles",
       "matchStrings": [
-        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV CATTLE_MACHINE_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n",
+        "ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
+      "matchStringsStrategy": "combination",
       "packageNameTemplate": "machine-arm64",
       "depNameTemplate": "rancher/machine",
       "datasourceTemplate": "custom.local"
