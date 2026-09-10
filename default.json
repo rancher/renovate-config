@@ -290,6 +290,7 @@
         "ENV CATTLE_MACHINE_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "matchStringsStrategy": "combination",
+      "autoReplaceStringTemplate": "ENV CATTLE_MACHINE_CHECKSUM_amd64={{{newDigest}}}\\n",
       "packageNameTemplate": "machine-amd64",
       "depNameTemplate": "rancher/machine",
       "datasourceTemplate": "custom.local"
@@ -306,6 +307,7 @@
         "ENV CATTLE_MACHINE_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
       "matchStringsStrategy": "combination",
+      "autoReplaceStringTemplate": "ENV CATTLE_MACHINE_CHECKSUM_arm64={{{newDigest}}}\\n",
       "packageNameTemplate": "machine-arm64",
       "depNameTemplate": "rancher/machine",
       "datasourceTemplate": "custom.local"
