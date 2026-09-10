@@ -912,7 +912,7 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "matchCurrentValue": "1.25",
+      "matchCurrentValue": "1.26",
       "enabled": false
     },
     {
