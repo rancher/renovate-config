@@ -63,10 +63,23 @@
       ],
       "description": "Track Go toolchain versions configured in GitHub Actions workflows",
       "matchStrings": [
-        "GOTOOLCHAIN=go(?<currentValue>\\d+\\.\\d+\\.\\d+)\\+auto",
-        "(?<variableName>SETUP_GO_VERSION|GOLANG_VERSION):\\s*'(?<currentValue>[^'\\s]+)'"
+        "GOTOOLCHAIN=go(?<currentValue>\\d+\\.\\d+\\.\\d+)\\+auto"
       ],
-      "autoReplaceStringTemplate": "{{#if variableName}}{{{variableName}}}: '{{{newValue}}}'{{else}}GOTOOLCHAIN=go{{{newValue}}}+auto{{/if}}",
+      "autoReplaceStringTemplate": "GOTOOLCHAIN=go{{{newValue}}}+auto",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track major and minor Go versions configured in GitHub Actions workflows",
+      "matchStrings": [
+        "(?<variableName>SETUP_GO_VERSION|GOLANG_VERSION):\\s*'(?<currentValue>\\d+\\.\\d+)(?<versionSuffix>\\.\\*)?'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "{{#if versionSuffix}}{{{variableName}}}: '{{{newMajor}}}.{{{newMinor}}}.*'{{else}}{{{variableName}}}: '{{{newMajor}}}.{{{newMinor}}}'{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
