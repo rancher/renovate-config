@@ -1,0 +1,604 @@
+{
+  "releases": [
+    {
+      "version": "v0.15.0-rancher145.2-rc.0",
+      "digest": "296bacac6ecf6728f2082e6aa6e17e308be107479826ce4b1ff9f93836c866f8",
+      "releaseTimestamp": "2026-09-10T17:02:43Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher145.2-rc.0"
+    },
+    {
+      "version": "v0.15.0-rancher142.6-rc.0",
+      "digest": "eb82aedda0066a146ca2d3109b0a919b2f7955e6566960601e18f0adf5c68e0e",
+      "releaseTimestamp": "2026-09-10T18:39:11Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.6-rc.0"
+    },
+    {
+      "version": "v0.15.0-rancher137.4-rc.0",
+      "digest": "4671bc53c1386491a139a1e34a4c8db40a5f7671c78c413132fcf87af3a5fcd0",
+      "releaseTimestamp": "2026-09-10T18:27:39Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.4-rc.0"
+    },
+    {
+      "version": "v0.15.0-rancher146-rc.4",
+      "digest": "1d961c67b3dfe0d7d7bdcae1256b96277f5948cf48e68a8c2eebd60baf9b9bc7",
+      "releaseTimestamp": "2026-09-10T17:02:50Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher146-rc.4"
+    },
+    {
+      "version": "v0.15.0-rancher145.1-rc.2",
+      "digest": "5a950668a43eb2012e9b65aefb2a5035dc69df3a9765a6a3ce1eccb663241685",
+      "releaseTimestamp": "2026-08-18T16:49:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher145.1-rc.2"
+    },
+    {
+      "version": "v0.15.0-rancher145.1-rc.1",
+      "digest": "98cc9758c2e2ffc930c7f3ed6e816782e1fbc61e7da92494aeaa5680baa58992",
+      "releaseTimestamp": "2026-08-18T16:49:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher145.1-rc.1"
+    },
+    {
+      "version": "v0.15.0-rancher145.1",
+      "digest": "9a9b1cef3ff6b8eb2346e2f2cdc25106b2b3e2beb97d0e796adc14beb6abc7b4",
+      "releaseTimestamp": "2026-08-18T16:49:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher145.1"
+    },
+    {
+      "version": "v0.15.0-rancher142.5-rc.3",
+      "digest": "dde22aef888ccf8dcd2253d24e0db25f712393d215b9a30ceb8a9bd682dda18d",
+      "releaseTimestamp": "2026-08-18T16:46:11Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.5-rc.3"
+    },
+    {
+      "version": "v0.15.0-rancher142.5-rc.2",
+      "digest": "bc2e9e5cc20c3fdade7341b797911bd78d67b0f342e464cdd4d3633bd39cca67",
+      "releaseTimestamp": "2026-08-18T16:46:11Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.5-rc.2"
+    },
+    {
+      "version": "v0.15.0-rancher142.5",
+      "digest": "05c81e4ba8ecc0f4fde94b0dbf5d9a3ce00871c41888c3a755f6f30d69888443",
+      "releaseTimestamp": "2026-08-18T16:46:11Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.5"
+    },
+    {
+      "version": "v0.15.0-rancher137.3-rc.2",
+      "digest": "37079a2e4a4864eef03786ac60b9256133ad826e9c8fa87709d06bc4be82eb42",
+      "releaseTimestamp": "2026-08-18T16:46:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.3-rc.2"
+    },
+    {
+      "version": "v0.15.0-rancher137.3-rc.1",
+      "digest": "a9f4f11377e9a664668d0b49dd5ad3efe22f111a5f710c34e5134a027ee76e6f",
+      "releaseTimestamp": "2026-08-18T16:46:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.3-rc.1"
+    },
+    {
+      "version": "v0.15.0-rancher137.3",
+      "digest": "35ebb77b47034cc9c3834463d9f9626e98fdafe44b124251ded7c97fd08f2aa4",
+      "releaseTimestamp": "2026-08-18T16:46:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.3"
+    },
+    {
+      "version": "v0.15.0-rancher146-rc.3",
+      "digest": "f7b0db45fb440a13edd04238409da90a8141ea8e3a1836e90950bdafbaa48c35",
+      "releaseTimestamp": "2026-08-18T21:07:31Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher146-rc.3"
+    },
+    {
+      "version": "v0.15.0-rancher142.5-rc.1",
+      "digest": "474094823b1b89e55ad7b6f0daa8caadd70cfca136b23c8fd8731c59feed9729",
+      "releaseTimestamp": "2026-08-17T22:52:11Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.5-rc.1"
+    },
+    {
+      "version": "v0.15.0-rancher146-rc.2",
+      "digest": "95055ce7ae997efb5fe29ef438e32c1b5e5d9bfcd45ae58f43212db76079af10",
+      "releaseTimestamp": "2026-08-17T20:07:56Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher146-rc.2"
+    },
+    {
+      "version": "v0.15.0-rancher145.1-rc.0",
+      "digest": "959c9f144ba9c387af951850179337eb1773bc8f6d1bf3f137d894d8df60b9ad",
+      "releaseTimestamp": "2026-08-14T07:01:18Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher145.1-rc.0"
+    },
+    {
+      "version": "v0.15.0-rancher142.5-rc.0",
+      "digest": "4374ecd109354e115732ab581898966382f37abaefb217dc45933db5928a0d7c",
+      "releaseTimestamp": "2026-08-13T07:04:37Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.5-rc.0"
+    },
+    {
+      "version": "v0.15.0-rancher137.3-rc.0",
+      "digest": "93e9e54382848b5cb76722b10e08cea14c8ed3f580bfb64b3bf858978ef0866f",
+      "releaseTimestamp": "2026-08-06T05:39:34Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.3-rc.0"
+    },
+    {
+      "version": "v0.15.0-rancher142.4",
+      "digest": "48fb4eb585409b35aa2bbec038577222c276ca3dcc7ab9a576d6af5e73b17cc0",
+      "releaseTimestamp": "2026-07-09T19:25:12Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.4"
+    },
+    {
+      "version": "v0.15.0-rancher133.2",
+      "digest": "e675c4066e0d035768053edf7d79f9096d823c7909f648a2ec4fd3d5e7ed686d",
+      "releaseTimestamp": "2026-07-09T18:43:03Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher133.2"
+    },
+    {
+      "version": "v0.15.0-rancher127.2",
+      "digest": "83f841cea8321e4f0daf25b7b5b5b4c321ce3c20cb1f55ce13701f8e597a5251",
+      "releaseTimestamp": "2026-07-09T18:16:50Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher127.2"
+    },
+    {
+      "version": "v0.15.0-rancher145",
+      "digest": "7cf9e1a42982429d05d66c106d4560269cdfc617f84417013c72a56f1171f668",
+      "releaseTimestamp": "2026-07-02T19:51:55Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher145"
+    },
+    {
+      "version": "v0.15.0-rancher142.3",
+      "digest": "b257884713e645542fd9f560b8540f41ac02ee5d9cd75b5645a16d0d10a956ee",
+      "releaseTimestamp": "2026-07-02T20:51:52Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.3"
+    },
+    {
+      "version": "v0.15.0-rancher137.2",
+      "digest": "f6e896d9c0b42a21a555b879007d526359583fd0c35f6240c03f81d6ab655d6a",
+      "releaseTimestamp": "2026-07-02T20:52:01Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.2"
+    },
+    {
+      "version": "v0.15.0-rancher133.1",
+      "digest": "3807376c0bc36f851ede2ff1e911cc75ca2b43341aa9e386620737bb1ded8904",
+      "releaseTimestamp": "2026-07-02T20:52:13Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher133.1"
+    },
+    {
+      "version": "v0.15.0-rancher127.1",
+      "digest": "abdd8ff6c1b90a8f673a8c3aeef6784cdc0688b4335c29f9c4eec3b5affafb97",
+      "releaseTimestamp": "2026-07-02T20:52:25Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher127.1"
+    },
+    {
+      "version": "v0.15.0-rancher144",
+      "digest": "f4b2f736f6955d97880e2f7c2e6aaa5c037c7be126bf66b446d80771cf791e9d",
+      "releaseTimestamp": "2026-06-26T06:33:14Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher144"
+    },
+    {
+      "version": "v0.15.0-rancher142.2",
+      "digest": "14f76f0107626ec625ed17049f8117e800e07ec36ef6a2f243f43819be2c98c4",
+      "releaseTimestamp": "2026-06-10T19:35:53Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.2"
+    },
+    {
+      "version": "v0.15.0-rancher142.1",
+      "digest": "c5d7a6897d6a9dd5fe8b9683d70e4b464ba2aa063778c8072cf40332604a2d55",
+      "releaseTimestamp": "2026-06-04T20:21:14Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142.1"
+    },
+    {
+      "version": "v0.15.0-rancher137.1",
+      "digest": "a75c6f1928b94ab08e94dc292856177f9e411d762d5eba7b006c2cbfa3ca0586",
+      "releaseTimestamp": "2026-06-04T20:21:10Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137.1"
+    },
+    {
+      "version": "v0.15.0-rancher143",
+      "digest": "9e434a25b3547b3cf55b6d73d61c7086190c5d89b207cc3313cbf9b1da70e842",
+      "releaseTimestamp": "2026-05-19T04:57:38Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher143"
+    },
+    {
+      "version": "v0.15.0-rancher142",
+      "digest": "9ae8f09bde3d036ab71659bcdbd7f03e2566371b985eb44e67cacfa6481306e5",
+      "releaseTimestamp": "2026-03-12T14:06:32Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher142"
+    },
+    {
+      "version": "v0.15.0-rancher141",
+      "digest": "d57214db4b2cf991093407cfc0e0142d923f376353d94f217f92a33a3b527dce",
+      "releaseTimestamp": "2026-03-11T16:22:59Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher141"
+    },
+    {
+      "version": "v0.15.0-rancher140",
+      "digest": "62dd6547895105e71d0330e9489acd77c66591a756ef3e193408a41335a10774",
+      "releaseTimestamp": "2026-03-02T16:30:26Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher140"
+    },
+    {
+      "version": "v0.15.0-rancher139",
+      "digest": "dcb4db4bbb8442508464f7a84c7860d4254cfb49b23714c7d181620716b830cc",
+      "releaseTimestamp": "2026-02-16T04:43:00Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher139"
+    },
+    {
+      "version": "v0.15.0-rancher138",
+      "digest": "26683c78159d1d2c2c270bb0f9638272724c1c8589b2fa690a7fa175c7bda026",
+      "releaseTimestamp": "2026-01-14T18:57:48Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher138"
+    },
+    {
+      "version": "v0.15.0-rancher137",
+      "digest": "743d43efb0b9ca6ad2c97fc4d62462d89b356d9dae3c80be7d1ba745c2f150df",
+      "releaseTimestamp": "2025-11-06T21:26:47Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher137"
+    },
+    {
+      "version": "v0.15.0-rancher136",
+      "digest": "d1a6b46a994b4f955285dd3137efbfac8f92227f79ec0971944dc4b51aa316c0",
+      "releaseTimestamp": "2025-11-04T20:18:17Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher136"
+    },
+    {
+      "version": "v0.15.0-rancher135",
+      "digest": "b801babf90db7d7af132136edd3003dab912f50357cf4c9643450f84b96d34c3",
+      "releaseTimestamp": "2025-10-07T10:06:20Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher135"
+    },
+    {
+      "version": "v0.15.0-rancher134",
+      "digest": "7e1af4b0602199bdfa85ad966401c99ef98805320863154e75a33c8b7dbb064b",
+      "releaseTimestamp": "2025-09-29T20:41:41Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher134"
+    },
+    {
+      "version": "v0.15.0-rancher133",
+      "digest": "43f2c7996afac6a31b5c2362294bb0786a98bce9387da3a67dcb77ec7c9bac9d",
+      "releaseTimestamp": "2025-09-24T19:01:56Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher133"
+    },
+    {
+      "version": "v0.15.0-rancher132",
+      "digest": "e6859c0ff02baca40f0c1607831c4973205c7764413b95f10fbb277167265803",
+      "releaseTimestamp": "2025-09-22T19:41:10Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher132"
+    },
+    {
+      "version": "v0.15.0-rancher131",
+      "digest": "4c4308c211b11efb34611cb3f936f2e0e3b53a7ce7b1fac32be0d42fc119aa7f",
+      "releaseTimestamp": "2025-07-11T17:31:49Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher131"
+    },
+    {
+      "version": "v0.15.0-rancher130",
+      "digest": "1840c713f47c674996296d06b1225682d2bfebfcd29ba561eacdc9c22690841e",
+      "releaseTimestamp": "2025-07-03T18:42:41Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher130"
+    },
+    {
+      "version": "v0.15.0-rancher129",
+      "digest": "85840c14ea50b190a9d5f00058b4c45d2224e9f7448953059df0eafc8ccabae3",
+      "releaseTimestamp": "2025-06-11T16:27:07Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher129"
+    },
+    {
+      "version": "v0.15.0-rancher128",
+      "digest": "878fc3e2d08aa1677ed4aa74f2c36e3f3a3ce149e6f6d428714258a290e1e773",
+      "releaseTimestamp": "2025-05-28T17:54:59Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher128"
+    },
+    {
+      "version": "v0.15.0-rancher127",
+      "digest": "d73e124eee05468edcf78a1f8f3a6f3dfd2d1469b2c39637ab00e4b79260fcda",
+      "releaseTimestamp": "2025-04-09T19:46:05Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher127"
+    },
+    {
+      "version": "v0.15.0-rancher126",
+      "digest": "6486019fb15a1c410ac29b7bda3bed9504a1ba02ad70f1b78f5f437fdfaf4c64",
+      "releaseTimestamp": "2025-02-11T20:08:50Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher126"
+    },
+    {
+      "version": "v0.15.0-rancher125",
+      "digest": "aae3a8fdddae64e878d18ee9478ab04ec72d7bec708e3a5472272ec8b6e06281",
+      "releaseTimestamp": "2025-01-08T17:47:04Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher125"
+    },
+    {
+      "version": "v0.15.0-rancher124",
+      "digest": "72ca47fe07928b01198073c450be7745507299aaee00ece915a28745814f6a2f",
+      "releaseTimestamp": "2024-11-29T12:09:03Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher124"
+    },
+    {
+      "version": "v0.15.0-rancher123",
+      "digest": "5010c002347ee93a019fc5c50b5049a08533c17e1c0bbb2a1fa206978c9bb446",
+      "releaseTimestamp": "2024-11-26T23:07:09Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher123"
+    },
+    {
+      "version": "v0.15.0-rancher122",
+      "digest": "218b200a1e18a0454869f02b4387845bb09fe644ad6f9179b81cefee3cd7812d",
+      "releaseTimestamp": "2024-11-01T20:05:53Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher122"
+    },
+    {
+      "version": "v0.15.0-rancher121",
+      "digest": "f05e6e9700f0421d9b94af99a1df8bdba7d674cde2291c2f550ac819875fc3c9",
+      "releaseTimestamp": "2024-10-30T14:15:30Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher121"
+    },
+    {
+      "version": "v0.15.0-rancher120",
+      "digest": "d2be966aa786d86402db4495fe647aba072ce04069a5b11505147c703d4388d8",
+      "releaseTimestamp": "2024-10-24T18:37:27Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher120"
+    },
+    {
+      "version": "v0.15.0-rancher119",
+      "digest": "6b00db1bf75d38c011b439f153b8807186731796b2cb6770c7f9ea4d74890ca0",
+      "releaseTimestamp": "2024-10-10T23:15:19Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher119"
+    },
+    {
+      "version": "v0.15.0-rancher109-patch1",
+      "digest": "e9123bbac9b746a887b340df1552b3145cf9097fe598be3d203e571903b7e4a5",
+      "releaseTimestamp": "2024-09-26T18:40:20Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher109-patch1"
+    },
+    {
+      "version": "v0.15.0-rancher118",
+      "digest": "c03a183fa6f7d8c8430a42df7e1ee0f90ba97e503e1495608af72dc6166054a4",
+      "releaseTimestamp": "2024-09-25T18:10:37Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher118"
+    },
+    {
+      "version": "v0.15.0-rancher117",
+      "digest": "06513f416f324fe594aeb53365e6405e3a790a7e15aa152bcae916bba4adf9b9",
+      "releaseTimestamp": "2024-09-10T23:40:45Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher117"
+    },
+    {
+      "version": "v0.15.0-rancher116",
+      "digest": "3f6f49054d6f7946de96fc04745f1b9bad3dc73f394323ebd164c55f9add2bd6",
+      "releaseTimestamp": "2024-08-05T22:36:57Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher116"
+    },
+    {
+      "version": "v0.15.0-rancher115",
+      "digest": "95d6e5c741645901070e6a3cacea8c25e0e276d490fa74f681fbfb4e5de0e8cb",
+      "releaseTimestamp": "2024-07-31T23:31:20Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher115"
+    },
+    {
+      "version": "v0.15.0-rancher114",
+      "digest": "08dc0e53f53b112d674477f14079da049faa8cbbfd3229b807e040192b7a74a9",
+      "releaseTimestamp": "2024-06-07T20:59:18Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher114"
+    },
+    {
+      "version": "v0.15.0-rancher113",
+      "digest": "cfe72980efede98001ef5ec053ac5654ec2c4f3fc4f5e2c166c22f1d87b3f558",
+      "releaseTimestamp": "2024-05-02T15:47:49Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher113"
+    },
+    {
+      "version": "v0.15.0-rancher112",
+      "digest": "427d836303f77b180ebf6174f0cc411068c637eced8f8840259bc2713dd25075",
+      "releaseTimestamp": "2024-04-22T19:16:46Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher112"
+    },
+    {
+      "version": "v0.15.0-rancher111",
+      "digest": "87b8664b211ac2b81e9e48b3697d7da480b79987e01bcc33a1ac447fb9d558f8",
+      "releaseTimestamp": "2024-04-19T18:24:38Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher111"
+    },
+    {
+      "version": "v0.15.0-rancher110",
+      "digest": "16906d0437af54e0e8b1ab255fe5f2dde549726545160e6e84c1b0bb0afd8393",
+      "releaseTimestamp": "2024-02-15T06:00:13Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher110"
+    },
+    {
+      "version": "v0.15.0-rancher109",
+      "digest": "783b6fa99a442de74935c86c2e21c5cea4c466b98c7e93e75d1f3d564112a3dc",
+      "releaseTimestamp": "2024-01-09T21:24:18Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher109"
+    },
+    {
+      "version": "v0.15.0-rancher108",
+      "digest": "0e081276a1b3462b0e57f630eeaa1cca1a3573f7b3073fae678c42de1e2118ae",
+      "releaseTimestamp": "2024-01-08T19:00:49Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher108"
+    },
+    {
+      "version": "v0.15.0-rancher107",
+      "digest": "4cc2a136356392b230cdd3711f7af75ca842bbdc1c86991d5cccfeea3f1c4b2e",
+      "releaseTimestamp": "2023-12-14T22:19:22Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher107"
+    },
+    {
+      "version": "v0.15.0-rancher100-patch1",
+      "digest": "7b05cf2883ddda1c66b8587b527f6f439e4ec32f1e1d5be92a554c2e98133338",
+      "releaseTimestamp": "2023-10-10T18:35:00Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher100-patch1"
+    },
+    {
+      "version": "v0.15.0-rancher106",
+      "digest": "e7ccb388141f14c71cbafee578689dceb4fa211fb4c8911eefdfa08c6e06beec",
+      "releaseTimestamp": "2023-10-04T16:25:39Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher106"
+    },
+    {
+      "version": "v0.15.0-rancher105",
+      "digest": "d82e625c68d47a270d1d588d82aefcefaadea827fb2b79f3bc8ad14725a96f6a",
+      "releaseTimestamp": "2023-09-28T17:16:31Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher105"
+    },
+    {
+      "version": "v0.15.0-rancher104",
+      "digest": "3c805a578f19f7168ea0104cffefef10c941b35d2596a4dda189ffd58af4006b",
+      "releaseTimestamp": "2023-09-07T22:56:45Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher104"
+    },
+    {
+      "version": "v0.15.0-rancher103",
+      "digest": "2361a3abe1c14d2f951207a7a5f3d3475c6b04b5e168714b0ca7911c852570f1",
+      "releaseTimestamp": "2023-08-31T22:40:08Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher103"
+    },
+    {
+      "version": "v0.15.0-rancher102",
+      "digest": "88ff1dcfe810c240b696160c6bbaf74a96df4f8302ec456983f03da59125adf4",
+      "releaseTimestamp": "2023-08-08T17:00:52Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher102"
+    },
+    {
+      "version": "v0.15.0-rancher101",
+      "digest": "4f85439eb44663052350608562d348206f37f08ac96a4435bfdb93cbd843c532",
+      "releaseTimestamp": "2023-07-19T13:46:46Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher101"
+    },
+    {
+      "version": "v0.15.0-rancher100",
+      "digest": "a316639e472004df3d6cf3bac9e0645f44160a7db614ba75948e6264642a324c",
+      "releaseTimestamp": "2023-05-11T15:12:03Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher100"
+    },
+    {
+      "version": "v0.15.0-rancher99",
+      "digest": "885056dbac17f1378afbc879555f1b2f53f3d37ab425cb63b5ba8a9dfdf22a19",
+      "releaseTimestamp": "2023-04-20T20:46:29Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher99"
+    },
+    {
+      "version": "v0.15.0-rancher98",
+      "digest": "9459f98be4265f25d766ebcc20eec5153d719a26c83349eb684dd846be3f300c",
+      "releaseTimestamp": "2022-12-13T22:32:34Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher98"
+    },
+    {
+      "version": "v0.15.0-rancher97",
+      "digest": "50f0bb1d32e1e7f40053d5963b519900bb8650af8415350af2882bff8c47cc7e",
+      "releaseTimestamp": "2022-11-28T17:35:32Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher97"
+    },
+    {
+      "version": "v0.15.0-rancher96",
+      "digest": "f8c414f4739abc7fbcae76f9f7dd7a550c7fa8bd08662a789763b1d2f59bf28e",
+      "releaseTimestamp": "2022-11-15T06:18:22Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher96"
+    },
+    {
+      "version": "v0.15.0-rancher95",
+      "digest": "35061803ec8d4d5fd08fa5bc4738a4d561ba9d5e270e9a1d583710c85ebe59e4",
+      "releaseTimestamp": "2022-08-23T19:39:04Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher95"
+    },
+    {
+      "version": "v0.15.0-rancher94",
+      "digest": "98a40557186aac2f34d52dc4b633e04374f4c4ed14cd53eb6e95f35f46adb2da",
+      "releaseTimestamp": "2022-08-18T19:44:28Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher94"
+    },
+    {
+      "version": "v0.15.0-rancher93",
+      "digest": "6c78626172d903f9fa35468962e97672f1caa163cd2fd6005e23d5f2d1875662",
+      "releaseTimestamp": "2022-07-29T18:23:36Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher93"
+    },
+    {
+      "version": "v0.15.0-rancher92",
+      "digest": "e1b68c53bcd771f9d36c05717a1dbbc6c83276b44ad01bbda4ec07dae6c9c742",
+      "releaseTimestamp": "2022-07-27T16:17:33Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher92"
+    },
+    {
+      "version": "v0.15.0-rancher91",
+      "digest": "f125c42506dde8b81e4bd0324feee07ae356644022695bf5586ff6e0189dff01",
+      "releaseTimestamp": "2022-07-20T15:01:03Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher91"
+    },
+    {
+      "version": "v0.15.0-rancher90",
+      "digest": "4de0975a2b0dc8bc98935ce34f60d82b9bc028b4c75e3181f4f15a20807217eb",
+      "releaseTimestamp": "2022-07-11T16:35:14Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher90"
+    },
+    {
+      "version": "v0.15.0-rancher89",
+      "digest": "5d3de1ed85981e35947d0ef72c08378f9e84b80bd4193f96a407699c93858068",
+      "releaseTimestamp": "2022-07-07T20:42:22Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher89"
+    },
+    {
+      "version": "v0.15.0-rancher88",
+      "digest": "b22a25928ede805a54d7cda61de71cbfec559fe99c94dc4225e6248f82ca57a2",
+      "releaseTimestamp": "2022-06-14T21:29:28Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher88"
+    },
+    {
+      "version": "v0.15.0-rancher87",
+      "digest": "056f7ab7c8c70499f0704eb6043eb784cbab5b786908bbdadfaa76fb58ffdef8",
+      "releaseTimestamp": "2022-05-26T14:56:48Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher87"
+    },
+    {
+      "version": "v0.15.0-rancher86",
+      "digest": "f9ca0b08a4c28da854c432baf230d2fea5abfbdfb42baae07d257a680efed2c5",
+      "releaseTimestamp": "2022-05-17T14:39:58Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher86"
+    },
+    {
+      "version": "v0.15.0-rancher85",
+      "digest": "28c8a004ce914cf02ba676ed99517b4a31cb0be35f958ec7deccaebd5404f215",
+      "releaseTimestamp": "2022-05-04T23:17:25Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher85"
+    },
+    {
+      "version": "v0.15.0-rancher84",
+      "digest": "12207627aaef22a396e5547ed3f346a7cd960cc0e3d0b9c90ada4a8981be2ec6",
+      "releaseTimestamp": "2022-04-19T20:50:14Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher84"
+    },
+    {
+      "version": "v0.15.0-rancher83",
+      "digest": "fcc2972bc9f490cb61b794211f1f645874631b8f9d4fe9bea49fda3397986815",
+      "releaseTimestamp": "2022-04-07T17:52:45Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher83"
+    },
+    {
+      "version": "v0.15.0-rancher81",
+      "digest": "143d553631c57ab31fb76fd4a71956bc5b4af5f05efeb492a0ba2c471eb728f1",
+      "releaseTimestamp": "2022-03-16T23:12:35Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher81"
+    },
+    {
+      "version": "v0.15.0-rancher80",
+      "digest": "d0cc976fb51bd230ea14e118e465045b70803a3607574a463ae9567f2e7fa84a",
+      "releaseTimestamp": "2022-03-07T16:19:28Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher80"
+    },
+    {
+      "version": "v0.15.0-rancher79",
+      "digest": "03e8c8ad66e34ee982edd29669040b7fa24132003bb726773e92bbf14fef3740",
+      "releaseTimestamp": "2022-02-28T16:24:27Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher79"
+    },
+    {
+      "version": "v0.15.0-rancher78",
+      "digest": "33c66b0233bb51cc617bd8ab0244c16e5098046574062bc96f7b86093017f046",
+      "releaseTimestamp": "2022-02-24T21:59:22Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher78"
+    },
+    {
+      "version": "v0.15.0-rancher77",
+      "digest": "605dac72e2057a45abbedbf3555a18f131080bada5366fd5abb65aa094f06632",
+      "releaseTimestamp": "2022-02-22T23:40:37Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher77"
+    },
+    {
+      "version": "v0.15.0-rancher76",
+      "digest": "85c8210385d862919cbfdeb043fa2ca4922cd32e2c5efabec4446811b836d54b",
+      "releaseTimestamp": "2022-02-15T13:24:40Z",
+      "changelogUrl": "https://github.com/rancher/machine/releases/tag/v0.15.0-rancher76"
+    }
+  ]
+}

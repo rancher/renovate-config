@@ -1,0 +1,202 @@
+{
+  "releases": [
+    {
+      "version": "v0.16.0-rc.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-09-10T18:58:42Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.16.0-rc.1"
+    },
+    {
+      "version": "v0.15.2-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-09-10T19:23:46Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.2-rc.0"
+    },
+    {
+      "version": "v0.14.2-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-09-10T18:46:58Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.2-rc.0"
+    },
+    {
+      "version": "v0.13.2-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-09-10T18:18:44Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.13.2-rc.0"
+    },
+    {
+      "version": "v0.16.0-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-28T17:06:44Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.16.0-rc.0"
+    },
+    {
+      "version": "v0.15.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-24T16:39:48Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.1"
+    },
+    {
+      "version": "v0.15.1-rc.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-24T16:39:48Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.1-rc.1"
+    },
+    {
+      "version": "v0.15.1-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:01:30Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.1-rc.0"
+    },
+    {
+      "version": "v0.14.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:01:11Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.1"
+    },
+    {
+      "version": "v0.14.1-rc.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:01:11Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.1-rc.1"
+    },
+    {
+      "version": "v0.14.1-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:01:11Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.1-rc.0"
+    },
+    {
+      "version": "v0.13.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:00:59Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.13.1"
+    },
+    {
+      "version": "v0.13.1-rc.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:00:59Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.13.1-rc.1"
+    },
+    {
+      "version": "v0.13.1-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-08-14T14:00:59Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.13.1-rc.0"
+    },
+    {
+      "version": "v0.15.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-07-23T16:28:02Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.0"
+    },
+    {
+      "version": "v0.15.0-rc.5",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-07-10T06:00:39Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.0-rc.5"
+    },
+    {
+      "version": "v0.15.0-rc.4",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-07-02T17:24:58Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.0-rc.4"
+    },
+    {
+      "version": "v0.13.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-06-22T16:25:16Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.13.0"
+    },
+    {
+      "version": "v0.13.0-rc.2",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-06-22T16:25:16Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.13.0-rc.2"
+    },
+    {
+      "version": "v0.15.0-rc.3",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-06-08T21:45:38Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.0-rc.3"
+    },
+    {
+      "version": "v0.14.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-06-08T21:45:26Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.0"
+    },
+    {
+      "version": "v0.14.0-rc.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-06-08T21:45:26Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.0-rc.1"
+    },
+    {
+      "version": "v0.14.0-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-06-04T17:17:33Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.14.0-rc.0"
+    },
+    {
+      "version": "v0.15.0-rc.2",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-05-19T18:51:39Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.15.0-rc.2"
+    },
+    {
+      "version": "v0.3.17-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-04-29T17:52:53Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.17-rc.0"
+    },
+    {
+      "version": "v0.3.16",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-04-22T17:58:55Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.16"
+    },
+    {
+      "version": "v0.3.16-rc.4",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-04-22T17:58:55Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.16-rc.4"
+    },
+    {
+      "version": "v0.3.16-rc.3",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-04-17T14:14:32Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.16-rc.3"
+    },
+    {
+      "version": "v0.3.16-rc.1",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-04-08T13:44:14Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.16-rc.1"
+    },
+    {
+      "version": "v0.3.16-rc.0",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-04-07T20:53:23Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.16-rc.0"
+    },
+    {
+      "version": "v0.3.15-rc.4",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-03-12T17:44:36Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.15-rc.4"
+    },
+    {
+      "version": "v0.3.15",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-03-12T17:44:36Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.15"
+    },
+    {
+      "version": "v0.3.15-rc.3",
+      "digest": "ded6af4d28ab396dadf3f7c5871aa06c723275f9d7a4ec2d50d0fad9f52988d3",
+      "releaseTimestamp": "2026-02-17T16:31:45Z",
+      "changelogUrl": "https://github.com/rancher/system-agent/releases/tag/v0.3.15-rc.3"
+    }
+  ]
+}

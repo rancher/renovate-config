@@ -1,0 +1,238 @@
+{
+  "releases": [
+    {
+      "version": "v0.15.2-rc.0",
+      "digest": "9f1b613969d5b3e6918988f62e146e0d9ee080d576b552df25bf902eae59667b",
+      "releaseTimestamp": "2026-09-10T20:16:38Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.2-rc.0"
+    },
+    {
+      "version": "v0.14.2-rc.0",
+      "digest": "abdf7f643d8e4f3413e8d6ef9560c3e4377f8d8c4c7badc1b1a1a430193d37cf",
+      "releaseTimestamp": "2026-09-10T20:16:35Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.2-rc.0"
+    },
+    {
+      "version": "v0.13.2-rc.0",
+      "digest": "012cead3753dce21c518de93daf5344e8e11da112d4dbb642a2e2b4b4ed669f5",
+      "releaseTimestamp": "2026-09-10T20:16:33Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.2-rc.0"
+    },
+    {
+      "version": "v0.15.1",
+      "digest": "30800842fbba5d851a01d127b33b46d17f7137467d7088ea02a1c23ba1eb8e0a",
+      "releaseTimestamp": "2026-08-24T20:14:59Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.1"
+    },
+    {
+      "version": "v0.14.1",
+      "digest": "180bbf8454e80441b6a80ddc977d2ded075e27a29e738afe104abf9b95b0105e",
+      "releaseTimestamp": "2026-08-24T20:16:13Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.1"
+    },
+    {
+      "version": "v0.13.1",
+      "digest": "a0ca1b8e264335c536a0b10c6141219d415b738f366da5902d49ddd04ae07c92",
+      "releaseTimestamp": "2026-08-24T20:15:02Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.1"
+    },
+    {
+      "version": "v0.15.1-rc.3",
+      "digest": "3dfc75025784bbec07e835727ae876d760a0e0eb85bea0f2510d3045e5092ab5",
+      "releaseTimestamp": "2026-08-17T19:14:47Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.1-rc.3"
+    },
+    {
+      "version": "v0.14.1-rc.3",
+      "digest": "0d7cd658a62a439b3ed9f065cb9d73bded5620c686c2de144fce164d3338afee",
+      "releaseTimestamp": "2026-08-17T19:14:44Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.1-rc.3"
+    },
+    {
+      "version": "v0.13.1-rc.2",
+      "digest": "4de048df3f65bea7579d055c95a7220d90327535361f8bff985d11108ed754a4",
+      "releaseTimestamp": "2026-08-17T19:14:42Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.1-rc.2"
+    },
+    {
+      "version": "v0.12.1",
+      "digest": "11273bd428f19a5c822a86341517b3ba967739b74ac3ad3c2c8864b8b2856f79",
+      "releaseTimestamp": "2026-08-14T07:01:31Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.12.1"
+    },
+    {
+      "version": "v0.12.1-rc.2",
+      "digest": "b680c6595b4327e1172215feecec3c7886fbf18624b1f423c8fb2e72205b26a5",
+      "releaseTimestamp": "2026-08-14T07:01:31Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.12.1-rc.2"
+    },
+    {
+      "version": "v0.11.1",
+      "digest": "3504f6be2ed32a939292c31c293844b4bfde081289ada5ae097e81a822ff2553",
+      "releaseTimestamp": "2026-08-13T18:13:39Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.11.1"
+    },
+    {
+      "version": "v0.11.1-rc.1",
+      "digest": "cf3f0f6e514bba40a1b98fc885b2e78a2a40282d7519471c2fe96ebe3cca815d",
+      "releaseTimestamp": "2026-08-13T18:13:39Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.11.1-rc.1"
+    },
+    {
+      "version": "v0.16.0-rc.4",
+      "digest": "a85b7ed9e088c1564c3b861b31f548e3166cff1fe4400b58fbab0534d6a4dd82",
+      "releaseTimestamp": "2026-08-10T13:28:03Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.16.0-rc.4"
+    },
+    {
+      "version": "v0.15.1-rc.2",
+      "digest": "367e9bc3820a36683ec58ce30bdf4fd07aad7afc5b880a36d7a26c95fbec0aa1",
+      "releaseTimestamp": "2026-08-10T13:27:55Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.1-rc.2"
+    },
+    {
+      "version": "v0.16.0-rc.3",
+      "digest": "ee4e7a54e87948bd2a5e19341500d907901ea6a8baa5b931c9e12f8f4a32ba96",
+      "releaseTimestamp": "2026-08-05T21:36:34Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.16.0-rc.3"
+    },
+    {
+      "version": "v0.15.1-rc.1",
+      "digest": "7a04371aa539674f0c21daed21e98201a8b83edf3ab328092bbe773c29d8df0b",
+      "releaseTimestamp": "2026-08-05T13:45:19Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.1-rc.1"
+    },
+    {
+      "version": "v0.14.1-rc.2",
+      "digest": "8e75afd60cce46724c506f51c513018ca875f99c4eaba1dcc97f833fb447312c",
+      "releaseTimestamp": "2026-08-05T13:45:24Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.1-rc.2"
+    },
+    {
+      "version": "v0.13.1-rc.1",
+      "digest": "8ceb39bdf8ee304ba853bea4d997fa1061f80b0da54d90dec5e4cd3bceeefea0",
+      "releaseTimestamp": "2026-08-05T13:45:29Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.1-rc.1"
+    },
+    {
+      "version": "v0.12.1-rc.1",
+      "digest": "a8f7d3c0465e1c50bea2c36e35125aeedb190ab67b7c45a3a244046cbe5a8a0f",
+      "releaseTimestamp": "2026-08-05T20:11:37Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.12.1-rc.1"
+    },
+    {
+      "version": "v0.14.1-rc.1",
+      "digest": "30b429ef0434efd735c7bc473f1454c90c1940fc92983d73fbe39285707a0862",
+      "releaseTimestamp": "2026-07-31T19:44:26Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.1-rc.1"
+    },
+    {
+      "version": "v0.15.0",
+      "digest": "35cdbb6d1f8f42e6f210f58c2935fa4ede4f30a403d82ba0385d179666f8e12f",
+      "releaseTimestamp": "2026-07-23T17:24:54Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.0"
+    },
+    {
+      "version": "v0.15.0-rc.4",
+      "digest": "73926aa147875d8086e986d5831971017f2b0ed27e04bd6f99bdd2db286af697",
+      "releaseTimestamp": "2026-07-23T13:44:38Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.0-rc.4"
+    },
+    {
+      "version": "v0.14.0",
+      "digest": "219df74501c78791f6c5dc613ea41e49cca5d17990440af37e53a92503cd43d4",
+      "releaseTimestamp": "2026-07-23T14:18:19Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.0"
+    },
+    {
+      "version": "v0.14.0-rc.2",
+      "digest": "96c36c1f38b2ee22dd2868a4d913e51ab29a6e34be3509270d4b2836ae61a1c3",
+      "releaseTimestamp": "2026-07-23T14:18:19Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.14.0-rc.2"
+    },
+    {
+      "version": "v0.13.0",
+      "digest": "276ad577a5240fbba59f3f1f6702bc9cf4c1ae4c168c874a3d81212a3130378c",
+      "releaseTimestamp": "2026-07-23T13:51:33Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.0"
+    },
+    {
+      "version": "v0.13.0-rc.2",
+      "digest": "889416ef39143a19c4c88c58419e7c9f9f2ecc2a688f55f02304f5608a8f19bc",
+      "releaseTimestamp": "2026-07-23T13:51:33Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.0-rc.2"
+    },
+    {
+      "version": "v0.12.0",
+      "digest": "ee6491551bfb4ce266fd65f79a9d2529a041a6a3ff7c09aaf205e5f199e825fe",
+      "releaseTimestamp": "2026-07-23T13:45:52Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.12.0"
+    },
+    {
+      "version": "v0.12.0-rc.2",
+      "digest": "acc2468055e7f9204ca068049bae425845a9dc2e887b6183768e327e85a9f718",
+      "releaseTimestamp": "2026-07-23T13:45:52Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.12.0-rc.2"
+    },
+    {
+      "version": "v0.11.0",
+      "digest": "2b24a45f953b6de369244b16821d3637841f53042f48bbaedc153a6596ee3bfc",
+      "releaseTimestamp": "2026-07-23T13:46:05Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.11.0"
+    },
+    {
+      "version": "v0.11.0-rc.2",
+      "digest": "1f6ffa944734ca0c216bea052de9f4b24715cdcd00c82ccf13f8f490f9874e4b",
+      "releaseTimestamp": "2026-07-23T13:46:05Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.11.0-rc.2"
+    },
+    {
+      "version": "v0.16.0-rc.2",
+      "digest": "9078b9ed1dd4bd14b496a9810786a38104ca897e5a40770746b279349bca43b3",
+      "releaseTimestamp": "2026-07-21T18:22:16Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.16.0-rc.2"
+    },
+    {
+      "version": "v0.16.0-rc.1",
+      "digest": "6269a68fc1f3c605b388d4f7027a674418bb4874e13987e6de0bed03292bef59",
+      "releaseTimestamp": "2026-07-17T15:01:25Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.16.0-rc.1"
+    },
+    {
+      "version": "v0.13.0-rc.1",
+      "digest": "d047db6dd91413d1f14308ad8f626fc8ddb890268cf9d12cfa77f5274d900c39",
+      "releaseTimestamp": "2026-07-14T19:34:56Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.13.0-rc.1"
+    },
+    {
+      "version": "v0.12.0-rc.1",
+      "digest": "898e3657051aa5c1568a8ed40b6f835753153aa5416221ab39805ca10eb99ad4",
+      "releaseTimestamp": "2026-07-14T19:34:53Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.12.0-rc.1"
+    },
+    {
+      "version": "v0.11.0-rc.1",
+      "digest": "336e45e9207f7742aff9b813c9c7e38abfc27c9f2f9c9c87a543fc61a038aa1b",
+      "releaseTimestamp": "2026-07-14T19:34:51Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.11.0-rc.1"
+    },
+    {
+      "version": "v0.15.0-rc.3",
+      "digest": "67af6e466bf7ab8daba97ccc83b2d54607b19360d2f1981c347d0762dfd3f7b2",
+      "releaseTimestamp": "2026-07-06T19:24:46Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.0-rc.3"
+    },
+    {
+      "version": "v0.15.0-rc.2",
+      "digest": "b2f88e836c66ce4153eae0c8c4b50c999ddfdbfcd9b699819738b6a043f1493c",
+      "releaseTimestamp": "2026-06-09T18:58:48Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.0-rc.2"
+    },
+    {
+      "version": "v0.15.0-rc.1",
+      "digest": "28280acec5a8dd2ec61fd21f3b32b54b8d390fb1277e35a0fb1860584b2c98b0",
+      "releaseTimestamp": "2026-06-09T13:33:40Z",
+      "changelogUrl": "https://github.com/rancher/wins/releases/tag/v0.15.0-rc.1"
+    }
+  ]
+}
