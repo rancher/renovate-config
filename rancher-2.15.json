@@ -117,7 +117,7 @@
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
-      "allowedVersions": "<1.27"
+      "allowedVersions": "/^1\\.\\d+\\.0$/"
     },
     {
       "description": "Enable patch updates for kubectl",
