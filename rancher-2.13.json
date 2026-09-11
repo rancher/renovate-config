@@ -62,6 +62,7 @@
     },
     {
       "description": "Enable Go updates",
+      "matchManagers": ["gomod", "custom.regex"],
       "matchUpdateTypes": ["minor", "patch"],
       "matchPackageNames": [
         "golang",

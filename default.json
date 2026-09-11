@@ -45,6 +45,20 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Go Docker images with Go toolchain versions",
+      "matchStrings": [
+        "(?<prefix>FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/bci|registry\\.opensuse\\.org/opensuse/bci)/golang:)(?<currentValue>[^@\\s]+)"
+      ],
+      "autoReplaceStringTemplate": "{{{prefix}}}{{{newValue}}}",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track Go toolchain versions configured in GitHub Actions workflows",
@@ -863,6 +877,16 @@
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "Go toolchain"
+    },
+    {
+      "description": "Use Go toolchain versions for Go Docker images",
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "enabled": false
     },
     {
       "description": "Group Go workflow toolchain updates with Go updates",
