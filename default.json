@@ -45,6 +45,19 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track fully pinned Go versions configured in GitHub Actions workflows",
+      "matchStrings": [
+        "(?<variableName>SETUP_GO_VERSION|GOLANG_VERSION):\\s*'(?<currentValue>\\d+\\.\\d+\\.\\d+)'"
+      ],
+      "autoReplaceStringTemplate": "{{{variableName}}}: '{{{newValue}}}'",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
