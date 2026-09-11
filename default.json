@@ -47,11 +47,24 @@
       "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track fully pinned Go versions configured in GitHub Actions workflows",
+      "description": "Track fully pinned SETUP_GO_VERSION values configured in GitHub Actions workflows",
       "matchStrings": [
-        "(?<variableName>SETUP_GO_VERSION|GOLANG_VERSION):\\s*'(?<currentValue>\\d+\\.\\d+\\.\\d+)'"
+        "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+\\.\\d+)'"
       ],
-      "autoReplaceStringTemplate": "{{{variableName}}}: '{{{newValue}}}'",
+      "autoReplaceStringTemplate": "SETUP_GO_VERSION: '{{{newValue}}}'",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track fully pinned GOLANG_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOLANG_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+\\.\\d+)'"
+      ],
+      "autoReplaceStringTemplate": "GOLANG_VERSION: '{{{newValue}}}'",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -88,12 +101,58 @@
       "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track major and minor Go versions configured in GitHub Actions workflows",
+      "description": "Track wildcard SETUP_GO_VERSION values configured in GitHub Actions workflows",
       "matchStrings": [
-        "(?<variableName>SETUP_GO_VERSION|GOLANG_VERSION):\\s*'(?<currentValue>\\d+\\.\\d+)(?<versionSuffix>\\.\\*)?'"
+        "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)\\.\\*'"
       ],
       "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{variableName}}}: '{{{newMajor}}}.{{{newMinor}}}{{{versionSuffix}}}'",
+      "autoReplaceStringTemplate": "SETUP_GO_VERSION: '{{{newMajor}}}.{{{newMinor}}}.*'",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track bare SETUP_GO_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "SETUP_GO_VERSION: '{{{newMajor}}}.{{{newMinor}}}'",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track wildcard GOLANG_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOLANG_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)\\.\\*'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "GOLANG_VERSION: '{{{newMajor}}}.{{{newMinor}}}.*'",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track bare GOLANG_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOLANG_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "GOLANG_VERSION: '{{{newMajor}}}.{{{newMinor}}}'",
+      "depTypeTemplate": "go-workflow-minor",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -923,6 +982,12 @@
       "matchDatasources": ["golang-version"],
       "matchPackageNames": ["go"],
       "groupName": "Go toolchain"
+    },
+    {
+      "description": "Keep major and minor Go workflow values compatible with Renovate replacement validation",
+      "matchManagers": ["custom.regex"],
+      "matchDepTypes": ["go-workflow-minor"],
+      "allowedVersions": "/^1\\.\\d+\\.0$/"
     },
     {
       "description": "Group K3s updates with Kubernetes dependencies",
