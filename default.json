@@ -93,7 +93,7 @@
         "(?<variableName>SETUP_GO_VERSION|GOLANG_VERSION):\\s*'(?<currentValue>\\d+\\.\\d+)(?<versionSuffix>\\.\\*)?'"
       ],
       "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{#if versionSuffix}}{{{variableName}}}: '{{{newMajor}}}.{{{newMinor}}}.*'{{else}}{{{variableName}}}: '{{{newMajor}}}.{{{newMinor}}}'{{/if}}",
+      "autoReplaceStringTemplate": "{{{variableName}}}: '{{{newMajor}}}.{{{newMinor}}}{{{versionSuffix}}}'",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
