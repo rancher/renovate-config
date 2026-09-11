@@ -855,7 +855,7 @@
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Group other k8s.io dependencies",
+      "description": "Group other k8s.io and controller-tools dependencies",
       "matchManagers": ["gomod"],
       "matchPackageNames": [
         "!k8s.io/kubernetes",
@@ -865,7 +865,8 @@
         "!k8s.io/utils/**",
         "!k8s.io/kube-openapi",
         "!k8s.io/kube-openapi/**",
-        "k8s.io/**"
+        "k8s.io/**",
+        "sigs.k8s.io/controller-tools"
       ],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 5,
