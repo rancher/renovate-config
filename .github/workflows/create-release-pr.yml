@@ -40,6 +40,14 @@ jobs:
             sed -i 's/#main/#release/g' "${config}"
           done < <(git ls-files -z -- '*.json')
 
+          # Keep shared managers available to consumers that have not yet added
+          # a root default preset extension. Remove after all consumers migrate.
+          preset="github>rancher/renovate-config#release"
+          while IFS= read -r -d '' config; do
+            jq --arg preset "${preset}" 'if ((.extends // []) | index($preset)) then . else .extends = [$preset] + (.extends // []) end' "${config}" > "${config}.tmp"
+            mv "${config}.tmp" "${config}"
+          done < <(git ls-files -z -- 'rancher-*.json')
+
           # `security:gomodIndirectSecurityUpdates` requires Renovate >= 44.41.1 (or renovate-vault.yml >= v1.0.7); strip it when promoting to `release` for backwards compatibility.
           jq 'del(.extends[] | select(. == "security:gomodIndirectSecurityUpdates"))' default.json > default.json.tmp
           mv default.json.tmp default.json

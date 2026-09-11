@@ -20,6 +20,7 @@ their `renovate.json` as per below:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "$default",
     "release/v0.16",
@@ -41,6 +42,8 @@ their `renovate.json` as per below:
   ]
 }
 ```
+
+When using the `#main` presets, extend `default#main` once at top level. Do not add `default` to each branch preset. The release workflow rewrites `#main` to `#release` and adds the root preset to `rancher-*.json` for older consumers that do not yet have a top-level extension.
 
 The `rancher-main.json` preset contains additional configuration for the
 `rancher/rancher` main branch and its subprojects, like providing Go and Kubernetes version restrictions, but not much more than that.
@@ -65,6 +68,7 @@ the repository-agnostic `automerge.json` preset in a separate branch-scoped
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "$default",
     "release/v0.16",
@@ -99,6 +103,10 @@ Keep the release preset entries and automerge entry separate because Renovate
 flattens nested package rules. The preset does not enable updates or change
 allowed versions.
 
+For a consumer tracking `main`, use `#main` for all presets and extend
+`default#main` once at top level; add `automerge#main` as a separate top-level
+extension when automerge is desired.
+
 ### GitHub requirements for automerge
 
 Enforce successful CI status with branch protection rules so GitHub automerge
@@ -118,6 +126,7 @@ branch-scoped configuration:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "$default",
     "release/v0.16",
