@@ -70,6 +70,7 @@
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "prHourlyLimit": 0,
       "enabled": true
     },
     {
