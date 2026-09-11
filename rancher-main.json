@@ -25,6 +25,13 @@
       "allowedVersions": "<1.28.0"
     },
     {
+      "description": "Apply Go version cap to module directives",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "allowedVersions": "/^1\\.(?:\\d|1\\d|2[0-7])\\.0$/"
+    },
+    {
       "description": "Allow golangci-lint action updates after seven days to be in sync with go bumps",
       "matchPackageNames": ["golangci/golangci-lint-action"],
       "minimumReleaseAge": "7 days"
