@@ -886,6 +886,7 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"],
       "enabled": false
     },
     {
