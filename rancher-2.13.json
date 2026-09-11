@@ -61,9 +61,8 @@
       "enabled": false
     },
     {
-      "description": "Enable patch updates for Go packages",
-      "matchDepTypes": ["!golang"],
-      "matchUpdateTypes": ["patch"],
+      "description": "Enable Go updates",
+      "matchUpdateTypes": ["minor", "patch"],
       "matchPackageNames": [
         "golang",
         "go",

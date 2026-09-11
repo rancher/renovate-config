@@ -11,7 +11,7 @@ This repository contains the centralized Renovate preset (`default.json`) and th
 
 For easier alignment of versions across projects around the Rancher Manager
 ecosystem, a few presets were created that enforce version constraints for each
-Rancher minor version. These presets mostly restrict bumps to security-related updates, with the exception of patch-level bumps for Go and Kubernetes.
+Rancher minor version. These presets mostly restrict bumps to security-related updates, with the exception of Go bumps and patch-level Kubernetes bumps.
 
 The presets are available at the root of this repository and follow the naming
 convention: `rancher-<version>.json`. To use these presets, a project can configure
