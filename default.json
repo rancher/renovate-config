@@ -677,7 +677,7 @@
       "matchManagers": ["gomod"],
       "matchDepNames": ["go"],
       "matchDepTypes": ["golang"],
-      "matchJsonata": ["updateType = 'minor' or updateType = 'major'"],
+      "allowedVersions": "/^\\d+\\.\\d+\\.0$/",
       "rangeStrategy": "bump",
       "groupName": "Go toolchain"
     },
