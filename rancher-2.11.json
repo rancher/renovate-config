@@ -23,6 +23,12 @@
       "allowedVersions": "<1.27"
     },
     {
+      "description": "Keep major and minor Go workflow values compatible with Renovate replacement validation",
+      "matchManagers": ["custom.regex"],
+      "matchDepTypes": ["go-workflow-minor"],
+      "allowedVersions": "/^1\\.(?:\\d|1\\d|2[0-6])\\.0$/"
+    },
+    {
       "description": "Apply Kubernetes version caps to all updates",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubernetes/kubernetes", "k8s.io/kubernetes"],
