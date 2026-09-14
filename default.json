@@ -259,7 +259,7 @@
         "(?:^|\\n)ARG\\s+KUBECTL_VERSION.*\\=\\s*(?<currentValue>.*?)\\n"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
-      "packageNameTemplate": "kubectl-amd64",
+      "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -272,7 +272,7 @@
         "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\""
       ],
       "depNameTemplate": "kubernetes/kubernetes",
-      "packageNameTemplate": "kubectl-amd64",
+      "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -538,13 +538,44 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
-      "description": "Version and arch-specific checksum manager for kubectl amd64 in Dockerfiles",
+      "description": "Kubectl version manager for Dockerfile environment variables",
+      "matchStrings": [
+        "ENV KUBECTL_VERSION(?<versionSeparator>=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
+      ],
+      "autoReplaceStringTemplate": "ENV KUBECTL_VERSION{{{versionSeparator}}}{{{newValue}}}\\n",
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for kubectl amd64 in Dockerfiles",
       "matchStrings": [
         "ENV KUBECTL_VERSION(?<versionSeparator>=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n(?<between>[\\s\\S]*?)ENV KUBECTL_CHECKSUM_amd64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_VERSION{{{versionSeparator}}}{{{newValue}}}\\n{{{between}}}ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}\\n",
+      "autoReplaceStringTemplate": "ENV KUBECTL_VERSION{{{versionSeparator}}}{{{kubectlVersion}}}\\n{{{between}}}ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}\\n",
       "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubectl-amd64",
+      "packageNameTemplate": "kubectl-amd64-checksum",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for reverse-ordered kubectl amd64 variables",
+      "matchStrings": [
+        "ENV KUBECTL_CHECKSUM_amd64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n(?<between>[\\s\\S]*?)ENV KUBECTL_VERSION(?<versionSeparator>=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n"
+      ],
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}\\n{{{between}}}ENV KUBECTL_VERSION{{{versionSeparator}}}{{{kubectlVersion}}}\\n",
+      "currentValueTemplate": "{{{kubectlVersion}}}",
+      "depNameTemplate": "kubectl-amd64",
+      "packageNameTemplate": "kubectl-amd64-checksum",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -554,14 +585,29 @@
         "/(^|/)Dockerfile[^/]*$/"
       ],
       "description": "Arch-specific checksum manager for kubectl arm64 in Dockerfiles",
-      "matchStringsStrategy": "combination",
       "matchStrings": [
-        "ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
-        "ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n"
+        "ENV KUBECTL_VERSION(?<versionSeparator>=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n(?<between>[\\s\\S]*?)ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}\\n",
+      "autoReplaceStringTemplate": "ENV KUBECTL_VERSION{{{versionSeparator}}}{{{kubectlVersion}}}\\n{{{between}}}ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}\\n",
       "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubectl-arm64",
+      "packageNameTemplate": "kubectl-arm64-checksum",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for reverse-ordered kubectl arm64 variables",
+      "matchStrings": [
+        "ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n(?<between>[\\s\\S]*?)ENV KUBECTL_VERSION(?<versionSeparator>=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n"
+      ],
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}\\n{{{between}}}ENV KUBECTL_VERSION{{{versionSeparator}}}{{{kubectlVersion}}}\\n",
+      "currentValueTemplate": "{{{kubectlVersion}}}",
+      "depNameTemplate": "kubectl-arm64",
+      "packageNameTemplate": "kubectl-arm64-checksum",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -795,7 +841,7 @@
     {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64"],
+      "matchPackageNames": ["rancher/kubectl", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version"],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 1,
       "prPriority": 50,
