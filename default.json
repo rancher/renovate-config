@@ -118,7 +118,7 @@
       "description": "Track BCI workflow images with version comments",
       "matchStrings": [
         "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base)@sha256:[a-f0-9]{64}[ \\t]*#\\s*(?<currentValue>\\d+\\.\\d+)",
-        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)[ \\t]*#\\s*zizmor: ignore\\[unpinned-images\\]"
+        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)[ \\t]*#\\s*zizmor: ignore\\[unpinned-images\\][^\\r\\n]*"
       ],
       "versioningTemplate": "docker",
       "autoReplaceStringTemplate": "container: {{{depName}}}:{{{newValue}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
