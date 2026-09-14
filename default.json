@@ -776,13 +776,17 @@
       "separateMajorMinor": false
     },
     {
-      "description": "Allow Wrangler and lasso updates to be created after 3 days because they are internal products",
+      "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs",
       "matchManagers": ["gomod"],
-      "groupName": "wrangler-lasso",
+      "groupName": "Kubernetes dependencies",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
         "github.com/rancher/lasso"
       ],
+      "minimumGroupSize": 1,
+      "prPriority": 50,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}",
       "minimumReleaseAge": "3 days"
     },
     {
