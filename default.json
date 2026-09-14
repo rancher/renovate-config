@@ -562,7 +562,7 @@
       ],
       "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}\\n",
       "currentValueTemplate": "{{{kubectlVersion}}}",
-      "depNameTemplate": "kubectl-amd64",
+      "depNameTemplate": "kubernetes/kubernetes-amd64",
       "packageNameTemplate": "kubectl-amd64-checksum",
       "datasourceTemplate": "custom.local"
     },
@@ -580,7 +580,7 @@
       ],
       "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}\\n",
       "currentValueTemplate": "{{{kubectlVersion}}}",
-      "depNameTemplate": "kubectl-arm64",
+      "depNameTemplate": "kubernetes/kubernetes-arm64",
       "packageNameTemplate": "kubectl-arm64-checksum",
       "datasourceTemplate": "custom.local"
     },
