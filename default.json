@@ -181,6 +181,21 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track Rancher CI Go image families with Go toolchain versions",
+      "matchStrings": [
+        "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track tagged Rancher CI container images in GitHub Actions workflows",
@@ -804,6 +819,13 @@
       "matchPackageNames": ["ghcr.io/rancher/ci-image/**"],
       "groupName": "Rancher CI images",
       "pinDigests": true
+    },
+    {
+      "description": "Update Rancher CI Go image families with Go toolchain versions",
+      "matchManagers": ["custom.regex"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
+      "enabled": false
     },
     {
       "description": "Group non-Go BCI image updates",
