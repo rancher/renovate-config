@@ -542,10 +542,11 @@
       "description": "Arch-specific checksum manager for kubectl amd64 in Dockerfiles",
       "matchStringsStrategy": "combination",
       "matchStrings": [
-        "ENV KUBECTL_VERSION(?:=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV KUBECTL_CHECKSUM_amd64(?:=|\\s)[^\\r\\n\\s]+\\n",
-        "ENV KUBECTL_CHECKSUM_amd64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV KUBECTL_CHECKSUM_amd64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n"
       ],
-      "autoReplaceStringTemplate": "{{#if currentDigest}}ENV KUBECTL_CHECKSUM_amd64={{{newDigest}}}\\n{{else}}ENV KUBECTL_VERSION={{{newValue}}}\\n{{/if}}",
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}\\n",
+      "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubectl-amd64",
       "datasourceTemplate": "custom.local"
     },
@@ -558,10 +559,11 @@
       "description": "Arch-specific checksum manager for kubectl arm64 in Dockerfiles",
       "matchStringsStrategy": "combination",
       "matchStrings": [
-        "ENV KUBECTL_VERSION(?:=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*?ENV KUBECTL_CHECKSUM_arm64(?:=|\\s)[^\\r\\n\\s]+\\n",
-        "ENV KUBECTL_CHECKSUM_arm64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n",
+        "ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n"
       ],
-      "autoReplaceStringTemplate": "{{#if currentDigest}}ENV KUBECTL_CHECKSUM_arm64={{{newDigest}}}\\n{{else}}ENV KUBECTL_VERSION={{{newValue}}}\\n{{/if}}",
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}\\n",
+      "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubectl-arm64",
       "datasourceTemplate": "custom.local"
     },
