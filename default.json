@@ -257,9 +257,9 @@
       ],
       "description": "Canonical kubectl version source for Dockerfile and deps files; tied to custom.local so version bumps only happen when checksum data is available",
       "matchStrings": [
-        "(?:^|\\n)(?<prefix>(?:ARG\\s+|ENV\\s+)?KUBECTL_VERSION)(?<separator>\\s*\\?=\\s*|=\\s*|\\s+)(?<currentValue>[^\\r\\n]+)\\n"
+        "(?<linePrefix>^|\\n)(?<prefix>(?:ARG[ \\t]+|ENV[ \\t]+)?KUBECTL_VERSION)(?<separator>[ \\t]*\\?=[ \\t]*|[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)[ \\t]*\\n"
       ],
-      "autoReplaceStringTemplate": "{{{prefix}}}{{{separator}}}{{{newValue}}}\\n",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}{{{prefix}}}{{{separator}}}{{{newValue}}}\\n",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
