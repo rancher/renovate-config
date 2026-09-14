@@ -115,6 +115,19 @@
       "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
+      "description": "Track BCI workflow images with version comments",
+      "matchStrings": [
+        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base)@sha256:[a-f0-9]{64}[ \\t]*#\\s*(?<currentValue>\\d+\\.\\d+)"
+      ],
+      "versioningTemplate": "docker",
+      "autoReplaceStringTemplate": "container: {{{depName}}}:{{{newValue}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
       "description": "Track bare SETUP_GO_VERSION values configured in GitHub Actions workflows",
       "matchStrings": [
         "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)'"
@@ -840,6 +853,13 @@
       "matchManagers": ["custom.regex"],
       "matchDatasources": ["docker"],
       "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
+      "enabled": false
+    },
+    {
+      "description": "Update BCI workflow images with version tags",
+      "matchManagers": ["github-actions"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["registry.suse.com/bci/bci-base"],
       "enabled": false
     },
     {
