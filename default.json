@@ -825,7 +825,8 @@
         "!k8s.io/kube-openapi",
         "!k8s.io/kube-openapi/**",
         "k8s.io/**",
-        "sigs.k8s.io/controller-tools"
+        "sigs.k8s.io/controller-tools",
+        "sigs.k8s.io/controller-runtime"
       ],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 5,
