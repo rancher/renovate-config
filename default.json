@@ -545,7 +545,7 @@
         "ENV KUBECTL_VERSION(?:=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n",
         "ENV KUBECTL_CHECKSUM_amd64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64={{{newDigest}}}\\n",
+      "autoReplaceStringTemplate": "{{#if currentDigest}}ENV KUBECTL_CHECKSUM_amd64={{{newDigest}}}\\n{{else}}ENV KUBECTL_VERSION={{{newValue}}}\\n{{/if}}",
       "depNameTemplate": "kubectl-amd64",
       "datasourceTemplate": "custom.local"
     },
@@ -561,7 +561,7 @@
         "ENV KUBECTL_VERSION(?:=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n",
         "ENV KUBECTL_CHECKSUM_arm64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
       ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64={{{newDigest}}}\\n",
+      "autoReplaceStringTemplate": "{{#if currentDigest}}ENV KUBECTL_CHECKSUM_arm64={{{newDigest}}}\\n{{else}}ENV KUBECTL_VERSION={{{newValue}}}\\n{{/if}}",
       "depNameTemplate": "kubectl-arm64",
       "datasourceTemplate": "custom.local"
     },
