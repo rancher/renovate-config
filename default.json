@@ -72,7 +72,8 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
+        "/(^|/)Dockerfile[^/]*$/",
+        "/hack/make/deps.mk/"
       ],
       "description": "Track Go Docker images with Go toolchain versions",
       "matchStrings": [
