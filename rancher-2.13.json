@@ -31,7 +31,7 @@
     {
       "description": "Apply Kubernetes version caps to all updates",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version", "kubernetes/kubernetes", "k8s.io/kubernetes"],
       "allowedVersions": "<1.33"
     },
     {
@@ -129,7 +129,7 @@
     {
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64"],
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version"],
       "enabled": true,
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },

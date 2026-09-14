@@ -61,7 +61,10 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes",
         "kubectl-amd64",
-        "kubectl-arm64"
+        "kubectl-arm64",
+        "kubectl-amd64-checksum",
+        "kubectl-arm64-checksum",
+        "kubectl-version"
       ],
       "allowedVersions": "<1.38.0"
     },
