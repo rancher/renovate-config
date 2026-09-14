@@ -188,7 +188,22 @@
         "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
       "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track Rancher CI Go image families in image fields",
+      "matchStrings": [
+        "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
       "depTypeTemplate": "go-workflow-minor",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -823,6 +838,13 @@
     {
       "description": "Update Rancher CI Go image families with Go toolchain versions",
       "matchManagers": ["custom.regex"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
+      "enabled": false
+    },
+    {
+      "description": "Update Rancher CI Go image families with Go toolchain versions",
+      "matchManagers": ["github-actions"],
       "matchDatasources": ["docker"],
       "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
       "enabled": false
