@@ -257,8 +257,9 @@
       ],
       "description": "Canonical kubectl version source for Dockerfile and deps files; tied to custom.local so version bumps only happen when checksum data is available",
       "matchStrings": [
-        "(?:^|\\n)(?:ARG\\s+)?KUBECTL_VERSION.*\\=\\s*(?<currentValue>.*?)\\n"
+        "(?<linePrefix>^|\\n)(?<prefix>(?:ARG[ \\t]+|ENV[ \\t]+)?KUBECTL_VERSION)(?<separator>[ \\t]*\\?=[ \\t]*|[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)[ \\t]*\\n"
       ],
+      "autoReplaceStringTemplate": "{{{linePrefix}}}{{{prefix}}}{{{separator}}}{{{newValue}}}\\n",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -532,21 +533,6 @@
       ],
       "depNameTemplate": "k3d-io/k3d",
       "datasourceTemplate": "github-releases"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "description": "Kubectl version manager for Dockerfile environment variables",
-      "matchStrings": [
-        "ENV KUBECTL_VERSION(?<versionSeparator>=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n"
-      ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_VERSION{{{versionSeparator}}}{{{newValue}}}\\n",
-      "depNameTemplate": "kubernetes/kubernetes",
-      "packageNameTemplate": "kubectl-version",
-      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
