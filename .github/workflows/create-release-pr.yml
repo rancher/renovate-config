@@ -34,7 +34,7 @@ jobs:
           branch="release-candidate-${GITHUB_RUN_ID}"
 
           git switch -c "${branch}" release
-          git read-tree -u -m main
+          git merge --no-ff --no-commit -X theirs main
 
           while IFS= read -r -d '' config; do
             sed -i 's/#main/#release/g' "${config}"
