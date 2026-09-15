@@ -15,11 +15,10 @@
   "labels": [
     "dependencies"
   ],
-  "automergeStrategy": "merge-commit",
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "postUpdateOptions": [
-    "gomodTidy",
+    "gomodTidyAll",
     "gomodUpdateImportPaths"
   ],
   "customDatasources": {
@@ -32,13 +31,41 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/(^|/)go\\.mod$/"
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Add a Go toolchain directive when go.mod has none",
+      "description": "Track fully pinned SETUP_GO_VERSION values configured in GitHub Actions workflows",
       "matchStrings": [
-        "go (?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)\\n\\n(?<nextDirective>replace|require) \\("
+        "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+\\.\\d+)'"
       ],
-      "autoReplaceStringTemplate": "go {{{currentValue}}}\\ntoolchain go{{{newValue}}}\\n\\n{{{nextDirective}}} (",
+      "autoReplaceStringTemplate": "SETUP_GO_VERSION: '{{{newValue}}}'",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track fully pinned GOLANG_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOLANG_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+\\.\\d+)'"
+      ],
+      "autoReplaceStringTemplate": "GOLANG_VERSION: '{{{newValue}}}'",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/hack/make/deps.mk/"
+      ],
+      "description": "Track Go Docker images with Go toolchain versions",
+      "matchStrings": [
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/bci|registry\\.opensuse\\.org/opensuse/bci)/golang:(?<currentValue>[^@\\s]+)"
+      ],
+      "versioningTemplate": "semver-coerced",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -52,6 +79,80 @@
         "GOTOOLCHAIN=go(?<currentValue>\\d+\\.\\d+\\.\\d+)\\+auto"
       ],
       "autoReplaceStringTemplate": "GOTOOLCHAIN=go{{{newValue}}}+auto",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track wildcard SETUP_GO_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)\\.\\*'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "SETUP_GO_VERSION: '{{{newMajor}}}.{{{newMinor}}}.*'",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track BCI workflow images with version comments",
+      "matchStrings": [
+        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base)@sha256:[a-f0-9]{64}[ \\t]*#\\s*(?<currentValue>\\d+\\.\\d+)",
+        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)(?:[ \\t]*#\\s*zizmor: ignore\\[unpinned-images\\][^\\r\\n]*)?"
+      ],
+      "versioningTemplate": "docker",
+      "autoReplaceStringTemplate": "container: {{{depName}}}:{{{newValue}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track bare SETUP_GO_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "SETUP_GO_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "SETUP_GO_VERSION: '{{{newMajor}}}.{{{newMinor}}}'",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track wildcard GOLANG_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOLANG_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)\\.\\*'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "GOLANG_VERSION: '{{{newMajor}}}.{{{newMinor}}}.*'",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track bare GOLANG_VERSION values configured in GitHub Actions workflows",
+      "matchStrings": [
+        "GOLANG_VERSION:\\s*'(?<currentValue>\\d+\\.\\d+)'"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "GOLANG_VERSION: '{{{newMajor}}}.{{{newMinor}}}'",
+      "depTypeTemplate": "go-workflow-minor",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -81,6 +182,36 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track Rancher CI Go image families with Go toolchain versions",
+      "matchStrings": [
+        "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "description": "Track Rancher CI Go image families in image fields",
+      "matchStrings": [
+        "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+      ],
+      "currentValueTemplate": "{{{currentValue}}}.0",
+      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
+      "depTypeTemplate": "go-workflow-minor",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track tagged Rancher CI container images in GitHub Actions workflows",
@@ -95,28 +226,39 @@
       "managerFilePatterns": [
         "/\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
+      "description": "Track digest-pinned Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?<lineEnding>[ \\t]*(?:#[^\\r\\n]*)?(?:\\r?\\n|$))"
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
       ],
       "currentValueTemplate": "latest",
-      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}{{{lineEnding}}}",
+      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}@{{{newDigest}}}",
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/",
-        "/hack/make/deps.mk/"
+        "/(^|/)Dockerfile[^/]*$/"
       ],
-      "description": "Canonical kubectl version source for Dockerfile and deps files; tied to custom.local so version bumps only happen when checksum data is available",
+      "description": "Kubectl version source for Dockerfile ENV declarations",
       "matchStrings": [
-        "KUBECTL_VERSION.*\\=\\s*(?<currentValue>.*?)\\n",
-        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
+        "(?<linePrefix>^|\\r?\\n[ \\t]*)ENV[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>(?:[^\\r\\n]*(?:\\r?\\n|$))*?)(?<duplicateLinePrefix>[ \\t]*)ENV[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
       "depNameTemplate": "kubernetes/kubernetes",
-      "packageNameTemplate": "kubectl-amd64",
+      "packageNameTemplate": "kubectl-version",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)hack/make/deps\\.mk$/"
+      ],
+      "description": "Kubectl version source for Make declarations",
+      "matchStrings": [
+        "(?<linePrefix>^|\\n)KUBECTL_VERSION(?<separator>[ \\t]*\\?=[ \\t]*|[ \\t]*=[ \\t]*)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n|$)"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -124,12 +266,26 @@
       "managerFilePatterns": [
         "/\\.sh$/"
       ],
-      "description": "Canonical kubectl version source for shell scripts; tied to custom.local so version bumps only happen when checksum data is available",
+      "description": "Kubectl version source for shell scripts",
       "matchStrings": [
-        "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\""
+        "KUBECTL_VERSION=\\\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\\\""
       ],
       "depNameTemplate": "kubernetes/kubernetes",
-      "packageNameTemplate": "kubectl-amd64",
+      "packageNameTemplate": "kubectl-version",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Kubectl version source for Dockerfile ARG declarations",
+      "matchStrings": [
+        "(?<linePrefix>^|\\r?\\n[ \\t]*)ARG[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>(?:[^\\r\\n]*(?:\\r?\\n|$))*?)(?<duplicateLinePrefix>[ \\t]*)ARG[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -246,10 +402,24 @@
       ],
       "description": "Track K3s versions configured in Dockerfile environment variables",
       "matchStrings": [
-        "ENV CATTLE_K3S_VERSION[=\\s](?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)\\n"
+        "(?<linePrefix>^|\\r?\\n[ \\t]*)ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>(?:[^\\r\\n]*(?:\\r?\\n|$))*?)(?<duplicateLinePrefix>[ \\t]*)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
+      ],
+      "depNameTemplate": "k3s-io/k3s",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher K3s image versions in Dockerfiles",
+      "matchStrings": [
+        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+-k3s\\d+)"
       ],
       "depNameTemplate": "rancher/k3s",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver"
     },
     {
       "customType": "regex",
@@ -384,10 +554,13 @@
       "description": "Arch-specific checksum manager for kubectl amd64 in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV KUBECTL_CHECKSUM_amd64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "(?:^|\\n)ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV KUBECTL_CHECKSUM_amd64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
       ],
-      "depNameTemplate": "kubectl-amd64",
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64={{{newDigest}}}",
+      "currentValueTemplate": "{{{kubectlVersion}}}",
+      "depNameTemplate": "kubernetes/kubernetes-amd64",
+      "packageNameTemplate": "kubectl-amd64-checksum",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -399,10 +572,13 @@
       "description": "Arch-specific checksum manager for kubectl arm64 in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV KUBECTL_CHECKSUM_arm64(\\=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "(?:^|\\n)ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV KUBECTL_CHECKSUM_arm64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
       ],
-      "depNameTemplate": "kubectl-arm64",
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64={{{newDigest}}}",
+      "currentValueTemplate": "{{{kubectlVersion}}}",
+      "depNameTemplate": "kubernetes/kubernetes-arm64",
+      "packageNameTemplate": "kubectl-arm64-checksum",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -533,9 +709,7 @@
       "matchDepTypes": [
         "golang"
       ],
-      "matchJsonata": [
-        "updateType = 'minor' or updateType = 'major'"
-      ],
+      "allowedVersions": "/^\\d+\\.\\d+\\.0$/",
       "rangeStrategy": "bump",
       "groupName": "Go toolchain"
     },
@@ -583,6 +757,45 @@
       "pinDigests": true
     },
     {
+      "description": "Update Rancher CI Go image families with Go toolchain versions",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Update BCI workflow images with version tags",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "registry.suse.com/bci/bci-base"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Update Rancher CI Go image families with Go toolchain versions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Group non-Go BCI image updates",
       "matchDatasources": [
         "docker"
@@ -604,25 +817,7 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Allow security fixes for GitHub Actions without the group-size threshold",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchJsonata": [
-        "$exists(vulnerabilityFixVersion)"
-      ],
-      "minimumGroupSize": 1
-    },
-    {
-      "description": "Prioritize vulnerability fix updates across all branches",
-      "matchJsonata": [
-        "$exists(vulnerabilityFixVersion)"
-      ],
-      "prPriority": 100,
-      "prCreation": "immediate"
-    },
-    {
-      "description": "Update renovate-vault workflow references after two days without a group-size restriction",
+      "description": "Prioritize renovate-vault workflow references after two days without a group-size restriction",
       "matchManagers": [
         "github-actions"
       ],
@@ -631,6 +826,7 @@
         "rancher/renovate-config/**"
       ],
       "minimumReleaseAge": "2 days",
+      "prPriority": 10,
       "minimumGroupSize": 1
     },
     {
@@ -661,31 +857,20 @@
       "separateMajorMinor": false
     },
     {
-      "description": "Allow Wrangler and lasso updates to be created after 3 days because they are internal products",
+      "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs",
       "matchManagers": [
         "gomod"
       ],
-      "groupName": "wrangler-lasso",
+      "groupName": "Kubernetes dependencies",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
         "github.com/rancher/lasso"
       ],
+      "minimumGroupSize": 1,
+      "prPriority": 50,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}",
       "minimumReleaseAge": "3 days"
-    },
-    {
-      "description": "Let Rancher teams manage internal product updates",
-      "matchManagers": [
-        "gomod"
-      ],
-      "matchPackageNames": [
-        "github.com/rancher/**",
-        "!github.com/rancher/wrangler/v3",
-        "!github.com/rancher/lasso"
-      ],
-      "matchJsonata": [
-        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
-      ],
-      "enabled": false
     },
     {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
@@ -699,9 +884,14 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes",
         "kubectl-amd64",
-        "kubectl-arm64"
+        "kubectl-arm64",
+        "kubectl-amd64-checksum",
+        "kubectl-arm64-checksum",
+        "kubectl-version"
       ],
       "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 1,
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -734,7 +924,7 @@
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
-      "description": "Group other k8s.io dependencies",
+      "description": "Group other k8s.io and controller-tools dependencies",
       "matchManagers": [
         "gomod"
       ],
@@ -746,9 +936,13 @@
         "!k8s.io/utils/**",
         "!k8s.io/kube-openapi",
         "!k8s.io/kube-openapi/**",
-        "k8s.io/**"
+        "k8s.io/**",
+        "sigs.k8s.io/controller-tools",
+        "sigs.k8s.io/controller-runtime"
       ],
       "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 5,
+      "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
@@ -761,6 +955,20 @@
         "golang-version"
       ],
       "groupName": "Go toolchain"
+    },
+    {
+      "description": "Prioritize Go toolchain updates",
+      "matchPackageNames": [
+        "golang",
+        "go",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang",
+        "golangci/golangci-lint",
+        "golangci/golangci-lint-action",
+        "github.com/golangci/golangci-lint",
+        "github.com/golangci/golangci-lint/v2"
+      ],
+      "prPriority": 50
     },
     {
       "description": "Group Go Docker image updates with toolchain updates",
@@ -779,6 +987,26 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Use Go toolchain versions for Go Docker images",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "pin"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Group Go workflow toolchain updates with Go updates",
       "matchManagers": [
         "custom.regex"
@@ -792,15 +1020,31 @@
       "groupName": "Go toolchain"
     },
     {
-      "description": "Group K3s image and environment updates",
+      "description": "Keep major and minor Go workflow values compatible with Renovate replacement validation",
       "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDepTypes": [
+        "go-workflow-minor"
+      ],
+      "allowedVersions": "/^1\\.\\d+\\.0$/"
+    },
+    {
+      "description": "Group K3s updates with Kubernetes dependencies",
+      "matchManagers": [
+        "gomod",
         "custom.regex",
         "dockerfile"
       ],
       "matchPackageNames": [
-        "rancher/k3s"
+        "rancher/k3s",
+        "k3s-io/k3s"
       ],
-      "groupName": "K3s"
+      "groupName": "Kubernetes dependencies",
+      "minimumGroupSize": 1,
+      "prPriority": 50,
+      "commitMessageTopic": "Kubernetes dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
       "description": "Require three Go toolchain updates when golangci-lint changes",
@@ -852,7 +1096,7 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "matchCurrentValue": "1.25",
+      "matchCurrentValue": "1.26",
       "enabled": false
     },
     {
@@ -870,20 +1114,6 @@
         "digest"
       ],
       "enabled": false
-    },
-    {
-      "matchPackageNames": [
-        "golang.org/x/crypto/x509roots/fallback",
-        "golang.org/x/exp"
-      ],
-      "matchDepTypes": [
-        "!indirect"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "digest"
-      ],
-      "enabled": true
     },
     {
       "description": "Disable major bumps",
@@ -974,6 +1204,13 @@
         "digest"
       ],
       "enabled": false
+    },
+    {
+      "description": "Ignore group-size requirements for security updates",
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
+      ],
+      "minimumGroupSize": 1
     }
   ]
 }
