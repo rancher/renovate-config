@@ -394,8 +394,9 @@
       ],
       "description": "Track K3s versions configured in Dockerfile environment variables",
       "matchStrings": [
-        "ENV CATTLE_K3S_VERSION[=\\s](?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)\\n"
+        "ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*\\r?\\n)(?:(?<middle>[\\s\\S]*?)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*\\r?\\n))?"
       ],
+      "autoReplaceStringTemplate": "ENV CATTLE_K3S_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}ENV CATTLE_K3S_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases"
     },
