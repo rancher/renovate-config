@@ -255,11 +255,11 @@
         "/(^|/)Dockerfile[^/]*$/",
         "/hack/make/deps.mk/"
       ],
-      "description": "Canonical kubectl version source for Dockerfile and deps files; tied to custom.local so version bumps only happen when checksum data is available",
+      "description": "Kubectl version source for Dockerfile ENV declarations",
       "matchStrings": [
-        "(?<linePrefix>^|\\n)(?<prefix>(?:ARG[ \\t]+|ENV[ \\t]+)?KUBECTL_VERSION)(?<separator>[ \\t]*\\?=[ \\t]*|[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)[ \\t]*\\n"
+        "(?<prefix>ENV[ \\t]+KUBECTL_VERSION)(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n)(?:(?<middle>[\\s\\S]*?)(?<duplicatePrefix>ENV[ \\t]+KUBECTL_VERSION)(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*\\r?\\n))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}{{{prefix}}}{{{separator}}}{{{newValue}}}\\n",
+      "autoReplaceStringTemplate": "{{{prefix}}}{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicatePrefix}}{{{middle}}}{{{duplicatePrefix}}}{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -267,12 +267,15 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/\\.sh$/"
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/",
+        "/hack/make/deps.mk/"
       ],
-      "description": "Canonical kubectl version source for shell scripts; tied to custom.local so version bumps only happen when checksum data is available",
+      "description": "Kubectl version source for Dockerfile ARG declarations",
       "matchStrings": [
-        "KUBECTL_VERSION=\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\""
+        "(?<prefix>ARG[ \\t]+KUBECTL_VERSION)(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n)(?:(?<middle>[\\s\\S]*?)(?<duplicatePrefix>ARG[ \\t]+KUBECTL_VERSION)(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*\\r?\\n))?"
       ],
+      "autoReplaceStringTemplate": "{{{prefix}}}{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicatePrefix}}{{{duplicatePrefix}}}{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
