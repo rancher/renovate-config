@@ -294,8 +294,7 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/",
-        "/hack/make/deps.mk/"
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "description": "Kubectl version source for Dockerfile ARG declarations",
       "matchStrings": [
