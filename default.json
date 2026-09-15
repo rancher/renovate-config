@@ -252,14 +252,40 @@
       "customType": "regex",
       "managerFilePatterns": [
         "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/",
-        "/hack/make/deps.mk/"
+        "/(^|/)Dockerfile[^/]*$/"
       ],
       "description": "Kubectl version source for Dockerfile ENV declarations",
       "matchStrings": [
-        "(?<prefix>ENV[ \\t]+KUBECTL_VERSION)(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n)(?:(?<middle>[\\s\\S]*?)(?<duplicatePrefix>ENV[ \\t]+KUBECTL_VERSION)(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*\\r?\\n))?"
+        "(?<linePrefix>^|\\n)ENV[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>\\n)ENV[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{prefix}}}{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicatePrefix}}{{{middle}}}{{{duplicatePrefix}}}{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateLinePrefix}}{{{middle}}}{{{duplicateLinePrefix}}}ENV KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "depNameTemplate": "kubernetes/kubernetes",
+      "packageNameTemplate": "kubectl-version",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)hack/make/deps\\.mk$/"
+      ],
+      "description": "Kubectl version source for Make declarations",
+      "matchStrings": [
+        "(?<linePrefix>^|\\n)KUBECTL_VERSION(?<separator>[ \\t]*\\?=[ \\t]*|[ \\t]*=[ \\t]*)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n|$)"
+      ],
+      "autoReplaceStringTemplate": "{{{linePrefix}}}KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}",
+      "depNameTemplate": "kubernetes/kubernetes",
+      "packageNameTemplate": "kubectl-version",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/\\.sh$/"
+      ],
+      "description": "Kubectl version source for shell scripts",
+      "matchStrings": [
+        "KUBECTL_VERSION=\\\"\\$\\{KUBECTL_VERSION:-(?<currentValue>[^}\\r\\n]+)\\}\\\""
+      ],
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -273,9 +299,9 @@
       ],
       "description": "Kubectl version source for Dockerfile ARG declarations",
       "matchStrings": [
-        "(?<prefix>ARG[ \\t]+KUBECTL_VERSION)(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n)(?:(?<middle>[\\s\\S]*?)(?<duplicatePrefix>ARG[ \\t]+KUBECTL_VERSION)(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*\\r?\\n))?"
+        "(?<linePrefix>^|\\n)ARG[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>\\n)ARG[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{prefix}}}{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicatePrefix}}{{{duplicatePrefix}}}{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}ARG KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateLinePrefix}}{{{middle}}}{{{duplicateLinePrefix}}}ARG KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -394,9 +420,9 @@
       ],
       "description": "Track K3s versions configured in Dockerfile environment variables",
       "matchStrings": [
-        "ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*\\r?\\n)(?:(?<middle>[\\s\\S]*?)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*\\r?\\n))?"
+        "(?<linePrefix>^|\\n)ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>\\n)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "ENV CATTLE_K3S_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}ENV CATTLE_K3S_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV CATTLE_K3S_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateLinePrefix}}{{{middle}}}{{{duplicateLinePrefix}}}ENV CATTLE_K3S_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases"
     },
@@ -547,10 +573,10 @@
       "description": "Arch-specific checksum manager for kubectl amd64 in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV KUBECTL_CHECKSUM_amd64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "(?:^|\\n)ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "(?<checksumLinePrefix>^|\\n)ENV KUBECTL_CHECKSUM_amd64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)(?<checksumLineEnding>\\r?\\n|$)"
       ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}\\n",
+      "autoReplaceStringTemplate": "{{{checksumLinePrefix}}}ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}{{{checksumLineEnding}}}",
       "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubernetes/kubernetes-amd64",
       "packageNameTemplate": "kubectl-amd64-checksum",
@@ -565,10 +591,10 @@
       "description": "Arch-specific checksum manager for kubectl arm64 in Dockerfiles",
       "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)\\n"
+        "(?:^|\\n)ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "(?<checksumLinePrefix>^|\\n)ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)(?<checksumLineEnding>\\r?\\n|$)"
       ],
-      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}\\n",
+      "autoReplaceStringTemplate": "{{{checksumLinePrefix}}}ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}{{{checksumLineEnding}}}",
       "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubernetes/kubernetes-arm64",
       "packageNameTemplate": "kubectl-arm64-checksum",
