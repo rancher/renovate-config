@@ -44,7 +44,7 @@ jobs:
           # a root default preset extension. Remove after all consumers migrate.
           preset="github>rancher/renovate-config#release"
           while IFS= read -r -d '' config; do
-            jq --arg preset "${preset}" 'if ((.extends // []) | index($preset)) then . else .extends = [$preset] + (.extends // []) end' "${config}" > "${config}.tmp"
+            jq --arg preset "${preset}" '(.extends // []) as $extends | del(.extends) | {extends: (if ($extends | index($preset)) then $extends else [$preset] + $extends end)} + .' "${config}" > "${config}.tmp"
             mv "${config}.tmp" "${config}"
           done < <(git ls-files -z -- 'rancher-*.json')
 
