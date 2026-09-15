@@ -256,9 +256,9 @@
       ],
       "description": "Kubectl version source for Dockerfile ENV declarations",
       "matchStrings": [
-        "(?<linePrefix>^|\\n)ENV[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>\\n)ENV[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
+        "(?<linePrefix>^|\\r?\\n[ \\t]*)ENV[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>[ \\t]*)ENV[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateLinePrefix}}{{{middle}}}{{{duplicateLinePrefix}}}ENV KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}{{{duplicateLinePrefix}}}ENV KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -298,9 +298,9 @@
       ],
       "description": "Kubectl version source for Dockerfile ARG declarations",
       "matchStrings": [
-        "(?<linePrefix>^|\\n)ARG[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>\\n)ARG[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
+        "(?<linePrefix>^|\\r?\\n[ \\t]*)ARG[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>[ \\t]*)ARG[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}ARG KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateLinePrefix}}{{{middle}}}{{{duplicateLinePrefix}}}ARG KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}ARG KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}{{{duplicateLinePrefix}}}ARG KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -419,9 +419,9 @@
       ],
       "description": "Track K3s versions configured in Dockerfile environment variables",
       "matchStrings": [
-        "(?<linePrefix>^|\\n)ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>\\n)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
+        "(?<linePrefix>^|\\r?\\n[ \\t]*)ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>[\\s\\S]*?)(?<duplicateLinePrefix>[ \\t]*)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV CATTLE_K3S_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateLinePrefix}}{{{middle}}}{{{duplicateLinePrefix}}}ENV CATTLE_K3S_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
+      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV CATTLE_K3S_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}{{{duplicateLinePrefix}}}ENV CATTLE_K3S_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases"
     },
