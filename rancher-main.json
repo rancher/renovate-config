@@ -1,6 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config#release"],
   "packageRules": [
     {
       "description": "Restrict BCI images to maintained versions only",
@@ -26,8 +25,55 @@
       "allowedVersions": "<1.28.0"
     },
     {
+      "description": "Keep major and minor Go workflow values compatible with Renovate replacement validation",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDepTypes": [
+        "go-workflow-minor"
+      ],
+      "allowedVersions": "/^1\\.(?:\\d|1\\d|2[0-7])\\.0$/"
+    },
+    {
+      "description": "Group all Go toolchain update types on main",
+      "matchManagers": [
+        "gomod",
+        "custom.regex",
+        "dockerfile",
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "go",
+        "golang",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang",
+        "golangci/golangci-lint",
+        "golangci/golangci-lint-action",
+        "github.com/golangci/golangci-lint",
+        "github.com/golangci/golangci-lint/v2"
+      ],
+      "groupName": "Go toolchain",
+      "separateMajorMinor": false,
+      "minimumGroupSize": 3
+    },
+    {
+      "description": "Apply Go version cap to module directives",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "golang"
+      ],
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "allowedVersions": "/^1\\.(?:\\d|1\\d|2[0-7])\\.0$/"
+    },
+    {
       "description": "Allow golangci-lint action updates after seven days to be in sync with go bumps",
-      "matchPackageNames": ["golangci/golangci-lint-action"],
+      "matchPackageNames": [
+        "golangci/golangci-lint-action"
+      ],
       "minimumReleaseAge": "7 days"
     },
     {
@@ -41,13 +87,12 @@
         "kubernetes/kubernetes",
         "k8s.io/kubernetes",
         "kubectl-amd64",
-        "kubectl-arm64"
+        "kubectl-arm64",
+        "kubectl-amd64-checksum",
+        "kubectl-arm64-checksum",
+        "kubectl-version"
       ],
-      "allowedVersions": "<1.38.0",
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "allowedVersions": "<1.38.0"
     },
     {
       "matchManagers": [
@@ -63,16 +108,18 @@
         "!k8s.io/kube-openapi/**",
         "k8s.io/**"
       ],
-      "allowedVersions": "<0.38.0",
-      "groupName": "Kubernetes dependencies",
-      "minimumGroupSize": 15,
-      "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "allowedVersions": "<0.38.0"
     },
     {
-      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
+      "matchPackageNames": [
+        "rancherlabs/slsactl",
+        "rancherlabs/slsactl/**"
+      ],
       "groupName": "slsactl",
       "minimumGroupSize": 2
     }
+  ],
+  "extends": [
+    "github>rancher/renovate-config#release"
   ]
 }
