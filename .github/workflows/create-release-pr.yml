@@ -34,6 +34,8 @@ jobs:
           branch="release-candidate-${GITHUB_RUN_ID}"
 
           git switch -c "${branch}" release
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git merge --no-ff --no-commit -X theirs main
 
           while IFS= read -r -d '' config; do
@@ -59,8 +61,6 @@ jobs:
             exit 0
           fi
 
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -m "Promote main configuration to release"
           git push --set-upstream origin "${branch}"
 
