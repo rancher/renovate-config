@@ -242,10 +242,10 @@
       ],
       "description": "Track untagged Rancher CI container images in GitHub Actions workflows",
       "matchStrings": [
-        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?(?<lineEnding>[ \\t]*(?:#[^\\r\\n]*)?(?:\\r?\\n|$))"
+        "(?<indentation>[ \\t]*)container:\\s+(?<depName>ghcr\\.io/rancher/ci-image/[a-z0-9_.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?"
       ],
       "currentValueTemplate": "latest",
-      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}{{{lineEnding}}}",
+      "autoReplaceStringTemplate": "{{{indentation}}}container: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
       "datasourceTemplate": "docker"
     },
     {
@@ -258,7 +258,6 @@
       "matchStrings": [
         "(?<linePrefix>^|\\r?\\n[ \\t]*)ENV[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>(?:[^\\r\\n]*(?:\\r?\\n|$))*?)(?<duplicateLinePrefix>[ \\t]*)ENV[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}{{{duplicateLinePrefix}}}ENV KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -272,7 +271,6 @@
       "matchStrings": [
         "(?<linePrefix>^|\\n)KUBECTL_VERSION(?<separator>[ \\t]*\\?=[ \\t]*|[ \\t]*=[ \\t]*)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*\\r?\\n|$)"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -300,7 +298,6 @@
       "matchStrings": [
         "(?<linePrefix>^|\\r?\\n[ \\t]*)ARG[ \\t]+KUBECTL_VERSION(?<separator>[ \\t]*=[ \\t]*|[ \\t]+)(?<currentValue>[^ \\t\\r\\n]+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>(?:[^\\r\\n]*(?:\\r?\\n|$))*?)(?<duplicateLinePrefix>[ \\t]*)ARG[ \\t]+KUBECTL_VERSION(?<duplicateSeparator>[ \\t]*=[ \\t]*|[ \\t]+)(?<duplicateValue>[^ \\t\\r\\n]+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}ARG KUBECTL_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}{{{duplicateLinePrefix}}}ARG KUBECTL_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "kubernetes/kubernetes",
       "packageNameTemplate": "kubectl-version",
       "datasourceTemplate": "custom.local"
@@ -421,7 +418,6 @@
       "matchStrings": [
         "(?<linePrefix>^|\\r?\\n[ \\t]*)ENV CATTLE_K3S_VERSION(?<separator>[=\\s])(?<currentValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<lineEnding>[ \\t]*(?:\\r?\\n|$))(?:(?<middle>(?:[^\\r\\n]*(?:\\r?\\n|$))*?)(?<duplicateLinePrefix>[ \\t]*)ENV CATTLE_K3S_VERSION(?<duplicateSeparator>[=\\s])(?<duplicateValue>v\\d+\\.\\d+\\.\\d+\\+k3s\\d+)(?<duplicateLineEnding>[ \\t]*(?:\\r?\\n|$)))?"
       ],
-      "autoReplaceStringTemplate": "{{{linePrefix}}}ENV CATTLE_K3S_VERSION{{{separator}}}{{{newValue}}}{{{lineEnding}}}{{#if duplicateValue}}{{{middle}}}{{{duplicateLinePrefix}}}ENV CATTLE_K3S_VERSION{{{duplicateSeparator}}}{{{newValue}}}{{{duplicateLineEnding}}}{{/if}}",
       "depNameTemplate": "k3s-io/k3s",
       "datasourceTemplate": "github-releases"
     },
@@ -573,9 +569,9 @@
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "(?:^|\\n)ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "(?<checksumLinePrefix>^|\\n)ENV KUBECTL_CHECKSUM_amd64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)(?<checksumLineEnding>\\r?\\n|$)"
+        "ENV KUBECTL_CHECKSUM_amd64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
       ],
-      "autoReplaceStringTemplate": "{{{checksumLinePrefix}}}ENV KUBECTL_CHECKSUM_amd64{{{checksumSeparator}}}{{{newDigest}}}{{{checksumLineEnding}}}",
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_amd64={{{newDigest}}}",
       "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubernetes/kubernetes-amd64",
       "packageNameTemplate": "kubectl-amd64-checksum",
@@ -591,9 +587,9 @@
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "(?:^|\\n)ENV KUBECTL_VERSION(?:=|\\s)(?<kubectlVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
-        "(?<checksumLinePrefix>^|\\n)ENV KUBECTL_CHECKSUM_arm64(?<checksumSeparator>=|\\s)(?<currentDigest>[^\\r\\n\\s]+)(?<checksumLineEnding>\\r?\\n|$)"
+        "ENV KUBECTL_CHECKSUM_arm64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
       ],
-      "autoReplaceStringTemplate": "{{{checksumLinePrefix}}}ENV KUBECTL_CHECKSUM_arm64{{{checksumSeparator}}}{{{newDigest}}}{{{checksumLineEnding}}}",
+      "autoReplaceStringTemplate": "ENV KUBECTL_CHECKSUM_arm64={{{newDigest}}}",
       "currentValueTemplate": "{{{kubectlVersion}}}",
       "depNameTemplate": "kubernetes/kubernetes-arm64",
       "packageNameTemplate": "kubectl-arm64-checksum",
