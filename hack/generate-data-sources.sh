@@ -157,6 +157,9 @@ kubectl_save_arch_sources() {
             | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
           ]}' >"${DATA_DIR}/kubectl-${arch}.json"
   done
+  cp "${DATA_DIR}/kubectl-amd64.json" "${DATA_DIR}/kubectl-version.json"
+  cp "${DATA_DIR}/kubectl-amd64.json" "${DATA_DIR}/kubectl-amd64-checksum.json"
+  cp "${DATA_DIR}/kubectl-arm64.json" "${DATA_DIR}/kubectl-arm64-checksum.json"
 }
 
 main() {
