@@ -100,8 +100,13 @@ ghcli_fetch_data() {
     VERSION_JSON="{ \"releases\": ["
 
     while IFS=$'\t' read -r version created_at; do
-      CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused -L "https://github.com/cli/cli/releases/download/${version}/gh_${version#v}_checksums.txt")
-      checksum=$(grep "_linux_${arch}.tar.gz" <<<"$CHECKSUM_DATA" | cut -d ' ' -f1)
+      if ! CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/cli/cli/releases/download/${version}/gh_${version#v}_checksums.txt"); then
+        continue
+      fi
+      checksum=$(awk -v file="gh_${version#v}_linux_${arch}.tar.gz" '$2 == file { print $1; exit }' <<<"$CHECKSUM_DATA" | tr -d '\r\n')
+      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        continue
+      fi
       VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/cli/cli/releases/tag/${version}\"},"
     done <<<"${versions}"
 
@@ -119,8 +124,13 @@ goreleaser_fetch_data() {
 
   VERSION_JSON="{ \"releases\": ["
   while IFS=$'\t' read -r version created_at; do
-    CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused -L "https://github.com/goreleaser/goreleaser/releases/download/${version}/checksums.txt")
-    checksum=$(grep "goreleaser_Linux_${ARCH}.tar.gz" <<<"$CHECKSUM_DATA" | grep -v sbom | cut -d ' ' -f1)
+    if ! CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/goreleaser/goreleaser/releases/download/${version}/checksums.txt"); then
+      continue
+    fi
+    checksum=$(awk -v file="goreleaser_Linux_${ARCH}.tar.gz" '$2 == file { print $1; exit }' <<<"$CHECKSUM_DATA" | tr -d '\r\n')
+    if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      continue
+    fi
     VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/goreleaser/goreleaser/releases/tag/${version}\"},"
   done <<<"${versions}"
   # remove last comma
