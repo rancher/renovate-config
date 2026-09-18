@@ -7,7 +7,7 @@
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
-    "groupName": "{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{{depName}}}{{/if}}",
+    "groupName": "{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{#if (containsString depName 'golang.org/x/')}}golang.org/x dependencies{{else}}{{{depName}}}{{/if}}{{/if}}",
     "minimumReleaseAge": "2 days"
   },
   "baseBranchPatterns": [
