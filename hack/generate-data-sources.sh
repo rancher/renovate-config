@@ -16,12 +16,6 @@ DATA_DIR="data"
 
 ARCHS=("amd64" "arm64" "s390x")
 
-kustomize_fetch_data() {
-  curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes-sigs/kustomize/releases?per-page=100 |
-    jq -r '.[].assets[] | select(.name == "checksums.txt") | .browser_download_url' |
-    head -n3 | xargs -I{} curl --retry 3 --retry-connrefused -L {} >>"${DATA_DIR}/kustomize-data.raw"
-}
-
 kubectl_fetch_data() {
   versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per_page=100 |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | .tag_name')
@@ -135,18 +129,6 @@ goreleaser_fetch_data() {
   echo "${VERSION_JSON}" >"${DATA_DIR}/goreleaser-${ARCH}.json"
 }
 
-kustomize_save_arch_sources() {
-  for arch in "${ARCHS[@]}"; do
-    grep "linux_${arch}" "${DATA_DIR}/kustomize-data.raw" | jq -n --raw-input --slurp '{ "releases": [
-            inputs | split("\n")[]
-            | select(test("^\\w+\\s+kustomize_"))
-            | match("(?<digest>\\w+)\\s+kustomize_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
-            | select(. != null)
-            | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
-          ]}' >"${DATA_DIR}/kustomize-${arch}.json"
-  done
-}
-
 kubectl_save_arch_sources() {
   for arch in "${ARCHS[@]}"; do
     grep "linux_${arch}" "${DATA_DIR}/kubectl-data.raw" | jq -n --raw-input --slurp '{ "releases": [
@@ -164,7 +146,7 @@ kubectl_save_arch_sources() {
 
 main() {
   mkdir -p "${DATA_DIR}"
-  rm -f "${DATA_DIR}/kubectl-data.raw" "${DATA_DIR}/kustomize-data.raw"
+  rm -f "${DATA_DIR}/kubectl-data.raw"
 
   # RENOVATE_LOCAL_DATA_FORCE_ALL=true generates every dataset unconditionally,
   # regardless of whether markers are present in the current directory tree.
@@ -173,8 +155,6 @@ main() {
   if [[ "${RENOVATE_LOCAL_DATA_FORCE_ALL:-false}" == "true" ]]; then
     kubectl_fetch_data
     kubectl_save_arch_sources
-    kustomize_fetch_data
-    kustomize_save_arch_sources
     goreleaser_fetch_data
     ghcli_fetch_data
     helm_fetch_data
@@ -188,10 +168,6 @@ main() {
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "# renovate-local: kubectl" -e "KUBECTL_VERSION" -e "KUBECTL_CHECKSUM_amd64" -e "KUBECTL_CHECKSUM_arm64" ./; then
     kubectl_fetch_data
     kubectl_save_arch_sources
-  fi
-  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: kustomize" ./; then
-    kustomize_fetch_data
-    kustomize_save_arch_sources
   fi
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: goreleaser" ./; then
     goreleaser_fetch_data
