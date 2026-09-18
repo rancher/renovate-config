@@ -798,6 +798,19 @@
       "separateMajorMinor": false
     },
     {
+      "description": "Let Rancher teams manage internal product updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": [
+        "github.com/rancher/**",
+        "!github.com/rancher/wrangler/v3",
+        "!github.com/rancher/lasso"
+      ],
+      "matchJsonata": [
+        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs",
       "matchManagers": ["gomod"],
       "groupName": "Kubernetes dependencies",
