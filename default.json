@@ -896,6 +896,7 @@
       "matchPackageNames": [
         "golang",
         "go",
+        "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang",
         "golangci/golangci-lint",
