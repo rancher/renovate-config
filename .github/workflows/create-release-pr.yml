@@ -68,4 +68,4 @@ jobs:
             --base release \
             --head "${branch}" \
             --title "Release week $(date -u +%V)" \
-            --body "Automatically created PR to merge main into release"
+            --body "Automatically created PR to merge main into release.\n\nIMPORTANT: merge this PR with Create a merge commit. Do not squash or rebase; preserving main history keeps future release PRs limited to new commits."
