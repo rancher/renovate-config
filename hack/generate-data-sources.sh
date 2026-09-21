@@ -16,6 +16,12 @@ DATA_DIR="data"
 
 ARCHS=("amd64" "arm64" "s390x")
 
+kustomize_fetch_data() {
+  curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes-sigs/kustomize/releases?per-page=100 |
+    jq -r '.[].assets[] | select(.name == "checksums.txt") | .browser_download_url' |
+    head -n3 | xargs -I{} curl --retry 3 --retry-connrefused -L {} >>"${DATA_DIR}/kustomize-data.raw"
+}
+
 kubectl_fetch_data() {
   versions=$(curl --retry 3 --retry-connrefused -L https://api.github.com/repos/kubernetes/kubernetes/releases?per_page=100 |
     jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | .tag_name')
@@ -100,13 +106,8 @@ ghcli_fetch_data() {
     VERSION_JSON="{ \"releases\": ["
 
     while IFS=$'\t' read -r version created_at; do
-      if ! CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/cli/cli/releases/download/${version}/gh_${version#v}_checksums.txt"); then
-        continue
-      fi
-      checksum=$(awk -v file="gh_${version#v}_linux_${arch}.tar.gz" '$2 == file { print $1; exit }' <<<"$CHECKSUM_DATA" | tr -d '\r\n')
-      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
-        continue
-      fi
+      CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused -L "https://github.com/cli/cli/releases/download/${version}/gh_${version#v}_checksums.txt")
+      checksum=$(grep "_linux_${arch}.tar.gz" <<<"$CHECKSUM_DATA" | cut -d ' ' -f1)
       VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/cli/cli/releases/tag/${version}\"},"
     done <<<"${versions}"
 
@@ -124,19 +125,26 @@ goreleaser_fetch_data() {
 
   VERSION_JSON="{ \"releases\": ["
   while IFS=$'\t' read -r version created_at; do
-    if ! CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/goreleaser/goreleaser/releases/download/${version}/checksums.txt"); then
-      continue
-    fi
-    checksum=$(awk -v file="goreleaser_Linux_${ARCH}.tar.gz" '$2 == file { print $1; exit }' <<<"$CHECKSUM_DATA" | tr -d '\r\n')
-    if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
-      continue
-    fi
+    CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused -L "https://github.com/goreleaser/goreleaser/releases/download/${version}/checksums.txt")
+    checksum=$(grep "goreleaser_Linux_${ARCH}.tar.gz" <<<"$CHECKSUM_DATA" | grep -v sbom | cut -d ' ' -f1)
     VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/goreleaser/goreleaser/releases/tag/${version}\"},"
   done <<<"${versions}"
   # remove last comma
   VERSION_JSON="${VERSION_JSON%,}"
   VERSION_JSON+="]}"
   echo "${VERSION_JSON}" >"${DATA_DIR}/goreleaser-${ARCH}.json"
+}
+
+kustomize_save_arch_sources() {
+  for arch in "${ARCHS[@]}"; do
+    grep "linux_${arch}" "${DATA_DIR}/kustomize-data.raw" | jq -n --raw-input --slurp '{ "releases": [
+            inputs | split("\n")[]
+            | select(test("^\\w+\\s+kustomize_"))
+            | match("(?<digest>\\w+)\\s+kustomize_(?<version>v[\\d.]+)_(?<os>\\w+)_(?<arch>\\w+)\\..+")
+            | select(. != null)
+            | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
+          ]}' >"${DATA_DIR}/kustomize-${arch}.json"
+  done
 }
 
 kubectl_save_arch_sources() {
@@ -149,14 +157,11 @@ kubectl_save_arch_sources() {
             | { version: ("\(.captures[1].string)"), digest: .captures[0].string }
           ]}' >"${DATA_DIR}/kubectl-${arch}.json"
   done
-  cp "${DATA_DIR}/kubectl-amd64.json" "${DATA_DIR}/kubectl-version.json"
-  cp "${DATA_DIR}/kubectl-amd64.json" "${DATA_DIR}/kubectl-amd64-checksum.json"
-  cp "${DATA_DIR}/kubectl-arm64.json" "${DATA_DIR}/kubectl-arm64-checksum.json"
 }
 
 main() {
   mkdir -p "${DATA_DIR}"
-  rm -f "${DATA_DIR}/kubectl-data.raw"
+  rm -f "${DATA_DIR}/kubectl-data.raw" "${DATA_DIR}/kustomize-data.raw"
 
   # RENOVATE_LOCAL_DATA_FORCE_ALL=true generates every dataset unconditionally,
   # regardless of whether markers are present in the current directory tree.
@@ -165,6 +170,8 @@ main() {
   if [[ "${RENOVATE_LOCAL_DATA_FORCE_ALL:-false}" == "true" ]]; then
     kubectl_fetch_data
     kubectl_save_arch_sources
+    kustomize_fetch_data
+    kustomize_save_arch_sources
     goreleaser_fetch_data
     ghcli_fetch_data
     helm_fetch_data
@@ -178,6 +185,10 @@ main() {
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "# renovate-local: kubectl" -e "KUBECTL_VERSION" -e "KUBECTL_CHECKSUM_amd64" -e "KUBECTL_CHECKSUM_arm64" ./; then
     kubectl_fetch_data
     kubectl_save_arch_sources
+  fi
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: kustomize" ./; then
+    kustomize_fetch_data
+    kustomize_save_arch_sources
   fi
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" "# renovate-local: goreleaser" ./; then
     goreleaser_fetch_data

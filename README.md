@@ -11,7 +11,7 @@ This repository contains the centralized Renovate preset (`default.json`) and th
 
 For easier alignment of versions across projects around the Rancher Manager
 ecosystem, a few presets were created that enforce version constraints for each
-Rancher minor version. These presets mostly restrict bumps to security-related updates, with the exception of Go bumps and patch-level Kubernetes bumps.
+Rancher minor version.
 
 The presets are available at the root of this repository and follow the naming
 convention: `rancher-<version>.json`. To use these presets, a project can configure
@@ -20,144 +20,20 @@ their `renovate.json` as per below:
 ```json
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config//default#release"],
+  "extends": [
+    "github>rancher/renovate-config//rancher-main#release"
+  ],
   "baseBranchPatterns": [
-    "$default",
-    "release/v0.16",
-    "release/v0.15"
+    "main"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["$default"],
-      "extends": ["github>rancher/renovate-config//rancher-main#release"]
-    },
-    {
-      "matchBaseBranches": ["release/v0.16"],
-      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
+      "matchBaseBranches": ["releases/v0.7.x"],
+      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
     },
     {
       "matchBaseBranches": ["releases/v0.6.x"],
       "extends": ["github>rancher/renovate-config//rancher-2.13#release"]
-    }
-  ]
-}
-```
-
-When using the `#main` presets, extend `default#main` once at top level. Do not add `default` to each branch preset. The release workflow rewrites `#main` to `#release` and adds the root preset to `rancher-*.json` for older consumers that do not yet have a top-level extension.
-
-The `rancher-main.json` preset contains additional configuration for the
-`rancher/rancher` main branch and its subprojects, like providing Go and Kubernetes version restrictions, but not much more than that.
-Other repositories can skip the following `$default` package rule that extends `rancher-main`:
-
-```json
-{
-  "matchBaseBranches": ["$default"],
-  "extends": ["github>rancher/renovate-config//rancher-main#release"]
-}
-```
-
-Branches that are part of `baseBranchPatterns` and do not have a dedicated `packageRule` will get almost all updates Renovate provides, including major bumps.
-That is also true for `rancher-main` besides the restrictions mentioned above.
-
-## Opting into automerge
-
-Projects can opt into automerging eligible patch and minor updates by extending
-the repository-agnostic `automerge.json` preset in a separate branch-scoped
-`extends` entry after the release preset entries:
-
-```json
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config//default#release"],
-  "baseBranchPatterns": [
-    "$default",
-    "release/v0.16",
-    "release/v0.15"
-  ],
-  "packageRules": [
-    {
-      "matchBaseBranches": ["$default"],
-      "extends": ["github>rancher/renovate-config//rancher-main#release"]
-    },
-    {
-      "matchBaseBranches": ["release/v0.16"],
-      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
-    },
-    {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
-    },
-    {
-      "matchBaseBranches": [
-        "$default",
-        "release/v0.16",
-        "release/v0.15"
-      ],
-      "extends": ["github>rancher/renovate-config//automerge#release"]
-    }
-  ]
-}
-```
-
-Keep the release preset entries and automerge entry separate because Renovate
-flattens nested package rules. The preset does not enable updates or change
-allowed versions.
-
-For a consumer tracking `main`, use `#main` for all presets and extend
-`default#main` once at top level; add `automerge#main` as a separate top-level
-extension when automerge is desired.
-
-### GitHub requirements for automerge
-
-Enforce successful CI status with branch protection rules so GitHub automerge
-waits for CI to complete successfully before merging.
-
-- Enable auto-merge for the repository in GitHub.
-- Add the `renovate-rancher` app user to `Restrict who can push to matching branches` in `Branch protection rules` for the main and release branches.
-- Require an approving review, either from a [GitHub Action](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml) or by not requiring approvals.
-
-The [GitHub Action](https://github.com/rancher/rancher/blob/main/.github/workflows/auto-approve-bot-prs.yml) approves a pull request only when it has an auto-merge request, comes from the configured Renovate bot in the same repository, uses a `renovate/*` head branch, includes `**Automerge**: Enabled` in its body, has met the configured minimum working-day age, and all checks pass.
-
-### Fine-grained automerge configuration
-
-To enable security automerge only without using the shared preset, use this
-branch-scoped configuration:
-
-```json
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>rancher/renovate-config//default#release"],
-  "baseBranchPatterns": [
-    "$default",
-    "release/v0.16",
-    "release/v0.15"
-  ],
-  "packageRules": [
-    {
-      "matchBaseBranches": ["$default"],
-      "extends": ["github>rancher/renovate-config//rancher-main#release"]
-    },
-    {
-      "matchBaseBranches": ["release/v0.16"],
-      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
-    },
-    {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
-    },
-    {
-      "matchBaseBranches": [
-        "$default",
-        "release/v0.16",
-        "release/v0.15"
-      ],
-      "description": "Automerge eligible security updates",
-      "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
-      "matchJsonata": [
-        "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
-      ],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true
     }
   ]
 }
