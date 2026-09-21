@@ -31,6 +31,11 @@ jobs:
             echo "No SemVer tag found"
             exit 1
           fi
+          if git diff --quiet "${latest_tag}..HEAD" -- \
+            .github/workflows/renovate-vault.yml; then
+            echo "No Renovate workflow changes since ${latest_tag}"
+            exit 0
+          fi
           major=${BASH_REMATCH[1]}
           minor=${BASH_REMATCH[2]}
           patch=${BASH_REMATCH[3]}
