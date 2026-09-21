@@ -64,8 +64,10 @@ jobs:
           git commit -m "Promote main configuration to release"
           git push --set-upstream origin "${branch}"
 
+          body=$'Automatically created PR to merge main into release.\n\n**IMPORTANT**: merge this PR with Create a merge commit. Do not squash or rebase; preserving main history keeps future release PRs limited to new commits.'
+
           gh pr create \
             --base release \
             --head "${branch}" \
             --title "Release week $(date -u +%V)" \
-            --body "Automatically created PR to merge main into release.\n\nIMPORTANT: merge this PR with Create a merge commit. Do not squash or rebase; preserving main history keeps future release PRs limited to new commits."
+            --body "${body}"
