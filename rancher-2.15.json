@@ -3,7 +3,7 @@
   "packageRules": [
     {
       "description": "Apply Go package version cap to all updates",
-      "matchPackageNames": ["golang", "go", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["golang", "go", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
       "allowedVersions": "<1.27"
     },
     {
@@ -68,10 +68,11 @@
     {
       "description": "Enable Go updates",
       "matchManagers": ["gomod", "custom.regex"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "matchPackageNames": [
         "golang",
         "go",
+        "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
@@ -94,7 +95,7 @@
     {
       "description": "Allow Go image updates after two days on release branches",
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["golang", "go", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["golang", "go", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
       "minimumReleaseAge": "2 days"
     },
     {
@@ -107,7 +108,7 @@
     {
       "description": "Group all Go toolchain update types on release branches",
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
-      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "groupName": "Go toolchain",
       "separateMajorMinor": false,
       "minimumGroupSize": 3
@@ -115,7 +116,7 @@
     {
       "description": "Keep release Go patch updates independent of linter updates",
       "matchUpdateTypes": ["patch"],
-      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
       "groupName": "Go patch updates"
     },
     {
