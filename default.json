@@ -763,6 +763,12 @@
       "enabled": false
     },
     {
+      "description": "Exclude github/gh-aw-actions from automated updates",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["github/gh-aw-actions", "github/gh-aw-actions/**"],
+      "enabled": false
+    },
+    {
       "description": "Group non-Go BCI image updates",
       "matchDatasources": ["docker"],
       "matchPackageNames": [
