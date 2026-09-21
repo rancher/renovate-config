@@ -46,6 +46,20 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher hardened Go build images",
+      "matchStrings": [
+        "(?<depName>rancher/hardened-build-base):(?<currentValue>v\\d+\\.\\d+\\.\\d+b\\d+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?"
+      ],
+      "autoReplaceStringTemplate": "{{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
+      "versioningTemplate": "docker",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track fully pinned GOLANG_VERSION values configured in GitHub Actions workflows",
@@ -65,8 +79,7 @@
       ],
       "description": "Track Go Docker images with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/bci|registry\\.opensuse\\.org/opensuse/bci)/golang:(?<currentValue>[^@\\s]+)",
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?rancher/hardened-build-base:v(?<currentValue>\\d+\\.\\d+\\.\\d+)b\\d+"
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/bci|registry\\.opensuse\\.org/opensuse/bci)/golang:(?<currentValue>[^@\\s]+)"
       ],
       "versioningTemplate": "semver-coerced",
       "depNameTemplate": "go",
@@ -894,11 +907,12 @@
     },
     {
       "description": "Group Go Docker image updates with toolchain updates",
-      "matchManagers": ["dockerfile"],
+      "matchManagers": ["custom.regex", "dockerfile"],
       "matchDatasources": ["docker"],
       "matchPackageNames": [
         "golang",
         "go",
+        "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
