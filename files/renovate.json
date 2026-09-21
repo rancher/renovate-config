@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "release/v2.15",
     "release/v2.14",
     "release/v2.13",
@@ -10,8 +11,8 @@
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["$default"],
-      "extends": ["github>rancher/renovate-config#release"]
+      "matchBaseBranches": ["main"],
+      "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
       "description": "Apply Rancher 2.15 update constraints to branch release/v2.15. Adapt baseBranchPatterns and matchBaseBranches if this repository uses different release branch names.",
