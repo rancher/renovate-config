@@ -811,6 +811,17 @@
       "enabled": false
     },
     {
+      "description": "Exclude github/gh-aw-actions from automated updates",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "github/gh-aw-actions",
+        "github/gh-aw-actions/**"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Group non-Go BCI image updates",
       "matchDatasources": [
         "docker"
@@ -1036,6 +1047,19 @@
         "minor",
         "patch",
         "pin"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Let custom regex manager exclusively track hardened Go build image",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "rancher/hardened-build-base"
       ],
       "enabled": false
     },
