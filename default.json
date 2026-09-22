@@ -931,6 +931,13 @@
       "enabled": false
     },
     {
+      "description": "Let custom regex manager exclusively track hardened Go build image",
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["rancher/hardened-build-base"],
+      "enabled": false
+    },
+    {
       "description": "Group Go workflow toolchain updates with Go updates",
       "matchManagers": ["custom.regex"],
       "matchDatasources": ["golang-version"],
