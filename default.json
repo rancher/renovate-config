@@ -390,7 +390,7 @@
       ],
       "matchStrings": [
         ".*?https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh.*?sh -s (?<currentValue>.*?);",
-        "GOLANGCI_(LINT|LINT_VER|VERSION)(:|\\?|\\s)*=\\s*(?<currentValue>.*?)\\n"
+        "GOLANGCI_(LINT(_VERSION|_VER)?|VERSION)(:|\\?|\\s)*=\\s*(?<currentValue>v?\\d+\\.\\d+(?:\\.\\d+)?)(?:\\s|$)"
       ],
       "depNameTemplate": "golangci/golangci-lint",
       "datasourceTemplate": "github-releases"
