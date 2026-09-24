@@ -718,6 +718,11 @@
       "groupName": "Go toolchain"
     },
     {
+      "description": "Only update containerd to LTS release lines (https://github.com/containerd/containerd/blob/main/RELEASES.md#current-state-of-containerd-releases)",
+      "matchPackageNames": ["containerd/containerd", "github.com/containerd/containerd", "github.com/containerd/containerd/v2"],
+      "allowedVersions": "/^v?(?:2.0|2.3)\\.\\d+$/"
+    },
+    {
       "description": "Prioritize non-GitHub Actions patch and minor updates before major updates",
       "matchManagers": ["!github-actions"],
       "matchUpdateTypes": ["major"],
