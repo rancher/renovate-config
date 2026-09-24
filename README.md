@@ -22,13 +22,13 @@ their `renovate.json` as per below:
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "release/v0.16",
     "release/v0.15"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["$default"],
+      "matchBaseBranches": ["main"],
       "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
@@ -47,11 +47,11 @@ When using the `#main` presets, extend `default#main` once at top level. Do not 
 
 The `rancher-main.json` preset contains additional configuration for the
 `rancher/rancher` main branch and its subprojects, like providing Go and Kubernetes version restrictions, but not much more than that.
-Other repositories can skip the following `$default` package rule that extends `rancher-main`:
+Other repositories can skip the following `main` package rule that extends `rancher-main`:
 
 ```json
 {
-  "matchBaseBranches": ["$default"],
+  "matchBaseBranches": ["main"],
   "extends": ["github>rancher/renovate-config//rancher-main#release"]
 }
 ```
@@ -70,13 +70,13 @@ the repository-agnostic `automerge.json` preset in a separate branch-scoped
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "release/v0.16",
     "release/v0.15"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["$default"],
+      "matchBaseBranches": ["main"],
       "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
@@ -89,7 +89,7 @@ the repository-agnostic `automerge.json` preset in a separate branch-scoped
     },
     {
       "matchBaseBranches": [
-        "$default",
+        "main",
         "release/v0.16",
         "release/v0.15"
       ],
@@ -128,13 +128,13 @@ branch-scoped configuration:
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
-    "$default",
+    "main",
     "release/v0.16",
     "release/v0.15"
   ],
   "packageRules": [
     {
-      "matchBaseBranches": ["$default"],
+      "matchBaseBranches": ["main"],
       "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
@@ -147,7 +147,7 @@ branch-scoped configuration:
     },
     {
       "matchBaseBranches": [
-        "$default",
+        "main",
         "release/v0.16",
         "release/v0.15"
       ],
