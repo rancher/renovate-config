@@ -17,6 +17,12 @@
       ],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true
+    },
+    {
+      "description": "Do not automerge Kubernetes minor updates",
+      "matchPackageNames": ["k8s.io/**", "kubernetes/kubernetes", "rancher/kubectl", "kubectl-version", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": false
     }
   ]
 }
