@@ -53,7 +53,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "44.90.3"
+  RENOVATE_VERSION: "44.111.4"
   RENOVATE_CACHE_DIR: /tmp/renovate/cache
   # Repository taken from variable to keep configuration file generic
   RENOVATE_REPOSITORIES: ${{ github.repository }}

@@ -4,6 +4,28 @@
     "github>rancher/renovate-config//default#release",
     "github>rancher/renovate-config//automerge#release"
   ],
+  "customDatasources": {
+    "containerd-lts": {
+      "defaultRegistryUrlTemplate": "https://endoflife.date/api/v1/products/containerd/",
+      "transformTemplates": [
+        "{\"releases\": $map(result.releases[isLts = true and isEol = false], function($release) { {\"version\": $release.name} })}"
+      ]
+    }
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Append newly designated containerd LTS release lines",
+      "managerFilePatterns": ["/^default\\.json$/"],
+      "matchStrings": [
+        "\"description\": \"Only update containerd to LTS release lines[^\\r\\n]*\\r?\\n\\s*\"matchPackageNames\": \\[\"containerd/containerd\"[^\\r\\n]*\\r?\\n\\s*\"allowedVersions\": [^\\r\\n]*?(?<currentValue>\\d+\\.\\d+(?:\\|\\d+\\.\\d+)*)(?:[^\"\\r\\n]*)\""
+      ],
+      "autoReplaceStringTemplate": "\"description\": \"Only update containerd to LTS release lines (https://github.com/containerd/containerd/blob/main/RELEASES.md#current-state-of-containerd-releases)\",\n      \"matchPackageNames\": [\"containerd/containerd\", \"github.com/containerd/containerd\", \"github.com/containerd/containerd/v2\"],\n      \"allowedVersions\": \"/^v?(?:{{{currentValue}}}|{{{newValue}}})\\\\.[0-9]+$/\"",
+      "depNameTemplate": "containerd",
+      "datasourceTemplate": "custom.containerd-lts",
+      "versioningTemplate": "regex:^(?:.*\\|)?(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?$"
+    }
+  ],
   "baseBranchPatterns": ["main"],
   "packageRules": [
     {
