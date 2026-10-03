@@ -128,6 +128,7 @@ jobs:
           permission-issues: read
           permission-pull-requests: write
           permission-statuses: write
+          permission-vulnerability-alerts: read
           permission-workflows: write
       - name: Assemble RENOVATE_FORCE
         env:
