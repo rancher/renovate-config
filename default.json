@@ -20,6 +20,7 @@
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "postUpdateOptions": [
+    "goGenerate",
     "gomodTidyAll",
     "gomodUpdateImportPaths"
   ],
