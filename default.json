@@ -602,6 +602,40 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
+      "description": "Arch-specific checksum manager for etcd amd64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "(?:^|\\n)ENV CATTLE_ETCD_VERSION(?:=|\\s)(?<etcdVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV CATTLE_ETCD_CHECKSUM_amd64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
+      ],
+      "autoReplaceStringTemplate": "ENV CATTLE_ETCD_CHECKSUM_amd64={{{newDigest}}}",
+      "currentValueTemplate": "{{{etcdVersion}}}",
+      "depNameTemplate": "etcd-amd64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for etcd arm64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "(?:^|\\n)ENV CATTLE_ETCD_VERSION(?:=|\\s)(?<etcdVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV CATTLE_ETCD_CHECKSUM_arm64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
+      ],
+      "autoReplaceStringTemplate": "ENV CATTLE_ETCD_CHECKSUM_arm64={{{newDigest}}}",
+      "currentValueTemplate": "{{{etcdVersion}}}",
+      "depNameTemplate": "etcd-arm64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
       "matchStrings": [
         "ENV CRIDOCKERD_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
       ],
@@ -991,6 +1025,14 @@
       "matchPackageNames": ["mikefarah/yq", "yq-amd64", "yq-arm64"],
       "groupName": "yq",
       "commitMessageTopic": "yq",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
+      "description": "Group etcd version and checksum dependencies in Dockerfiles",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["etcd-io/etcd", "etcd-amd64", "etcd-arm64"],
+      "groupName": "etcd",
+      "commitMessageTopic": "etcd",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
     },
     {
