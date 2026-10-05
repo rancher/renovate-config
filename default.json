@@ -1182,6 +1182,14 @@
       "groupName": "Azure dependencies"
     },
     {
+      "description": "Group go.etcd.io/etcd/ packages together",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["go.etcd.io/etcd/**"],
+      "groupName": "etcd dependencies",
+      "commitMessageTopic": "etcd dependencies",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+    },
+    {
       "description": "Group go.opentelemetry.io/ packages together",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["go.opentelemetry.io/**"],
