@@ -1122,6 +1122,13 @@
       "allowedVersions": "/^1\\.\\d+\\.0$/"
     },
     {
+      "description": "Let custom regex manager exclusively track Rancher K3s image versions",
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["rancher/k3s"],
+      "enabled": false
+    },
+    {
       "description": "Group K3s updates with Kubernetes dependencies",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
