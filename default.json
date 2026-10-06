@@ -610,7 +610,8 @@
       ],
       "autoReplaceStringTemplate": "ENV CATTLE_ETCD_CHECKSUM_amd64={{{newDigest}}}",
       "currentValueTemplate": "{{{etcdVersion}}}",
-      "depNameTemplate": "etcd-amd64",
+      "depNameTemplate": "etcd-io/etcd-amd64",
+      "packageNameTemplate": "etcd-amd64",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -627,7 +628,8 @@
       ],
       "autoReplaceStringTemplate": "ENV CATTLE_ETCD_CHECKSUM_arm64={{{newDigest}}}",
       "currentValueTemplate": "{{{etcdVersion}}}",
-      "depNameTemplate": "etcd-arm64",
+      "depNameTemplate": "etcd-io/etcd-arm64",
+      "packageNameTemplate": "etcd-arm64",
       "datasourceTemplate": "custom.local"
     },
     {
@@ -1030,7 +1032,7 @@
     {
       "description": "Group etcd version and checksum dependencies in Dockerfiles",
       "matchManagers": ["custom.regex"],
-      "matchPackageNames": ["etcd-io/etcd", "etcd-amd64", "etcd-arm64"],
+      "matchPackageNames": ["etcd-io/etcd", "etcd-io/etcd-amd64", "etcd-io/etcd-arm64"],
       "groupName": "etcd",
       "commitMessageTopic": "etcd",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
