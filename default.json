@@ -1032,7 +1032,7 @@
     {
       "description": "Group etcd version and checksum dependencies in Dockerfiles",
       "matchManagers": ["custom.regex"],
-      "matchPackageNames": ["etcd-io/etcd", "etcd-io/etcd-amd64", "etcd-io/etcd-arm64"],
+      "matchPackageNames": ["etcd-io/etcd", "etcd-io/etcd-amd64", "etcd-io/etcd-arm64", "etcd-amd64", "etcd-arm64"],
       "groupName": "etcd",
       "commitMessageTopic": "etcd",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
