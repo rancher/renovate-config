@@ -541,7 +541,7 @@
       ],
       "description": "Track Rancher K3s image versions in Dockerfiles",
       "matchStrings": [
-        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+-k3s\\d+)"
+        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?-k3s\\d+)"
       ],
       "depNameTemplate": "rancher/k3s",
       "datasourceTemplate": "docker",
