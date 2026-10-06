@@ -110,6 +110,7 @@
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
       "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "separateMajorMinor": false,
       "minimumGroupSize": 3
     },
@@ -117,7 +118,8 @@
       "description": "Keep release Go patch updates independent of linter updates",
       "matchUpdateTypes": ["patch"],
       "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
-      "groupName": "Go patch updates"
+      "groupName": "Go patch updates",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Apply Go version cap to module directives",
