@@ -1152,6 +1152,12 @@
       "ignoreUnstable": false
     },
     {
+      "description": "Keep the K3s environment version and image tag in sync",
+      "matchDatasources": ["docker", "github-releases"],
+      "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
+      "minimumReleaseAge": "0 days"
+    },
+    {
       "description": "Group K3s updates with Kubernetes dependencies",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
