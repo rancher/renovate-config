@@ -34,6 +34,12 @@
       "allowedVersions": "<1.34"
     },
     {
+      "description": "Keep Rancher K3s image tags on the 1.33 Kubernetes line",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["rancher/k3s"],
+      "allowedVersions": "/^v?1\\.33\\.\\d+-k3s\\d+$/"
+    },
+    {
       "description": "Apply k8s.io dependency version cap to all updates",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["!k8s.io/kubernetes", "!k8s.io/gengo", "!k8s.io/gengo/**", "!k8s.io/utils", "!k8s.io/utils/**", "!k8s.io/kube-openapi", "!k8s.io/kube-openapi/**", "k8s.io/**"],

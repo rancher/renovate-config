@@ -1141,7 +1141,8 @@
       "description": "Restrict Rancher K3s image tags to final k3s releases",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["rancher/k3s"],
-      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+-k3s\\d+$/"
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+-k3s\\d+$/",
+      "ignoreUnstable": false
     },
     {
       "description": "Group K3s updates with Kubernetes dependencies",
