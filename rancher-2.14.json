@@ -30,8 +30,8 @@
     {
       "description": "Apply Kubernetes version caps to all updates",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version", "kubernetes/kubernetes", "k8s.io/kubernetes"],
-      "allowedVersions": "<1.33"
+      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version", "kubernetes/kubernetes", "k8s.io/kubernetes", "rancher/k3s", "k3s-io/k3s"],
+      "allowedVersions": "<1.36"
     },
     {
       "description": "Apply k8s.io dependency version cap to all updates",
@@ -139,6 +139,13 @@
       "description": "Enable patch updates for kubernetes/kubernetes and k8s.io/kubernetes",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
       "matchPackageNames": ["kubernetes/kubernetes", "k8s.io/kubernetes"],
+      "enabled": true,
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
+    },
+    {
+      "description": "Enable patch updates for Rancher K3s",
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
       "enabled": true,
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
