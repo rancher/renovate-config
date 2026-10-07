@@ -8,6 +8,7 @@
   "vulnerabilityAlerts": {
     "enabled": true,
     "groupName": "{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{#if (containsString depName 'golang.org/x/')}}golang.org/x dependencies{{else}}{{{depName}}}{{/if}}{{/if}}",
+    "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
     "minimumReleaseAge": "2 days"
   },
   "baseBranchPatterns": [
@@ -937,12 +938,14 @@
         "!registry.suse.com/bci/golang",
         "!registry.opensuse.org/opensuse/bci/golang"
       ],
-      "groupName": "BCI images"
+      "groupName": "BCI images",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group GitHub Actions updates and require at least three actions",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
+      "commitMessageExtra": "{{{upgrades.0.depName}}}",
       "minimumGroupSize": 3
     },
     {
