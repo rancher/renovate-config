@@ -154,6 +154,30 @@ kubectl_save_arch_sources() {
   cp "${DATA_DIR}/kubectl-arm64.json" "${DATA_DIR}/kubectl-arm64-checksum.json"
 }
 
+etcd_fetch_data() {
+  versions=$(curl --silent --retry 3 --retry-connrefused -L https://api.github.com/repos/etcd-io/etcd/releases?per_page=100 |
+    jq -r 'map(select(.tag_name | test("alpha|rc|beta") | not))[] | "\(.tag_name)\t\(.created_at)"')
+
+  for arch in amd64 arm64; do
+    VERSION_JSON="{ \"releases\": ["
+
+    while IFS=$'\t' read -r version created_at; do
+      if ! CHECKSUM_DATA=$(curl --retry 3 --retry-connrefused --fail -L "https://github.com/etcd-io/etcd/releases/download/${version}/SHA256SUMS"); then
+        continue
+      fi
+      checksum=$(awk -v file="etcd-${version}-linux-${arch}.tar.gz" '$2 == file { print $1; exit }' <<<"${CHECKSUM_DATA}" | tr -d '\r\n')
+      if [[ ! "${checksum}" =~ ^[[:xdigit:]]{64}$ ]]; then
+        continue
+      fi
+      VERSION_JSON+="{\"version\": \"${version}\", \"digest\": \"${checksum}\", \"releaseTimestamp\": \"${created_at}\", \"changelogUrl\": \"https://github.com/etcd-io/etcd/releases/tag/${version}\"},"
+    done <<<"${versions}"
+
+    VERSION_JSON="${VERSION_JSON%,}"
+    VERSION_JSON+="]}"
+    echo "${VERSION_JSON}" >"${DATA_DIR}/etcd-${arch}.json"
+  done
+}
+
 main() {
   mkdir -p "${DATA_DIR}"
   rm -f "${DATA_DIR}/kubectl-data.raw"
@@ -167,6 +191,7 @@ main() {
     kubectl_save_arch_sources
     goreleaser_fetch_data
     ghcli_fetch_data
+    etcd_fetch_data
     helm_fetch_data
     yq_fetch_data
     return
@@ -187,6 +212,9 @@ main() {
   fi
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "HELM_CHECKSUM_amd64" -e "HELM_CHECKSUM_arm64" ./; then
     helm_fetch_data
+  fi
+  if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "CATTLE_ETCD_CHECKSUM_amd64" -e "CATTLE_ETCD_CHECKSUM_arm64" ./; then
+    etcd_fetch_data
   fi
   if grep -r -q --exclude-dir=renovate-config --exclude-dir=.git --exclude-dir="${DATA_DIR}" -e "YQ_CHECKSUM_amd64" -e "YQ_CHECKSUM_arm64" ./; then
     yq_fetch_data

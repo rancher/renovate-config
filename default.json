@@ -7,6 +7,7 @@
   "vulnerabilityAlerts": {
     "enabled": true,
     "groupName": "{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{#if (containsString depName 'golang.org/x/')}}golang.org/x dependencies{{else}}{{{depName}}}{{/if}}{{/if}}",
+    "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
     "minimumReleaseAge": "2 days"
   },
   "baseBranchPatterns": [
@@ -19,6 +20,7 @@
   "minimumReleaseAge": "7 days",
   "minimumReleaseAgeBehaviour": "timestamp-optional",
   "postUpdateOptions": [
+    "goGenerate",
     "gomodTidyAll",
     "gomodUpdateImportPaths"
   ],
@@ -539,7 +541,7 @@
       ],
       "description": "Track Rancher K3s image versions in Dockerfiles",
       "matchStrings": [
-        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+-k3s\\d+)"
+        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?-k3s\\d+)"
       ],
       "depNameTemplate": "rancher/k3s",
       "datasourceTemplate": "docker",
@@ -593,6 +595,42 @@
       ],
       "depNameTemplate": "etcd-io/etcd",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for etcd amd64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "(?:^|\\n)ENV CATTLE_ETCD_VERSION(?:=|\\s)(?<etcdVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV CATTLE_ETCD_CHECKSUM_amd64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
+      ],
+      "autoReplaceStringTemplate": "ENV CATTLE_ETCD_CHECKSUM_amd64={{{newDigest}}}",
+      "currentValueTemplate": "{{{etcdVersion}}}",
+      "depNameTemplate": "etcd-io/etcd-amd64",
+      "packageNameTemplate": "etcd-amd64",
+      "datasourceTemplate": "custom.local"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Arch-specific checksum manager for etcd arm64 in Dockerfiles",
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "(?:^|\\n)ENV CATTLE_ETCD_VERSION(?:=|\\s)(?<etcdVersion>[^\\r\\n\\s]+)\\n[\\s\\S]*",
+        "ENV CATTLE_ETCD_CHECKSUM_arm64(?:=|\\s)(?<currentDigest>[^\\r\\n\\s]+)"
+      ],
+      "autoReplaceStringTemplate": "ENV CATTLE_ETCD_CHECKSUM_arm64={{{newDigest}}}",
+      "currentValueTemplate": "{{{etcdVersion}}}",
+      "depNameTemplate": "etcd-io/etcd-arm64",
+      "packageNameTemplate": "etcd-arm64",
+      "datasourceTemplate": "custom.local"
     },
     {
       "customType": "regex",
@@ -843,7 +881,8 @@
       ],
       "allowedVersions": "/^\\d+\\.\\d+\\.0$/",
       "rangeStrategy": "bump",
-      "groupName": "Go toolchain"
+      "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Only update containerd to LTS release lines (https://github.com/containerd/containerd/blob/main/RELEASES.md#current-state-of-containerd-releases)",
@@ -958,7 +997,8 @@
         "!registry.suse.com/bci/golang",
         "!registry.opensuse.org/opensuse/bci/golang"
       ],
-      "groupName": "BCI images"
+      "groupName": "BCI images",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group GitHub Actions updates and require at least three actions",
@@ -966,10 +1006,11 @@
         "github-actions"
       ],
       "groupName": "GitHub Actions",
+      "commitMessageExtra": "{{{upgrades.0.depName}}}",
       "minimumGroupSize": 3
     },
     {
-      "description": "Prioritize renovate-vault workflow references after two days without a group-size restriction",
+      "description": "Prioritize renovate-vault workflow references after one day without a group-size restriction",
       "matchManagers": [
         "github-actions"
       ],
@@ -977,7 +1018,7 @@
         "rancher/renovate-config",
         "rancher/renovate-config/**"
       ],
-      "minimumReleaseAge": "2 days",
+      "minimumReleaseAge": "1 day",
       "prPriority": 10,
       "minimumGroupSize": 1
     },
@@ -1036,7 +1077,7 @@
       "minimumGroupSize": 1,
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "minimumReleaseAge": "3 days"
     },
     {
@@ -1060,7 +1101,7 @@
       "minimumGroupSize": 1,
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group helm version and checksum dependencies in Dockerfiles",
@@ -1074,7 +1115,7 @@
       ],
       "groupName": "helm",
       "commitMessageTopic": "helm",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group yq version and checksum dependencies in Dockerfiles",
@@ -1088,7 +1129,23 @@
       ],
       "groupName": "yq",
       "commitMessageTopic": "yq",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
+    },
+    {
+      "description": "Group etcd version and checksum dependencies in Dockerfiles",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchPackageNames": [
+        "etcd-io/etcd",
+        "etcd-io/etcd-amd64",
+        "etcd-io/etcd-arm64",
+        "etcd-amd64",
+        "etcd-arm64"
+      ],
+      "groupName": "etcd",
+      "commitMessageTopic": "etcd",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group other k8s.io and controller-tools dependencies",
@@ -1111,7 +1168,7 @@
       "minimumGroupSize": 5,
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group Go and toolchain minor or major bumps into one PR",
@@ -1121,7 +1178,8 @@
       "matchDatasources": [
         "golang-version"
       ],
-      "groupName": "Go toolchain"
+      "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Prioritize Go toolchain updates",
@@ -1154,7 +1212,8 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "groupName": "Go toolchain"
+      "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Use Go toolchain versions for Go Docker images",
@@ -1200,7 +1259,8 @@
       "matchPackageNames": [
         "go"
       ],
-      "groupName": "Go toolchain"
+      "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Keep major and minor Go workflow values compatible with Renovate replacement validation",
@@ -1211,6 +1271,29 @@
         "go-workflow-minor"
       ],
       "allowedVersions": "/^1\\.\\d+\\.0$/"
+    },
+    {
+      "description": "Let custom regex manager exclusively track Rancher K3s image versions",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "rancher/k3s"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Restrict Rancher K3s image tags to final k3s releases",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "rancher/k3s"
+      ],
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+-k3s\\d+$/"
     },
     {
       "description": "Group K3s updates with Kubernetes dependencies",
@@ -1227,7 +1310,7 @@
       "minimumGroupSize": 1,
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
-      "commitMessageExtra": "to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Require three Go toolchain updates when golangci-lint changes",
@@ -1244,6 +1327,7 @@
         "github.com/golangci/golangci-lint/v2"
       ],
       "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "separateMajorMinor": false,
       "minimumGroupSize": 3
     },
@@ -1336,7 +1420,8 @@
         "github.com/onsi/ginkgo/v2",
         "github.com/onsi/gomega"
       ],
-      "groupName": "ginkgo and gomega"
+      "groupName": "ginkgo and gomega",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group github.com/aws/ packages together",
@@ -1346,7 +1431,8 @@
       "matchPackageNames": [
         "github.com/aws/**"
       ],
-      "groupName": "AWS dependencies"
+      "groupName": "AWS dependencies",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group github.com/Azure/ packages together",
@@ -1356,7 +1442,20 @@
       "matchPackageNames": [
         "github.com/Azure/**"
       ],
-      "groupName": "Azure dependencies"
+      "groupName": "Azure dependencies",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
+    },
+    {
+      "description": "Group go.etcd.io/etcd/ packages together",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "go.etcd.io/etcd/**"
+      ],
+      "groupName": "etcd dependencies",
+      "commitMessageTopic": "etcd dependencies",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group go.opentelemetry.io/ packages together",
@@ -1366,7 +1465,8 @@
       "matchPackageNames": [
         "go.opentelemetry.io/**"
       ],
-      "groupName": "OpenTelemetry dependencies"
+      "groupName": "OpenTelemetry dependencies",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Group golang.org/x/ packages together as they release in sync and go get forces co-updates",
@@ -1376,7 +1476,8 @@
       "matchPackageNames": [
         "golang.org/x/**"
       ],
-      "groupName": "golang.org/x dependencies"
+      "groupName": "golang.org/x dependencies",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Skip digest-only updates for slsactl GitHub Action",

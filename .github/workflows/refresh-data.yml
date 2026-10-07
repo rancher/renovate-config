@@ -8,6 +8,11 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 6 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - hack/generate-data-sources.sh
 
 jobs:
   refresh:
