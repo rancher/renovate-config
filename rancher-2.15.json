@@ -215,6 +215,14 @@
       "description": "Ignore group-size requirements for security updates",
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
       "minimumGroupSize": 1
+    },
+    {
+      "description": "Enable patch updates for Cluster API",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["sigs.k8s.io/cluster-api"],
+      "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "enabled": true
     }
   ]
 }

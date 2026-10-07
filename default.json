@@ -879,6 +879,13 @@
       "allowedVersions": "/^v?(?:2.0|2.3)\\.\\d+$/"
     },
     {
+      "description": "Require manual handling for major and minor Cluster API updates",
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["sigs.k8s.io/cluster-api"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
       "description": "Prioritize non-GitHub Actions patch and minor updates before major updates",
       "matchManagers": ["!github-actions"],
       "matchUpdateTypes": ["major"],
