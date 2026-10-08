@@ -61,9 +61,21 @@
         "kubectl-arm64-checksum",
         "kubectl-version",
         "kubernetes/kubernetes",
-        "k8s.io/kubernetes"
+        "k8s.io/kubernetes",
+        "rancher/k3s",
+        "k3s-io/k3s"
       ],
       "allowedVersions": "<1.33"
+    },
+    {
+      "description": "Keep Rancher K3s image tags on the 1.32 Kubernetes line",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "rancher/k3s"
+      ],
+      "allowedVersions": "/^v?1\\.32\\.\\d+-k3s\\d+$/"
     },
     {
       "description": "Apply k8s.io dependency version cap to all updates",
@@ -227,6 +239,7 @@
         "github.com/golangci/golangci-lint/v2"
       ],
       "groupName": "Go toolchain",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "separateMajorMinor": false,
       "minimumGroupSize": 3
     },
@@ -242,7 +255,8 @@
         "registry.suse.com/bci/golang",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
-      "groupName": "Go patch updates"
+      "groupName": "Go patch updates",
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
       "description": "Apply Go version cap to module directives",
@@ -290,6 +304,21 @@
       ],
       "matchDepTypes": [
         "!indirect"
+      ],
+      "enabled": true,
+      "matchJsonata": [
+        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
+      ]
+    },
+    {
+      "description": "Enable patch updates for Rancher K3s",
+      "matchManagers": [
+        "gomod",
+        "custom.regex"
+      ],
+      "matchPackageNames": [
+        "rancher/k3s",
+        "k3s-io/k3s"
       ],
       "enabled": true,
       "matchJsonata": [
@@ -398,6 +427,22 @@
         "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
       ],
       "minimumGroupSize": 1
+    },
+    {
+      "description": "Enable patch updates for Cluster API",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "sigs.k8s.io/cluster-api"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "matchJsonata": [
+        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
+      ],
+      "enabled": true
     }
   ]
 }
