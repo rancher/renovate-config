@@ -94,15 +94,15 @@
       "enabled": true
     },
     {
-      "description": "Allow Go updates after two days on release branches",
+      "description": "Allow Go updates after one day on release branches",
       "matchDatasources": ["golang-version"],
-      "minimumReleaseAge": "2 days"
+      "minimumReleaseAge": "1 day"
     },
     {
-      "description": "Allow Go image updates after two days on release branches",
+      "description": "Allow Go image updates after one day on release branches",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["golang", "go", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
-      "minimumReleaseAge": "2 days"
+      "minimumReleaseAge": "1 day"
     },
     {
       "description": "Enable golangci-lint updates",
