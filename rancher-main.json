@@ -41,6 +41,13 @@
       "minimumGroupSize": 3
     },
     {
+      "description": "Allow a single Go patch update to open a PR on its own",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchUpdateTypes": ["patch"],
+      "minimumGroupSize": 1
+    },
+    {
       "description": "Apply Go version cap to module directives",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],

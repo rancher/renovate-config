@@ -125,7 +125,8 @@
       "matchUpdateTypes": ["patch"],
       "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
       "groupName": "Go patch updates",
-      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
+      "minimumGroupSize": 1
     },
     {
       "description": "Apply Go version cap to module directives",
