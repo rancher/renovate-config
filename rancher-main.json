@@ -41,11 +41,35 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Apply Go version cap to module directives",
+      "description": "Allow a single Go patch update to open a PR on its own",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchUpdateTypes": ["patch"],
+      "minimumGroupSize": 1
+    },
+    {
+      "description": "Let the go directive open a PR on its own without a toolchain directive",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$not($exists(extractedConstraints.golang))"],
+      "minimumGroupSize": 1
+    },
+    {
+      "description": "Apply Go version cap to module directives with a toolchain",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$exists(extractedConstraints.golang)"],
       "allowedVersions": "/^1\\.(?:\\d|1\\d|2[0-7])\\.0$/"
+    },
+    {
+      "description": "Apply Go version cap to module directives without a toolchain",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$not($exists(extractedConstraints.golang))"],
+      "allowedVersions": "/^(?:1\\.(?:\\d|1\\d|2[0-7])\\.0|{{{major}}}\\.{{{minor}}}\\.\\d+)$/"
     },
     {
       "description": "Allow golangci-lint action updates after seven days to be in sync with go bumps",

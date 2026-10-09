@@ -874,6 +874,15 @@
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
+      "description": "Allow go directive patch updates without a toolchain directive",
+      "matchManagers": ["gomod"],
+      "matchDepNames": ["go"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$not($exists(extractedConstraints.golang))"],
+      "allowedVersions": "/^(?:\\d+\\.\\d+\\.0|{{{major}}}\\.{{{minor}}}\\.\\d+)$/"
+    },
+    {
       "description": "Only update containerd to LTS release lines (https://github.com/containerd/containerd/blob/main/RELEASES.md#current-state-of-containerd-releases)",
       "matchPackageNames": ["containerd/containerd", "github.com/containerd/containerd", "github.com/containerd/containerd/v2"],
       "allowedVersions": "/^v?(?:2.0|2.3)\\.\\d+$/"
@@ -1177,11 +1186,12 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Disable patch Go module directive updates",
+      "description": "Disable patch go directive updates when a toolchain directive exists",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
       "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$exists(extractedConstraints.golang)"],
       "enabled": false
     },
     {

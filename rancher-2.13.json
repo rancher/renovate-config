@@ -121,18 +121,36 @@
       "minimumGroupSize": 3
     },
     {
+      "description": "Let the go directive open a PR on its own without a toolchain directive",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$not($exists(extractedConstraints.golang))"],
+      "minimumGroupSize": 1
+    },
+    {
       "description": "Keep release Go patch updates independent of linter updates",
       "matchUpdateTypes": ["patch"],
       "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
       "groupName": "Go patch updates",
-      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
+      "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
+      "minimumGroupSize": 1
     },
     {
-      "description": "Apply Go version cap to module directives",
+      "description": "Apply Go version cap to module directives with a toolchain",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$exists(extractedConstraints.golang)"],
       "allowedVersions": "/^1\\.(?:\\d|1\\d|2[0-6])\\.0$/"
+    },
+    {
+      "description": "Apply Go version cap to module directives without a toolchain",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["golang"],
+      "matchDatasources": ["golang-version"],
+      "matchJsonata": ["$not($exists(extractedConstraints.golang))"],
+      "allowedVersions": "/^(?:1\\.(?:\\d|1\\d|2[0-6])\\.0|{{{major}}}\\.{{{minor}}}\\.\\d+)$/"
     },
     {
       "description": "Enable patch updates for kubectl",
@@ -191,11 +209,12 @@
       "minimumGroupSize": 2
     },
     {
-      "description": "Disable patch Go module directive updates",
+      "description": "Disable patch go directive updates when a toolchain directive exists",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
       "matchDatasources": ["golang-version"],
       "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$exists(extractedConstraints.golang)"],
       "enabled": false
     },
     {
