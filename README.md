@@ -163,6 +163,58 @@ branch-scoped configuration:
 }
 ```
 
+## Go generation dependencies
+
+Renovate runs `go generate ./...` after Go module updates to refresh tracked generated files in its PRs. It aborts the whole artifact update when a generation step needs a tool that is missing from the Renovate container, which leaves the update PR without its `go.sum` changes. Only the Go toolchain and the tools declared by the repository are guaranteed to be present, so remove any other tool the generation step relies on.
+
+### Declare post-processing in the API types
+
+A generation step that only rewrites the generated output usually can be replaced by controller-gen itself. [rancher/k3k](https://github.com/rancher/k3k) ran `controller-gen` and then a `yq` loop adding an annotation to every generated CRD; declaring the annotation on the type removes the loop and the `yq` dependency with it:
+
+```go
+// +kubebuilder:object:root=true
+// +kubebuilder:metadata:annotations="helm.sh/resource-policy=keep"
+type Cluster struct {
+```
+
+See [rancher/k3k#1308](https://github.com/rancher/k3k/pull/1308).
+
+### Pin tools in tool modules
+
+Tools that are not part of the Go toolchain can be declared in their own module and run through it, which removes the need for a binary on `PATH` and keeps the version in a `go.mod` file that Renovate updates. [rancher/fleet](https://github.com/rancher/fleet) uses this for `mockgen` and `controller-gen`:
+
+```sh
+go tool -modfile gotools/mockgen/go.mod mockgen --version
+```
+
+Ordering generated CRDs no longer needs `yq` either, because controller-gen writes one file per CRD under a name that sorts into the required order, so concatenating them is enough:
+
+```sh
+${CONTROLLERGEN} crd webhook paths="./pkg/apis/..." output:crd:dir="${tmpdir}/crds"
+cat "${tmpdir}"/crds/*.yaml > "$CRDS_YAML"
+```
+
+See [rancher/fleet#5889](https://github.com/rancher/fleet/pull/5889).
+
+### Disabling the option
+
+When the generation step cannot be made self-contained, turn the option off. Set `postUpdateOptions` to `null` at the top level and re-add the options you want to keep in a `packageRules` entry:
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>rancher/renovate-config//default#release"],
+  "postUpdateOptions": null,
+  "packageRules": [
+    {
+      "description": "Keep go mod tidy, but do not run go generate",
+      "matchManagers": ["gomod"],
+      "postUpdateOptions": ["gomodTidyAll", "gomodUpdateImportPaths"]
+    }
+  ]
+}
+```
+
 ## Testing new changes
 
 ### Matching patterns / versions found
