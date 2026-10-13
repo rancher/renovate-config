@@ -111,6 +111,14 @@
       "allowedVersions": "<0.38.0"
     },
     {
+      "description": "Allow Wrangler development releases on main",
+      "matchManagers": ["gomod"],
+      "matchDatasources": ["go"],
+      "matchPackageNames": ["github.com/rancher/wrangler/v3"],
+      "ignoreUnstable": false,
+      "respectLatest": false
+    },
+    {
       "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
       "groupName": "slsactl",
       "minimumGroupSize": 2
