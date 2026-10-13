@@ -94,17 +94,6 @@
       "enabled": true
     },
     {
-      "description": "Allow Go updates after two days on release branches",
-      "matchDatasources": ["golang-version"],
-      "minimumReleaseAge": "2 days"
-    },
-    {
-      "description": "Allow Go image updates after two days on release branches",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["golang", "go", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
-      "minimumReleaseAge": "2 days"
-    },
-    {
       "description": "Enable golangci-lint updates",
       "matchPackageNames": ["golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "matchUpdateTypes": ["major", "minor", "patch", "pin"],
@@ -207,15 +196,6 @@
       "groupName": "slsactl",
       "allowedVersions": "<=v0.1.36",
       "minimumGroupSize": 2
-    },
-    {
-      "description": "Disable patch go directive updates when a toolchain directive exists",
-      "matchManagers": ["gomod"],
-      "matchDepTypes": ["golang"],
-      "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["patch"],
-      "matchJsonata": ["$exists(extractedConstraints.golang)"],
-      "enabled": false
     },
     {
       "description": "Keep minor Helm and Kubernetes updates out of release branches",

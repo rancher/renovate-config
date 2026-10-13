@@ -919,24 +919,10 @@
       "pinDigests": true
     },
     {
-      "description": "Update Rancher CI Go image families with Go toolchain versions",
-      "matchManagers": ["custom.regex"],
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
-      "enabled": false
-    },
-    {
       "description": "Update BCI workflow images with version tags",
       "matchManagers": ["github-actions"],
       "matchDatasources": ["docker"],
       "matchPackageNames": ["registry.suse.com/bci/bci-base"],
-      "enabled": false
-    },
-    {
-      "description": "Update Rancher CI Go image families with Go toolchain versions",
-      "matchManagers": ["github-actions"],
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
       "enabled": false
     },
     {
