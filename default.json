@@ -857,7 +857,7 @@
       ]
     },
     {
-      "description": "Enable security updates for indirect Go modules",
+      "description": "Let indirect Go updates through when Renovate reports vulnerability metadata",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["indirect"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
