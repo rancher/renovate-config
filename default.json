@@ -6,7 +6,7 @@
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
-    "groupName": "{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{#if (containsString depName 'golang.org/x/')}}golang.org/x dependencies{{else}}{{{depName}}}{{/if}}{{/if}}",
+    "groupName": "{{#if (equals depName 'go')}}Go toolchain{{else}}{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{#if (containsString depName 'golang.org/x/')}}golang.org/x dependencies{{else}}{{{depName}}}{{/if}}{{/if}}{{/if}}",
     "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
     "minimumReleaseAge": "2 days"
   },
@@ -856,7 +856,7 @@
       ]
     },
     {
-      "description": "Enable security updates for indirect Go modules",
+      "description": "Let indirect Go updates through when Renovate reports vulnerability metadata",
       "matchManagers": [
         "gomod"
       ],
@@ -883,6 +883,25 @@
       "rangeStrategy": "bump",
       "groupName": "Go toolchain",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
+    },
+    {
+      "description": "Allow go directive patch updates without a toolchain directive",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepNames": [
+        "go"
+      ],
+      "matchDepTypes": [
+        "golang"
+      ],
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "matchJsonata": [
+        "$not($exists(extractedConstraints.golang))"
+      ],
+      "allowedVersions": "/^(?:\\d+\\.\\d+\\.0|{{{major}}}\\.{{{minor}}}\\.\\d+)$/"
     },
     {
       "description": "Only update containerd to LTS release lines (https://github.com/containerd/containerd/blob/main/RELEASES.md#current-state-of-containerd-releases)",
@@ -951,19 +970,6 @@
       "pinDigests": true
     },
     {
-      "description": "Update Rancher CI Go image families with Go toolchain versions",
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"
-      ],
-      "enabled": false
-    },
-    {
       "description": "Update BCI workflow images with version tags",
       "matchManagers": [
         "github-actions"
@@ -973,19 +979,6 @@
       ],
       "matchPackageNames": [
         "registry.suse.com/bci/bci-base"
-      ],
-      "enabled": false
-    },
-    {
-      "description": "Update Rancher CI Go image families with Go toolchain versions",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"
       ],
       "enabled": false
     },
@@ -1013,6 +1006,21 @@
       ],
       "groupName": "BCI images",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
+    },
+    {
+      "description": "Keep Go updates, including security bumps, on a two day release age on every branch",
+      "matchDatasources": [
+        "golang-version",
+        "docker"
+      ],
+      "matchPackageNames": [
+        "go",
+        "golang",
+        "rancher/hardened-build-base",
+        "registry.suse.com/bci/golang",
+        "registry.opensuse.org/opensuse/bci/golang"
+      ],
+      "minimumReleaseAge": "2 days"
     },
     {
       "description": "Group GitHub Actions updates and require at least three actions",
@@ -1359,7 +1367,7 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Disable patch Go module directive updates",
+      "description": "Disable patch go directive updates when a toolchain directive exists",
       "matchManagers": [
         "gomod"
       ],
@@ -1371,6 +1379,9 @@
       ],
       "matchUpdateTypes": [
         "patch"
+      ],
+      "matchJsonata": [
+        "$exists(extractedConstraints.golang)"
       ],
       "enabled": false
     },
@@ -1400,12 +1411,15 @@
       ]
     },
     {
-      "description": "Disable digest updates (commit-based versions) for Go modules",
+      "description": "Disable digest updates (commit-based versions) for Go modules without blocking security bumps",
       "matchManagers": [
         "gomod"
       ],
       "matchUpdateTypes": [
         "digest"
+      ],
+      "matchJsonata": [
+        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
       ],
       "enabled": false
     },
