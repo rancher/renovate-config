@@ -958,6 +958,12 @@
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
+      "description": "Keep Go updates, including security bumps, on a two day release age on every branch",
+      "matchDatasources": ["golang-version", "docker"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
       "description": "Group GitHub Actions updates and require at least three actions",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
@@ -1220,12 +1226,15 @@
       ]
     },
     {
-      "description": "Disable digest updates (commit-based versions) for Go modules",
+      "description": "Disable digest updates (commit-based versions) for Go modules without blocking security bumps",
       "matchManagers": [
         "gomod"
       ],
       "matchUpdateTypes": [
         "digest"
+      ],
+      "matchJsonata": [
+        "$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"
       ],
       "enabled": false
     },
