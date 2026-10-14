@@ -957,10 +957,10 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Prioritize renovate-vault workflow references after one day without a group-size restriction",
+      "description": "Prioritize renovate-vault workflow references with zero release age without a group-size restriction",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["rancher/renovate-config", "rancher/renovate-config/**"],
-      "minimumReleaseAge": "1 day",
+      "minimumReleaseAge": "0 days",
       "prPriority": 10,
       "minimumGroupSize": 1
     },
