@@ -31,7 +31,6 @@ jobs:
 
     uses: ./.github/workflows/renovate-vault.yml
     with:
-      logLevel: 'debug'
       renovateConfig: ".github/renovate.json"
       dryRun: 'full'
     secrets:

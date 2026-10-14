@@ -5,7 +5,6 @@
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "enabled": true,
     "groupName": "{{#if (equals depName 'go')}}Go toolchain{{else}}{{#if (containsString depName 'go.opentelemetry.io/')}}OpenTelemetry dependencies{{else}}{{#if (containsString depName 'golang.org/x/')}}golang.org/x dependencies{{else}}{{{depName}}}{{/if}}{{/if}}{{/if}}",
     "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
     "minimumReleaseAge": "2 days"
@@ -866,7 +865,10 @@
       "matchJsonata": [
         "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
       ],
-      "enabled": true
+      "enabled": true,
+      "force": {
+        "enabled": true
+      }
     },
     {
       "description": "Bump the go directive with minor or major Go updates",
@@ -1032,7 +1034,7 @@
       "minimumGroupSize": 3
     },
     {
-      "description": "Prioritize renovate-vault workflow references after one day without a group-size restriction",
+      "description": "Prioritize renovate-vault workflow references with zero release age without a group-size restriction",
       "matchManagers": [
         "github-actions"
       ],
@@ -1040,7 +1042,7 @@
         "rancher/renovate-config",
         "rancher/renovate-config/**"
       ],
-      "minimumReleaseAge": "1 day",
+      "minimumReleaseAge": "0 days",
       "prPriority": 10,
       "minimumGroupSize": 1
     },
