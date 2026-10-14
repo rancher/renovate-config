@@ -215,6 +215,15 @@ When the generation step cannot be made self-contained, turn the option off. Set
 }
 ```
 
+## Keeping `renovate-vault.yml` up to date in consuming repositories
+
+Renovate only bumps the pinned `uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@<sha> # <tag>` reference in consuming repositories. It does not update the contents of the workflow file itself, so the copy in a consuming repository can become outdated (for example, missing newer inputs or permissions).
+
+Verify that `.github/workflows/renovate-vault.yml` in each consuming repository is up to date, and use one of the following options:
+
+- Run the [Deploy Renovate](.github/workflows/renovate-deploy.yml) workflow against the repository. It opens a PR that replaces `renovate-vault.yml` with the current version.
+- If the deploy workflow cannot be used, copy the file from an up-to-date consumer such as [rancher/rancher](https://github.com/rancher/rancher/blob/main/.github/workflows/renovate-vault.yml).
+
 ## Testing new changes
 
 ### Matching patterns / versions found
