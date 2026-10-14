@@ -285,15 +285,35 @@ configuration is working as expected is to do a full renovate run.
 #### Manually triggering the Renovate workflow
 Push changes to a branch on the target repository (not your fork). On
 the GitHub Actions tab, manually trigger renovate via the `run workflow`
-button. Ensure that you pick the new branch and that "Override default log
-level" is set to `debug` and "Override all schedules" is set to `true`.
+button. Ensure that you pick the new branch and that "Override all
+schedules" is set to `true`.
 
 Note that Renovate may at times merge your branch configuration
 with the configuration from the `default` branch of that repository, which
 may result in your settings not working as expected.
 To understand the final config, check the section `DEBUG: Post-massage config`
-of the logs - this is only visible when renovate is executed in
-debug mode as per above.
+of the logs. The latest `renovate-vault.yml` runs Renovate at `debug` level
+by default, so this section is present in every run.
+
+#### Downloading the full log
+
+The latest `renovate-vault.yml` always logs at `debug` level, so the `DEBUG`
+sections are present in every run. Consuming repositories get debug logs once
+they pin a release that includes this change. Their copy of `renovate-vault.yml`
+should be current too, see
+[Keeping `renovate-vault.yml` up to date](#keeping-renovate-vaultyml-up-to-date-in-consuming-repositories).
+
+To get the full log of a run:
+
+1. Open the run on the GitHub Actions tab and click the `renovate` job.
+2. Expand the `Self-hosted Renovate` step.
+3. Click the gear icon in the top right of the log and select
+   "Download log archive".
+
+The archive has one file per step with the complete output, including the
+`DEBUG` sections such as `Post-massage config` that the web view cuts off.
+GitHub deletes logs after the retention period, so save the file when
+reporting a problem.
 
 #### Running on Forks
 The execution in forks is possible by creating the secret `RENOVATE_FORK_GH_TOKEN`

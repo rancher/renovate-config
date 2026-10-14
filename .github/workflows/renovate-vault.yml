@@ -4,9 +4,9 @@ on:
   workflow_call:
     inputs:
       logLevel:
-        description: "Override default log level"
+        description: "Deprecated: no longer used, logs are always debug. Kept for backward compatibility with older callers."
         required: false
-        default: "info"
+        default: "debug"
         type: string
       overrideSchedule:
         description: "Override all schedules"
@@ -66,8 +66,7 @@ env:
   RENOVATE_GIT_AUTHOR: "renovate-rancher <119870437+renovate-rancher[bot]@users.noreply.github.com>"
   # Use GitHub API to create commits (this allows for signed commits from GitHub App)
   RENOVATE_PLATFORM_COMMIT: "enabled"
-  # Override loglevel if set
-  LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+  LOG_LEVEL: debug
   RENOVATE_CONFIG_FILE: ${{ inputs.renovateConfig || '.github/renovate.json' }}
   # https://docs.renovatebot.com/configuration-options/#configmigration
   RENOVATE_CONFIG_MIGRATION: ${{ inputs.configMigration || 'true' }}
