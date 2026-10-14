@@ -5,9 +5,9 @@ on:
   workflow_call:
     inputs:
       logLevel:
-        description: "Override default log level"
+        description: "Deprecated: no longer used, logs are always debug. Kept for backward compatibility with older callers."
         required: false
-        default: "info"
+        default: "debug"
         type: string
       overrideSchedule:
         description: "Override all schedules"
@@ -37,8 +37,7 @@ env:
   RENOVATE_PLATFORM_COMMIT: "enabled"
   # Override schedule if set
   RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
-  # Override loglevel if set
-  LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+  LOG_LEVEL: debug
   RENOVATE_CONFIG_FILE: .github/renovate.json
 
 jobs:

@@ -3,14 +3,6 @@ name: Renovate
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: "Override default log level"
-        required: false
-        default: info
-        type: choice
-        options:
-          - info
-          - debug
       overrideSchedule:
         description: "Override all schedules"
         required: false
@@ -50,7 +42,7 @@ jobs:
     uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@faa051782ecc7002d78b37640974fa6aaf412c53 # v1.0.6
     with:
       configMigration: ${{ inputs.configMigration || 'true' }}
-      logLevel: ${{ inputs.logLevel || 'info' }}
+      logLevel: debug
       overrideSchedule: ${{ github.event.inputs.overrideSchedule == 'true' && '{''schedule'':null}' || '' }}
       renovateConfig: ${{ inputs.renovateConfig || '.github/renovate.json' }}
     secrets:
