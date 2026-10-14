@@ -1,8 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "mergeConfidence:age-confidence-badges",
-    "security:gomodIndirectSecurityUpdates"
+    "mergeConfidence:age-confidence-badges"
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
@@ -856,12 +855,24 @@
       ]
     },
     {
+      "description": "Enable lookups for indirect go.mod dependencies",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true
+    },
+    {
+      "description": "Disable non-security updates for indirect go.mod dependencies",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest", "pinDigest", "lockFileMaintenance", "rollback", "replacement"],
+      "enabled": false
+    },
+    {
       "description": "Let indirect Go updates through when Renovate reports vulnerability metadata",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["indirect"],
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
-      "enabled": true,
-      "force": { "enabled": true }
+      "enabled": true
     },
     {
       "description": "Bump the go directive with minor or major Go updates",
