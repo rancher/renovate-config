@@ -285,7 +285,6 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/\\.github/workflows/renovate.yml/",
         "/\\.github/workflows/renovate-vault.yml/"
       ],
       "matchStrings": [
