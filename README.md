@@ -1,6 +1,6 @@
 # renovate-config
 
-This repository contains the centralized Renovate preset (`default.json`) and the reusable workflow used to run Renovate (`.github/workflows/renovate.yml`)
+This repository contains the centralized Renovate preset (`default.json`) and the reusable workflow used to run Renovate (`.github/workflows/renovate-vault.yml`)
 
 ## Used branches
 
@@ -214,6 +214,12 @@ When the generation step cannot be made self-contained, turn the option off. Set
   ]
 }
 ```
+
+## Callers of the removed `renovate.yml`
+
+The deprecated reusable workflow `.github/workflows/renovate.yml` was deleted. Callers that still reference `rancher/renovate-config/.github/workflows/renovate.yml@<ref>` fail at workflow startup (`error parsing called workflow` / workflow file issue), and because the failure is a parse error no job starts, so Renovate stops for that repository until the caller is updated. Callers pinned to a commit SHA that contained the file keep working until they move the pin.
+
+To migrate, replace the caller with the current `renovate-vault.yml` as described in [Keeping `renovate-vault.yml` up to date in consuming repositories](#keeping-renovate-vaultyml-up-to-date-in-consuming-repositories), run it once manually to verify the token flow, and then delete the old caller. Note the differences: `renovate-vault.yml` needs `id-token: write` and reads its token from Vault instead of the `RENOVATE_APP_ID`/`RENOVATE_PRIVATE_KEY` secrets, and its `logLevel` input is unused because logging is always at `debug` level.
 
 ## Keeping `renovate-vault.yml` up to date in consuming repositories
 
