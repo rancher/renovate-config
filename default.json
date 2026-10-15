@@ -1310,6 +1310,11 @@
       "description": "Ignore group-size requirements for security updates",
       "matchJsonata": ["$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"],
       "minimumGroupSize": 1
+    },
+    {
+      "description": "Label major updates so they are easy to find",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["dependency/major"]
     }
   ]
 }

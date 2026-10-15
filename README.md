@@ -59,6 +59,18 @@ Other repositories can skip the following `main` package rule that extends `ranc
 Branches that are part of `baseBranchPatterns` and do not have a dedicated `packageRule` will get almost all updates Renovate provides, including major bumps.
 That is also true for `rancher-main` besides the restrictions mentioned above.
 
+## Labels
+
+`default.json` labels every PR with `dependencies` and adds `dependency/major` to branches that contain at least one major bump, so major updates can be found with `label:dependency/major`.
+
+Labels are per repository. GitHub creates a missing label on first use, but without a color or description, so projects that want a consistent `dependency/major` search should create it once:
+
+```bash
+gh label create dependency/major --color b60205 --description "Major version bump of a dependency (breaking change)"
+```
+
+Renovate only syncs labels of PRs whose body contains the `labels` entry in its `renovate-debug` block, which every PR created since Renovate 37 does. PRs that were relabeled manually are left untouched, and the repository cache can skip unchanged PRs; tick the rebase/retry checkbox of such a PR to let Renovate sync its labels.
+
 ## Opting into automerge
 
 Projects can opt into automerging eligible patch and minor updates by extending
