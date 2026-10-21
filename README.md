@@ -1,6 +1,6 @@
 # renovate-config
 
-This repository contains the centralized Renovate preset (`default.json`) and the reusable workflow used to run Renovate (`.github/workflows/renovate.yml`)
+This repository contains the centralized Renovate preset (`default.json`) and the reusable workflow used to run Renovate (`.github/workflows/renovate-vault.yml`)
 
 ## Used branches
 
@@ -58,6 +58,18 @@ Other repositories can skip the following `main` package rule that extends `ranc
 
 Branches that are part of `baseBranchPatterns` and do not have a dedicated `packageRule` will get almost all updates Renovate provides, including major bumps.
 That is also true for `rancher-main` besides the restrictions mentioned above.
+
+## Labels
+
+`default.json` labels every PR with `dependencies` and adds `dependency/major` to branches that contain at least one major bump, so major updates can be found with `label:dependency/major`.
+
+Labels are per repository. GitHub creates a missing label on first use, but without a color or description, so projects that want a consistent `dependency/major` search should create it once:
+
+```bash
+gh label create dependency/major --color b60205 --description "Major version bump of a dependency (breaking change)"
+```
+
+Renovate only syncs labels of PRs whose body contains the `labels` entry in its `renovate-debug` block, which every PR created since Renovate 37 does. PRs that were relabeled manually are left untouched, and the repository cache can skip unchanged PRs; tick the rebase/retry checkbox of such a PR to let Renovate sync its labels.
 
 ## Opting into automerge
 
@@ -214,6 +226,12 @@ When the generation step cannot be made self-contained, turn the option off. Set
   ]
 }
 ```
+
+## Callers of the removed `renovate.yml`
+
+The deprecated reusable workflow `.github/workflows/renovate.yml` was deleted. Callers that still reference `rancher/renovate-config/.github/workflows/renovate.yml@<ref>` fail at workflow startup (`error parsing called workflow` / workflow file issue), and because the failure is a parse error no job starts, so Renovate stops for that repository until the caller is updated. Callers pinned to a commit SHA that contained the file keep working until they move the pin.
+
+To migrate, replace the caller with the current `renovate-vault.yml` as described in [Keeping `renovate-vault.yml` up to date in consuming repositories](#keeping-renovate-vaultyml-up-to-date-in-consuming-repositories), run it once manually to verify the token flow, and then delete the old caller. Note the differences: `renovate-vault.yml` needs `id-token: write` and reads its token from Vault instead of the `RENOVATE_APP_ID`/`RENOVATE_PRIVATE_KEY` secrets, and its `logLevel` input is unused because logging is always at `debug` level.
 
 ## Keeping `renovate-vault.yml` up to date in consuming repositories
 
