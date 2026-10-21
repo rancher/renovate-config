@@ -285,7 +285,6 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/\\.github/workflows/renovate.yml/",
         "/\\.github/workflows/renovate-vault.yml/"
       ],
       "matchStrings": [
@@ -1543,6 +1542,11 @@
         "$exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert)"
       ],
       "minimumGroupSize": 1
+    },
+    {
+      "description": "Label major updates so they are easy to find",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["dependency/major"]
     }
   ]
 }
