@@ -1020,17 +1020,8 @@
     },
     {
       "description": "Keep Go updates, including security bumps, on a two day release age on every branch",
-      "matchDatasources": [
-        "golang-version",
-        "docker"
-      ],
-      "matchPackageNames": [
-        "go",
-        "golang",
-        "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.opensuse.org/opensuse/bci/golang"
-      ],
+      "matchDatasources": ["golang-version", "docker"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
       "minimumReleaseAge": "2 days"
     },
     {
@@ -1049,6 +1040,21 @@
       "minimumReleaseAge": "0 days",
       "prPriority": 10,
       "minimumGroupSize": 1
+    },
+    {
+      "description": "Exempt BCI base images from minimumReleaseAge since security fixes must ship immediately. BCI Go images are extracted as depName go on the golang-version datasource, so they stay under the two day Go rule above",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//"
+      ],
+      "minimumReleaseAge": "0 days"
+    },
+    {
+      "description": "Exempt the hardened Go build image from minimumReleaseAge so a fresh image tag joins the Go bump branch instead of being split off as a pending upgrade",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["rancher/hardened-build-base"],
+      "minimumReleaseAge": "0 days"
     },
     {
       "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
