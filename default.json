@@ -975,6 +975,15 @@
       "minimumGroupSize": 1
     },
     {
+      "description": "Exempt BCI images, including BCI Go, from minimumReleaseAge since those updates are critical",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//"
+      ],
+      "minimumReleaseAge": "0 days"
+    },
+    {
       "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
       "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
       "minimumReleaseAge": "0 days"
