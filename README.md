@@ -23,8 +23,8 @@ their `renovate.json` as per below:
   "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "main",
-    "release/v0.16",
-    "release/v0.15"
+    "release/v0.17",
+    "release/v0.16"
   ],
   "packageRules": [
     {
@@ -32,12 +32,12 @@ their `renovate.json` as per below:
       "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
-      "matchBaseBranches": ["release/v0.16"],
-      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
+      "matchBaseBranches": ["release/v0.17"],
+      "extends": ["github>rancher/renovate-config//rancher-2.16#release"]
     },
     {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
+      "matchBaseBranches": ["release/v0.16"],
+      "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
     }
   ]
 }
@@ -83,8 +83,8 @@ the repository-agnostic `automerge.json` preset in a separate branch-scoped
   "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "main",
-    "release/v0.16",
-    "release/v0.15"
+    "release/v0.17",
+    "release/v0.16"
   ],
   "packageRules": [
     {
@@ -92,18 +92,18 @@ the repository-agnostic `automerge.json` preset in a separate branch-scoped
       "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
+      "matchBaseBranches": ["release/v0.17"],
+      "extends": ["github>rancher/renovate-config//rancher-2.16#release"]
+    },
+    {
       "matchBaseBranches": ["release/v0.16"],
       "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
     },
     {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
-    },
-    {
       "matchBaseBranches": [
         "main",
-        "release/v0.16",
-        "release/v0.15"
+        "release/v0.17",
+        "release/v0.16"
       ],
       "extends": ["github>rancher/renovate-config//automerge#release"]
     }
@@ -141,8 +141,8 @@ branch-scoped configuration:
   "extends": ["github>rancher/renovate-config//default#release"],
   "baseBranchPatterns": [
     "main",
-    "release/v0.16",
-    "release/v0.15"
+    "release/v0.17",
+    "release/v0.16"
   ],
   "packageRules": [
     {
@@ -150,18 +150,18 @@ branch-scoped configuration:
       "extends": ["github>rancher/renovate-config//rancher-main#release"]
     },
     {
+      "matchBaseBranches": ["release/v0.17"],
+      "extends": ["github>rancher/renovate-config//rancher-2.16#release"]
+    },
+    {
       "matchBaseBranches": ["release/v0.16"],
       "extends": ["github>rancher/renovate-config//rancher-2.15#release"]
     },
     {
-      "matchBaseBranches": ["release/v0.15"],
-      "extends": ["github>rancher/renovate-config//rancher-2.14#release"]
-    },
-    {
       "matchBaseBranches": [
         "main",
-        "release/v0.16",
-        "release/v0.15"
+        "release/v0.17",
+        "release/v0.16"
       ],
       "description": "Automerge eligible security updates",
       "matchDepTypes": ["!devDependencies", "!dev-dependencies", "!test"],
