@@ -108,27 +108,10 @@
       ],
       "description": "Track minor Go versions configured in Dockerfile ARG declarations",
       "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GO_VERSION=(?<currentValue>\\d+\\.\\d+)$"
+        "(?m)^[ \\t]*ARG[ \\t]+GO_VERSION=(?<currentValue>\\d+\\.\\d+)\\r?$"
       ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GO_VERSION={{{newMajor}}}.{{{newMinor}}}",
-      "depTypeTemplate": "go-workflow-minor",
-      "depNameTemplate": "go",
-      "datasourceTemplate": "golang-version"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "description": "Track minor Go versions configured in CRLF Dockerfile ARG declarations",
-      "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GO_VERSION=(?<currentValue>\\d+\\.\\d+)\\r$"
-      ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GO_VERSION={{{newMajor}}}.{{{newMinor}}}\r",
-      "depTypeTemplate": "go-workflow-minor",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)\\.\\d+$",
+      "versioningTemplate": "semver-coerced",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
