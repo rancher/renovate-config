@@ -139,10 +139,10 @@
       ],
       "description": "Track minor Go image versions configured in Dockerfile ARG declarations",
       "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=registry\\.suse\\.com/bci/golang:(?<currentValue>\\d+\\.\\d+)$"
+        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=(?<image>registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)$"
       ],
       "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG=registry.suse.com/bci/golang:{{{newMajor}}}.{{{newMinor}}}",
+      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG={{{image}}}:{{{newMajor}}}.{{{newMinor}}}",
       "depTypeTemplate": "go-workflow-minor",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -155,42 +155,10 @@
       ],
       "description": "Track minor Go image versions configured in CRLF Dockerfile ARG declarations",
       "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=registry\\.suse\\.com/bci/golang:(?<currentValue>\\d+\\.\\d+)\\r$"
+        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=(?<image>registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)\\r$"
       ],
       "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG=registry.suse.com/bci/golang:{{{newMajor}}}.{{{newMinor}}}\r",
-      "depTypeTemplate": "go-workflow-minor",
-      "depNameTemplate": "go",
-      "datasourceTemplate": "golang-version"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "description": "Track minor OpenSUSE BCI Go image versions configured in Dockerfile ARG declarations",
-      "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=registry\\.opensuse\\.org/opensuse/bci/golang:(?<currentValue>\\d+\\.\\d+)$"
-      ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG=registry.opensuse.org/opensuse/bci/golang:{{{newMajor}}}.{{{newMinor}}}",
-      "depTypeTemplate": "go-workflow-minor",
-      "depNameTemplate": "go",
-      "datasourceTemplate": "golang-version"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "description": "Track minor OpenSUSE BCI Go image versions configured in CRLF Dockerfile ARG declarations",
-      "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=registry\\.opensuse\\.org/opensuse/bci/golang:(?<currentValue>\\d+\\.\\d+)\\r$"
-      ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG=registry.opensuse.org/opensuse/bci/golang:{{{newMajor}}}.{{{newMinor}}}\r",
+      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG={{{image}}}:{{{newMajor}}}.{{{newMinor}}}\r",
       "depTypeTemplate": "go-workflow-minor",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -956,7 +924,7 @@
     {
       "description": "Keep Go updates, including security bumps, on a two day release age on every branch",
       "matchDatasources": ["golang-version", "docker"],
-      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.suse.com/rancher/appco-go", "registry.opensuse.org/opensuse/bci/golang"],
       "minimumReleaseAge": "2 days"
     },
     {
@@ -1109,6 +1077,7 @@
         "go",
         "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang",
         "golangci/golangci-lint",
         "golangci/golangci-lint-action",
@@ -1126,6 +1095,7 @@
         "go",
         "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "Go toolchain",
@@ -1137,6 +1107,7 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": [
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchUpdateTypes": ["major", "minor", "patch", "pin"],
@@ -1225,6 +1196,7 @@
       ],
       "matchPackageNames": [
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchCurrentValue": "1.26",
