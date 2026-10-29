@@ -90,9 +90,10 @@
         "/(^|/|\\.)Dockerfile$/",
         "/(^|/)Dockerfile[^/]*$/"
       ],
-      "description": "Track minor Go Docker images with Go toolchain versions",
+      "description": "Track minor Go Docker images in FROM lines and ARG GOLANG declarations with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.]|$)"
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.]|$)",
+        "(?m)^[ \\t]*ARG[ \\t]+GOLANG=(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)\\r?$"
       ],
       "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)\\.\\d+$",
       "versioningTemplate": "semver-coerced",
@@ -127,38 +128,6 @@
       ],
       "currentValueTemplate": "{{{currentValue}}}.0",
       "autoReplaceStringTemplate": "{{{indentation}}}ARG GO_VERSION={{{newMajor}}}.{{{newMinor}}}\r",
-      "depTypeTemplate": "go-workflow-minor",
-      "depNameTemplate": "go",
-      "datasourceTemplate": "golang-version"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "description": "Track minor Go image versions configured in Dockerfile ARG declarations",
-      "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=(?<image>registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)$"
-      ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG={{{image}}}:{{{newMajor}}}.{{{newMinor}}}",
-      "depTypeTemplate": "go-workflow-minor",
-      "depNameTemplate": "go",
-      "datasourceTemplate": "golang-version"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile[^/]*$/"
-      ],
-      "description": "Track minor Go image versions configured in CRLF Dockerfile ARG declarations",
-      "matchStrings": [
-        "(?m)(?<indentation>^[ \\t]*)ARG[ \\t]+GOLANG=(?<image>registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)\\r$"
-      ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "{{{indentation}}}ARG GOLANG={{{image}}}:{{{newMajor}}}.{{{newMinor}}}\r",
       "depTypeTemplate": "go-workflow-minor",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
