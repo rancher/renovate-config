@@ -78,7 +78,7 @@
       ],
       "description": "Track patch-level Go Docker images with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/bci|registry\\.opensuse\\.org/opensuse/bci)/golang:(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "versioningTemplate": "semver-coerced",
       "depNameTemplate": "go",
@@ -92,7 +92,7 @@
       ],
       "description": "Track minor Go Docker images with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/bci|registry\\.opensuse\\.org/opensuse/bci)/golang:(?<currentValue>\\d+\\.\\d+)(?:[^\\d.]|$)"
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.]|$)"
       ],
       "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)\\.\\d+$",
       "versioningTemplate": "semver-coerced",
