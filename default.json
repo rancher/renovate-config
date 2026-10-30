@@ -880,11 +880,11 @@
       "minimumReleaseAge": "2 days"
     },
     {
-      "description": "Group GitHub Actions updates and require at least three actions",
+      "description": "Group GitHub Actions updates and require at least two actions",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",
       "commitMessageExtra": "{{{upgrades.0.depName}}}",
-      "minimumGroupSize": 3
+      "minimumGroupSize": 2
     },
     {
       "description": "Prioritize renovate-vault workflow references with zero release age without a group-size restriction",
