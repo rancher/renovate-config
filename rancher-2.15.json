@@ -9,6 +9,7 @@
         "go",
         "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "allowedVersions": "<1.27"
@@ -158,6 +159,7 @@
         "go",
         "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": [
@@ -211,6 +213,7 @@
         "golang",
         "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang",
         "golangci/golangci-lint",
         "golangci/golangci-lint-action",
@@ -248,6 +251,7 @@
         "golang",
         "rancher/hardened-build-base",
         "registry.suse.com/bci/golang",
+        "registry.suse.com/rancher/appco-go",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "Go patch updates",
