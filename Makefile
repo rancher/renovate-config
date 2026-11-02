@@ -24,3 +24,6 @@ test: data # this is to enable manual tests, not for CI.
 	@rm -rf $(TMP_DIR) && mkdir -p tests && cp -r tests $(TMP_DIR)
 	@mkdir -p $(TMP_DIR)/.github && cp default.json $(TMP_DIR)/.github/renovate.json
 	$(TEST_FILE)
+
+test-scripts: # unit tests for the Python helper scripts.
+	python3 -m unittest discover -s .github/scripts
