@@ -242,6 +242,10 @@ Verify that `.github/workflows/renovate-vault.yml` in each consuming repository 
 - Run the [Deploy Renovate](.github/workflows/renovate-deploy.yml) workflow against the repository. It opens a PR that replaces `renovate-vault.yml` with the current version.
 - If the deploy workflow cannot be used, copy the file from an up-to-date consumer such as [rancher/rancher](https://github.com/rancher/rancher/blob/main/.github/workflows/renovate-vault.yml).
 
+## Keeping consumer `renovate.json` presets up to date
+
+The [Sync Renovate configs](.github/workflows/renovate-sync.yml) workflow brings `.github/renovate.json` in consuming repositories up to the current Rancher presets while keeping their local customizations, and opens the result as a `renovate-config-sync` PR per changed repository. Run it manually with an organization (`rancher`) or a single repository (`rancher/fleet`) as `target`; `dryRun` (the default) only writes the report to the job summary and uploads the proposed files as the `renovate-config-sync` artifact. The rules it applies are documented on the functions in [sync_renovate_configs.py](.github/scripts/sync_renovate_configs.py) and covered by [test_sync_renovate_configs.py](.github/scripts/test_sync_renovate_configs.py); to run it locally use `GH_TOKEN=$(gh auth token) python3 .github/scripts/sync_renovate_configs.py --target rancher/fleet --out report`, as only `--apply` opens PRs.
+
 ## Testing new changes
 
 ### Matching patterns / versions found
