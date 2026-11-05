@@ -229,13 +229,13 @@
       "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track Rancher CI Go image families with Go toolchain versions",
+      "description": "Track Rancher CI Go images in container fields with Go toolchain versions",
       "matchStrings": [
-        "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+        "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
-      "depTypeTemplate": "go-workflow-minor",
+      "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -244,13 +244,13 @@
       "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track Rancher CI Go image families in image fields",
+      "description": "Track Rancher CI Go images in image fields with Go toolchain versions",
       "matchStrings": [
-        "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+        "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
-      "depTypeTemplate": "go-workflow-minor",
+      "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
+      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -847,6 +847,13 @@
       "matchPackageNames": ["ghcr.io/rancher/ci-image/**"],
       "groupName": "Rancher CI images",
       "pinDigests": true
+    },
+    {
+      "description": "Track Rancher CI Go image tags through the golang-version datasource so they move with the go.mod toolchain",
+      "matchManagers": ["custom.regex", "github-actions"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
+      "enabled": false
     },
     {
       "description": "Update BCI workflow images with version tags",
