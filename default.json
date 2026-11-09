@@ -216,17 +216,6 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/\\.github/workflows/.*\\.ya?ml/"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=github-tags depName=rancherlabs/slsactl\\n\\s*version:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
-      ],
-      "depNameTemplate": "rancherlabs/slsactl",
-      "datasourceTemplate": "github-tags"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track Rancher CI Go images in container fields with Go toolchain versions",
@@ -917,11 +906,6 @@
       "minimumReleaseAge": "0 days"
     },
     {
-      "description": "Allow slsactl updates after one day because it is an internal product",
-      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
-      "minimumReleaseAge": "1 day"
-    },
-    {
       "description": "Restrict helm/chart-testing-action below 2.8.0",
       "matchPackageNames": [
         "helm/chart-testing-action"
@@ -1191,19 +1175,6 @@
       ]
     },
     {
-      "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
-      "matchPackageNames": ["rancherlabs/slsactl"],
-      "groupName": "slsactl",
-      "minimumGroupSize": 2
-    },
-    {
-      "description": "Group slsactl GitHub Action (with digest)",
-      "matchPackageNames": ["rancherlabs/slsactl/**"],
-      "groupName": "slsactl",
-      "matchUpdateTypes": ["pinDigest"],
-      "minimumGroupSize": 2
-    },
-    {
       "description": "Group ginkgo and gomega together as ginkgo bumps gomega",
       "matchManagers": ["gomod"],
       "matchPackageNames": ["github.com/onsi/ginkgo/v2", "github.com/onsi/gomega"],
@@ -1245,12 +1216,6 @@
       "matchPackageNames": ["golang.org/x/**"],
       "groupName": "golang.org/x dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
-    },
-    {
-      "description": "Skip digest-only updates for slsactl GitHub Action",
-      "matchPackageNames": ["rancherlabs/slsactl/**"],
-      "matchUpdateTypes": ["digest"],
-      "enabled": false
     },
     {
       "description": "Ignore group-size requirements for security updates",

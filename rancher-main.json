@@ -118,11 +118,6 @@
       "matchPackageNames": ["github.com/rancher/wrangler/v3"],
       "ignoreUnstable": false,
       "respectLatest": false
-    },
-    {
-      "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
-      "groupName": "slsactl",
-      "minimumGroupSize": 2
     }
   ]
 }

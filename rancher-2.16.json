@@ -54,7 +54,6 @@
       ]
     },
     {
-      "matchPackageNames": ["!rancherlabs/slsactl", "!rancherlabs/slsactl/**"],
       "matchUpdateTypes": ["major","minor","patch","pin","digest","pinDigest"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": false
@@ -191,12 +190,6 @@
       "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
-    },
-    {
-      "matchPackageNames": ["rancherlabs/slsactl"],
-      "groupName": "slsactl",
-      "allowedVersions": "<=v0.1.45",
-      "minimumGroupSize": 2
     },
     {
       "description": "Keep minor Helm and Kubernetes updates out of release branches",
