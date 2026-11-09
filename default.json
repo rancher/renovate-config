@@ -917,9 +917,9 @@
       "minimumReleaseAge": "0 days"
     },
     {
-      "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
+      "description": "Allow slsactl updates after one day because it is an internal product",
       "matchPackageNames": ["rancherlabs/slsactl", "rancherlabs/slsactl/**"],
-      "minimumReleaseAge": "0 days"
+      "minimumReleaseAge": "1 day"
     },
     {
       "description": "Restrict helm/chart-testing-action below 2.8.0",
@@ -954,7 +954,7 @@
       "enabled": false
     },
     {
-      "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs",
+      "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs. Internal products use a one day release age",
       "matchManagers": ["gomod"],
       "groupName": "Kubernetes dependencies",
       "matchPackageNames": [
@@ -965,7 +965,7 @@
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
-      "minimumReleaseAge": "3 days"
+      "minimumReleaseAge": "1 day"
     },
     {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
