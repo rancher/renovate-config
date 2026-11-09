@@ -783,6 +783,13 @@
       "enabled": true
     },
     {
+      "description": "Never update the deprecated YAML module replace aliases: Go rejects one version for two module paths, so the alias must trail the maintained requirement",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["replace"],
+      "matchPackageNames": ["go.yaml.in/yaml/v2", "go.yaml.in/yaml/v3"],
+      "enabled": false
+    },
+    {
       "description": "Bump the go directive with minor or major Go updates",
       "matchManagers": ["gomod"],
       "matchDepNames": ["go"],
