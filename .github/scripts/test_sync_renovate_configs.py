@@ -512,5 +512,55 @@ class SecurityMirrorTest(unittest.TestCase):
         self.assertEqual([r["name"] for r in s.skip_security_mirrors(repos)], ["fleet", "rancher-security", "foo-security-tools"])
 
 
+class PrGitHub:
+    """Git data and pull request endpoints of `rancher/foo` used by `open_sync_pr`."""
+
+    def __init__(self, branch=None, pr=None):
+        self.branch, self.pr, self.writes = branch, pr, []
+
+    def file(self, repo, path, ref=None):
+        return self.branch.get(path)
+
+    def request(self, method, path, body=None, raw=False, allow_missing=False):
+        path = path.removeprefix("repos/rancher/foo/")
+        if method != "GET":
+            self.writes.append(f"{method} {path}")
+        if path == "git/ref/heads/main":
+            return {"object": {"sha": "base"}}
+        if path == f"git/ref/heads/{s.SYNC_BRANCH}":
+            return self.branch is not None or None
+        if path.startswith("pulls?state=open"):
+            return [self.pr] if self.pr else []
+        if path.startswith("pulls"):
+            self.pr = {"number": 1, "html_url": "https://github.com/rancher/foo/pull/1", **(self.pr or {}), **body}
+            return self.pr
+        return {"sha": "new", "tree": {"sha": "tree"}}
+
+
+class OpenSyncPrTest(unittest.TestCase):
+    UPDATES = {s.CONFIG_PATH: "{}\n"}
+    BODY = "Changes:\n- a\n\nCreated by the [renovate-sync workflow](https://x/1), started by @me.\n"
+    PR = {"number": 7, "html_url": "https://github.com/rancher/foo/pull/7", "title": s.PR_TITLE, "body": BODY}
+
+    def writes(self, branch=None, pr=None):
+        gh = PrGitHub(branch, pr)
+        url = s.open_sync_pr(gh, "rancher/foo", "main", self.UPDATES, self.BODY)
+        self.assertEqual(url, gh.pr["html_url"])
+        return gh.writes
+
+    def test_creates_branch_and_pr(self):
+        self.assertEqual(self.writes(), ["POST git/trees", "POST git/commits", "POST git/refs", "POST pulls"])
+
+    def test_current_branch_and_pr_untouched(self):
+        pr = {**self.PR, "body": self.BODY.replace("https://x/1", "https://x/0")}
+        self.assertEqual(self.writes(self.UPDATES, pr), [])
+
+    def test_stale_branch_force_pushed(self):
+        self.assertEqual(self.writes({}, self.PR), ["POST git/trees", "POST git/commits", f"PATCH git/refs/heads/{s.SYNC_BRANCH}"])
+
+    def test_changed_body_updated_without_push(self):
+        self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": "old"}), ["PATCH pulls/7"])
+
+
 if __name__ == "__main__":
     unittest.main()

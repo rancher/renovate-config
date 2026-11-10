@@ -1013,25 +1013,34 @@ def activity(original: dict, workflow: str | None) -> str:
 
 
 def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None], body: str) -> str:
-    """Commit the files to the sync branch through the API and open or update its PR."""
-    base_sha = gh.request("GET", f"repos/{repo}/git/ref/heads/{urllib.parse.quote(default_branch)}")["object"]["sha"]
-    base_tree = gh.request("GET", f"repos/{repo}/git/commits/{base_sha}")["tree"]["sha"]
-    items = [
-        {"path": path, "mode": "100644", "type": "blob", **({"sha": None} if content is None else {"content": content})}
-        for path, content in updates.items()
-    ]
-    tree = gh.request("POST", f"repos/{repo}/git/trees", {"base_tree": base_tree, "tree": items})["sha"]
-    commit = gh.request("POST", f"repos/{repo}/git/commits", {"message": PR_TITLE, "tree": tree, "parents": [base_sha]})["sha"]
-    if gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True):
-        gh.request("PATCH", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", {"sha": commit, "force": True})
-    else:
-        gh.request("POST", f"repos/{repo}/git/refs", {"ref": f"refs/heads/{SYNC_BRANCH}", "sha": commit})
+    """Commit the files to the sync branch through the API and open or update its PR.
+
+    A sync branch and PR that already carry the proposal are left untouched, so
+    repeated runs neither force-push nor rewrite the PR.
+    """
+    sync_ref = gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True)
+    if not sync_ref or any(gh.file(repo, path, SYNC_BRANCH) != content for path, content in updates.items()):
+        base_sha = gh.request("GET", f"repos/{repo}/git/ref/heads/{urllib.parse.quote(default_branch)}")["object"]["sha"]
+        base_tree = gh.request("GET", f"repos/{repo}/git/commits/{base_sha}")["tree"]["sha"]
+        items = [
+            {"path": path, "mode": "100644", "type": "blob", **({"sha": None} if content is None else {"content": content})}
+            for path, content in updates.items()
+        ]
+        tree = gh.request("POST", f"repos/{repo}/git/trees", {"base_tree": base_tree, "tree": items})["sha"]
+        commit = gh.request("POST", f"repos/{repo}/git/commits", {"message": PR_TITLE, "tree": tree, "parents": [base_sha]})["sha"]
+        if sync_ref:
+            gh.request("PATCH", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", {"sha": commit, "force": True})
+        else:
+            gh.request("POST", f"repos/{repo}/git/refs", {"ref": f"refs/heads/{SYNC_BRANCH}", "sha": commit})
     head = urllib.parse.quote(f"{repo.split('/')[0]}:{SYNC_BRANCH}", safe="")
     existing = gh.request("GET", f"repos/{repo}/pulls?state=open&head={head}") or []
-    if existing:
-        pr = gh.request("PATCH", f"repos/{repo}/pulls/{existing[0]['number']}", {"title": PR_TITLE, "body": body})
-    else:
-        pr = gh.request("POST", f"repos/{repo}/pulls", {"title": PR_TITLE, "body": body, "head": SYNC_BRANCH, "base": default_branch})
+    if not existing:
+        return gh.request("POST", f"repos/{repo}/pulls", {"title": PR_TITLE, "body": body, "head": SYNC_BRANCH, "base": default_branch})["html_url"]
+    pr = existing[0]
+    # The credit line names the run and actor, so it differs on every run.
+    credit = "\nCreated by the "
+    if pr.get("title") != PR_TITLE or (pr.get("body") or "").partition(credit)[0] != body.partition(credit)[0]:
+        pr = gh.request("PATCH", f"repos/{repo}/pulls/{pr['number']}", {"title": PR_TITLE, "body": body})
     return pr["html_url"]
 
 
