@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,6 +43,10 @@ PRESET_REFS = ("main", "release")
 DEFAULT_REF = "release"
 # GitHub rejects job summaries above 1 MiB.
 SUMMARY_LIMIT = 1000 * 1024
+# GitHub throttles and fails backend requests transiently; repeat those.
+TRANSIENT_STATUS = (429, 500, 502, 503, 504)
+RETRIES = 3
+RETRY_DELAY = 2.0
 
 REF_RE = re.compile(r"^github>rancher/renovate-config(?:(//|:)([^#]+))?(?:#(.+))?$")
 BRANCH_RE = re.compile(r"^(?P<prefix>(?:.*[^\d.])?)(?P<major>\d+)\.(?P<minor>\d+)$")
@@ -341,16 +346,28 @@ class GitHub:
         req.add_header("X-GitHub-Api-Version", "2022-11-28")
         if self.token:
             req.add_header("Authorization", f"Bearer {self.token}")
-        try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                payload = resp.read().decode()
-        except urllib.error.HTTPError as err:
-            if allow_missing and err.code in (403, 404, 409):
-                return None
-            detail = err.read().decode(errors="replace")[:300]
-            if err.code == 403 and "rate limit" not in detail:
-                detail = f"{detail} (the token may not be scoped to this repository)"
-            raise RuntimeError(f"{method} {path}: HTTP {err.code} {detail}") from err
+        # Only requests that are safe to repeat are retried. Git objects are
+        # content addressed, GraphQL is used for reads, and DELETE is made
+        # idempotent by its callers. Creating a PR or ref is not repeated: a
+        # response lost after the server created it would surface as a conflict.
+        retry = method in ("GET", "HEAD", "PATCH", "DELETE") or path == "graphql" or path.endswith(("/git/commits", "/git/trees"))
+        for attempt in range(1, RETRIES + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    payload = resp.read().decode()
+                break
+            except urllib.error.HTTPError as err:
+                if allow_missing and err.code in (403, 404, 409):
+                    return None
+                if retry and err.code in TRANSIENT_STATUS and attempt < RETRIES:
+                    time.sleep(RETRY_DELAY * attempt)
+                    continue
+                detail = err.read().decode(errors="replace")[:300]
+                if err.code == 403 and "rate limit" not in detail:
+                    detail = f"{detail} (the token may not be scoped to this repository)"
+                elif err.code == 422 and method == "POST" and path.endswith("/git/refs"):
+                    detail = f"{detail} (a branch ruleset may forbid creating the branch)"
+                raise RuntimeError(f"{method} {path}: HTTP {err.code} {detail}") from err
         if raw:
             return payload
         return json.loads(payload) if payload else None
@@ -1012,26 +1029,71 @@ def activity(original: dict, workflow: str | None) -> str:
     return "yes" if workflow == "active" else f"no (workflow {workflow})"
 
 
-def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None], body: str) -> str:
-    """Commit the files to the sync branch through the API and open or update its PR."""
-    base_sha = gh.request("GET", f"repos/{repo}/git/ref/heads/{urllib.parse.quote(default_branch)}")["object"]["sha"]
-    base_tree = gh.request("GET", f"repos/{repo}/git/commits/{base_sha}")["tree"]["sha"]
-    items = [
-        {"path": path, "mode": "100644", "type": "blob", **({"sha": None} if content is None else {"content": content})}
-        for path, content in updates.items()
-    ]
-    tree = gh.request("POST", f"repos/{repo}/git/trees", {"base_tree": base_tree, "tree": items})["sha"]
-    commit = gh.request("POST", f"repos/{repo}/git/commits", {"message": PR_TITLE, "tree": tree, "parents": [base_sha]})["sha"]
-    if gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True):
-        gh.request("PATCH", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", {"sha": commit, "force": True})
-    else:
-        gh.request("POST", f"repos/{repo}/git/refs", {"ref": f"refs/heads/{SYNC_BRANCH}", "sha": commit})
+def sync_prs(gh: GitHub, repo: str, state: str) -> list:
+    """Pull requests from the sync branch, newest first."""
     head = urllib.parse.quote(f"{repo.split('/')[0]}:{SYNC_BRANCH}", safe="")
-    existing = gh.request("GET", f"repos/{repo}/pulls?state=open&head={head}") or []
-    if existing:
-        pr = gh.request("PATCH", f"repos/{repo}/pulls/{existing[0]['number']}", {"title": PR_TITLE, "body": body})
-    else:
-        pr = gh.request("POST", f"repos/{repo}/pulls", {"title": PR_TITLE, "body": body, "head": SYNC_BRANCH, "base": default_branch})
+    return gh.request("GET", f"repos/{repo}/pulls?state={state}&head={head}") or []
+
+
+def drop_merged_sync_branch(gh: GitHub, repo: str) -> str | None:
+    """Delete the sync branch when its latest pull request was merged."""
+    if not gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True):
+        return None
+    prs = sync_prs(gh, repo, "all")
+    if not prs or not prs[0].get("merged_at"):
+        return None
+    try:
+        gh.request("DELETE", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}")
+    except RuntimeError as err:
+        # A deletion whose response was lost reports 404 on the retry, so a
+        # missing ref means the cleanup happened. Permission and ruleset
+        # failures must still fail the repository.
+        if "HTTP 404" not in str(err):
+            raise
+    return f"Delete branch `{SYNC_BRANCH}` left behind by merged pull request #{prs[0]['number']}."
+
+
+def strip_credit(body: str) -> str:
+    """PR body without its terminal credit line, which names the run and actor."""
+    lines = body.rstrip().split("\n")
+    return "\n".join(lines[:-1]).rstrip() if lines and lines[-1].startswith("Created by the ") else body.rstrip()
+
+
+def sync_branch_current(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None]) -> bool:
+    """True when the sync branch differs from the default branch exactly by the proposal."""
+    base = urllib.parse.quote(default_branch)
+    files = gh.request("GET", f"repos/{repo}/compare/{base}...{SYNC_BRANCH}").get("files") or []
+    return {f["filename"] for f in files} == set(updates) and all(
+        gh.file(repo, path, SYNC_BRANCH) == content for path, content in updates.items()
+    )
+
+
+def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None], body: str) -> str:
+    """Commit the files to the sync branch through the API and open or update its PR.
+
+    A sync branch and PR that already carry the proposal are left untouched, so
+    repeated runs neither force-push nor rewrite the PR.
+    """
+    sync_ref = gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True)
+    if not sync_ref or not sync_branch_current(gh, repo, default_branch, updates):
+        base_sha = gh.request("GET", f"repos/{repo}/git/ref/heads/{urllib.parse.quote(default_branch)}")["object"]["sha"]
+        base_tree = gh.request("GET", f"repos/{repo}/git/commits/{base_sha}")["tree"]["sha"]
+        items = [
+            {"path": path, "mode": "100644", "type": "blob", **({"sha": None} if content is None else {"content": content})}
+            for path, content in updates.items()
+        ]
+        tree = gh.request("POST", f"repos/{repo}/git/trees", {"base_tree": base_tree, "tree": items})["sha"]
+        commit = gh.request("POST", f"repos/{repo}/git/commits", {"message": PR_TITLE, "tree": tree, "parents": [base_sha]})["sha"]
+        if sync_ref:
+            gh.request("PATCH", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", {"sha": commit, "force": True})
+        else:
+            gh.request("POST", f"repos/{repo}/git/refs", {"ref": f"refs/heads/{SYNC_BRANCH}", "sha": commit})
+    existing = sync_prs(gh, repo, "open")
+    if not existing:
+        return gh.request("POST", f"repos/{repo}/pulls", {"title": PR_TITLE, "body": body, "head": SYNC_BRANCH, "base": default_branch})["html_url"]
+    pr = existing[0]
+    if pr.get("title") != PR_TITLE or strip_credit(pr.get("body") or "") != strip_credit(body):
+        pr = gh.request("PATCH", f"repos/{repo}/pulls/{pr['number']}", {"title": PR_TITLE, "body": body})
     return pr["html_url"]
 
 
@@ -1251,6 +1313,8 @@ def process_repo(gh: GitHub, info: dict, args: argparse.Namespace, shared: Share
     updates.update(approve_files)
     if not updates:
         report.status, report.pr = "unchanged", "no change"
+        if not args.dry_run and (dropped := drop_merged_sync_branch(gh, repo)):
+            report.notes.append(dropped)
         return report
     report.status = "changed"
     report.diff = "".join(unified_diff(path, originals.get(path), content) for path, content in updates.items())
@@ -1266,11 +1330,14 @@ def process_repo(gh: GitHub, info: dict, args: argparse.Namespace, shared: Share
 def list_targets(gh: GitHub, target: str) -> list[dict]:
     target = target.strip().strip("/")
     if "/" in target:
-        return [gh.request("GET", f"repos/{target}")]
-    kind = gh.request("GET", f"users/{target}")["type"]
-    path = f"orgs/{target}/repos?type=all" if kind == "Organization" else f"users/{target}/repos?type=owner"
-    repos = [r for r in gh.paginate(path) if not r.get("archived") and not r.get("disabled")]
-    return sorted(skip_security_mirrors(repos), key=lambda r: r["full_name"].lower())
+        repos = [gh.request("GET", f"repos/{target}")]
+    else:
+        kind = gh.request("GET", f"users/{target}")["type"]
+        path = f"orgs/{target}/repos?type=all" if kind == "Organization" else f"users/{target}/repos?type=owner"
+        repos = skip_security_mirrors([r for r in gh.paginate(path) if not r.get("archived") and not r.get("disabled")])
+    # This repository holds the presets and the workflow templates deployed to
+    # consumers, so it is the source of the sync rather than a target.
+    return sorted((r for r in repos if r["full_name"].lower() != PRESET_REPO), key=lambda r: r["full_name"].lower())
 
 
 def skip_security_mirrors(repos: list[dict]) -> list[dict]:

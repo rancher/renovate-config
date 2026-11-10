@@ -1,6 +1,9 @@
 import argparse
+import io
 import json
 import unittest
+import urllib.error
+from unittest import mock
 
 import sync_renovate_configs as s
 
@@ -506,10 +509,155 @@ class AutomergeTest(unittest.TestCase):
         self.assertIn("Automerge not enabled: Renovate activity is unconfirmed (`yes (workflow state unknown)`).", report.notes)
 
 
+class ListTargetsTest(unittest.TestCase):
+    def targets(self, repos, target="rancher"):
+        gh = mock.Mock()
+        gh.request.return_value = {"type": "Organization", "full_name": target}
+        gh.paginate.return_value = repos
+        return [r["full_name"] for r in s.list_targets(gh, target)]
+
+    def test_skips_preset_repo_and_security_mirrors(self):
+        repos = [{"full_name": n, "name": n.split("/")[1]} for n in ("rancher/fleet", "rancher/fleet-security", "rancher/renovate-config")]
+        self.assertEqual(self.targets(repos), ["rancher/fleet"])
+
+    def test_skips_preset_repo_when_targeted_directly(self):
+        self.assertEqual(self.targets([], "rancher/renovate-config"), [])
+
+
 class SecurityMirrorTest(unittest.TestCase):
     def test_skips_security_repo_with_base(self):
         repos = [{"name": n} for n in ("fleet", "fleet-security", "rancher-security", "foo-security-tools")]
         self.assertEqual([r["name"] for r in s.skip_security_mirrors(repos)], ["fleet", "rancher-security", "foo-security-tools"])
+
+
+class PrGitHub:
+    """Git data and pull request endpoints of `rancher/foo` used by `open_sync_pr`."""
+
+    def __init__(self, branch=None, pr=None):
+        self.branch, self.pr, self.writes = branch, pr, []
+
+    def file(self, repo, path, ref=None):
+        return self.branch.get(path)
+
+    def request(self, method, path, body=None, raw=False, allow_missing=False):
+        path = path.removeprefix("repos/rancher/foo/")
+        if method != "GET":
+            self.writes.append(f"{method} {path}")
+        if path == "git/ref/heads/main":
+            return {"object": {"sha": "base"}}
+        if path == f"git/ref/heads/{s.SYNC_BRANCH}":
+            return self.branch is not None or None
+        if path == f"compare/main...{s.SYNC_BRANCH}":
+            return {"files": [{"filename": p} for p in self.branch if self.branch[p] != self.default.get(p)]}
+        if path.startswith("pulls?state=open"):
+            return [self.pr] if self.pr else []
+        if path.startswith("pulls"):
+            self.pr = {"number": 1, "html_url": "https://github.com/rancher/foo/pull/1", **(self.pr or {}), **body}
+            return self.pr
+        return {"sha": "new", "tree": {"sha": "tree"}}
+
+
+class OpenSyncPrTest(unittest.TestCase):
+    UPDATES = {s.CONFIG_PATH: "{}\n"}
+    BODY = "Changes:\n- a\n\nCreated by the [renovate-sync workflow](https://x/1), started by @me.\n"
+    PR = {"number": 7, "html_url": "https://github.com/rancher/foo/pull/7", "title": s.PR_TITLE, "body": BODY}
+
+    def writes(self, branch=None, pr=None):
+        gh = PrGitHub(branch, pr)
+        gh.default = {}
+        url = s.open_sync_pr(gh, "rancher/foo", "main", self.UPDATES, self.BODY)
+        self.assertEqual(url, gh.pr["html_url"])
+        return gh.writes
+
+    def test_creates_branch_and_pr(self):
+        self.assertEqual(self.writes(), ["POST git/trees", "POST git/commits", "POST git/refs", "POST pulls"])
+
+    def test_current_branch_and_pr_untouched(self):
+        pr = {**self.PR, "body": self.BODY.replace("https://x/1", "https://x/0")}
+        self.assertEqual(self.writes(self.UPDATES, pr), [])
+
+    def test_stale_branch_force_pushed(self):
+        self.assertEqual(self.writes({}, self.PR), ["POST git/trees", "POST git/commits", f"PATCH git/refs/heads/{s.SYNC_BRANCH}"])
+
+    def test_branch_with_extra_file_rebuilt(self):
+        stale = {**self.UPDATES, "docs/old.md": "reverted\n"}
+        self.assertEqual(self.writes(stale, self.PR), ["POST git/trees", "POST git/commits", f"PATCH git/refs/heads/{s.SYNC_BRANCH}"])
+
+    def test_changed_body_updated_without_push(self):
+        self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": "old"}), ["PATCH pulls/7"])
+
+    def test_text_after_credit_line_rewrites_pr(self):
+        edited = self.BODY.replace("started by @me.", "started by @me.\n\nNeeds a release note.")
+        self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": edited}), ["PATCH pulls/7"])
+
+
+class DropBranchTest(unittest.TestCase):
+    MERGED = [{"number": 7, "merged_at": "2026-11-10T05:00:00Z"}]
+
+    def dropped(self, prs, branch=True, delete_error=None):
+        def request(method, path, body=None, raw=False, allow_missing=False):
+            if method != "DELETE":
+                return prs if "pulls?state=all" in path else {"object": {"sha": "x"}} if branch else None
+            if delete_error:
+                raise RuntimeError(delete_error)
+            return None
+
+        gh = mock.Mock(request=request)
+        return s.drop_merged_sync_branch(gh, "rancher/foo")
+
+    def test_deletes_branch_of_merged_pr(self):
+        self.assertEqual(self.dropped(self.MERGED), f"Delete branch `{s.SYNC_BRANCH}` left behind by merged pull request #7.")
+
+    def test_tolerates_already_deleted_branch(self):
+        self.assertIsNotNone(self.dropped(self.MERGED, delete_error="DELETE refs: HTTP 404 Not Found"))
+
+    def test_keeps_branch_without_merged_pr(self):
+        for prs, branch in (([{"number": 8, "merged_at": None}, *self.MERGED], True), ([], True), (self.MERGED, False)):
+            self.assertIsNone(self.dropped(prs, branch), prs)
+
+    def test_reports_failed_deletion(self):
+        with self.assertRaises(RuntimeError):
+            self.dropped(self.MERGED, delete_error="DELETE refs: HTTP 403 forbidden")
+
+
+class RetryTest(unittest.TestCase):
+    """Transient GitHub failures are retried, permanent ones reported once."""
+
+    def request(self, method, path, *outcomes, allow_missing=False):
+        outcomes, calls = list(outcomes), []
+
+        def urlopen(req, timeout=60):
+            calls.append(req.full_url.removeprefix("https://api.test/"))
+            outcome = outcomes.pop(0)
+            if isinstance(outcome, int):
+                raise urllib.error.HTTPError(req.full_url, outcome, "err", {}, io.BytesIO(b"Server Error"))
+            return io.BytesIO(outcome.encode())
+
+        with mock.patch.object(s.urllib.request, "urlopen", urlopen), mock.patch.object(s.time, "sleep") as sleep:
+            try:
+                result = s.GitHub("t", api="https://api.test").request(method, path, {} if method != "GET" else None, allow_missing=allow_missing)
+            except RuntimeError as err:
+                result = str(err)
+        return result, len(calls), [c.args[0] for c in sleep.call_args_list]
+
+    def test_transient_failures_retried(self):
+        self.assertEqual(self.request("GET", "repos/a/b", 502, 429, '{"ok": true}'), ({"ok": True}, 3, [s.RETRY_DELAY, s.RETRY_DELAY * 2]))
+        self.assertEqual(self.request("POST", "repos/a/b/git/commits", 502, '{"sha": "c"}')[:2], ({"sha": "c"}, 2))
+        self.assertEqual(self.request("POST", "graphql", 502, '{"data": {}}')[:2], ({"data": {}}, 2))
+
+    def test_retries_exhausted(self):
+        result, calls, _ = self.request("GET", "repos/a/b", *[503] * s.RETRIES)
+        self.assertEqual((result, calls), ("GET repos/a/b: HTTP 503 Server Error", s.RETRIES))
+
+    def test_creation_and_client_errors_not_retried(self):
+        for method, path, code in (("POST", "repos/a/b/pulls", 502), ("POST", "repos/a/b/git/refs", 502), ("GET", "repos/a/b", 401)):
+            self.assertEqual(self.request(method, path, code)[:2], (f"{method} {path}: HTTP {code} Server Error", 1))
+
+    def test_missing_allowed_without_retry(self):
+        self.assertEqual(self.request("GET", "repos/a/b", 404, allow_missing=True)[:2], (None, 1))
+
+    def test_refused_ref_mentions_rulesets(self):
+        self.assertIn("a branch ruleset may forbid creating the branch", self.request("POST", "repos/a/b/git/refs", 422)[0])
 
 
 if __name__ == "__main__":
