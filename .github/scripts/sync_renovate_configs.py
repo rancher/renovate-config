@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,6 +43,10 @@ PRESET_REFS = ("main", "release")
 DEFAULT_REF = "release"
 # GitHub rejects job summaries above 1 MiB.
 SUMMARY_LIMIT = 1000 * 1024
+# GitHub throttles and fails backend requests transiently; repeat those.
+TRANSIENT_STATUS = (429, 500, 502, 503, 504)
+RETRIES = 3
+RETRY_DELAY = 2.0
 
 REF_RE = re.compile(r"^github>rancher/renovate-config(?:(//|:)([^#]+))?(?:#(.+))?$")
 BRANCH_RE = re.compile(r"^(?P<prefix>(?:.*[^\d.])?)(?P<major>\d+)\.(?P<minor>\d+)$")
@@ -341,16 +346,27 @@ class GitHub:
         req.add_header("X-GitHub-Api-Version", "2022-11-28")
         if self.token:
             req.add_header("Authorization", f"Bearer {self.token}")
-        try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                payload = resp.read().decode()
-        except urllib.error.HTTPError as err:
-            if allow_missing and err.code in (403, 404, 409):
-                return None
-            detail = err.read().decode(errors="replace")[:300]
-            if err.code == 403 and "rate limit" not in detail:
-                detail = f"{detail} (the token may not be scoped to this repository)"
-            raise RuntimeError(f"{method} {path}: HTTP {err.code} {detail}") from err
+        # Git objects are content addressed, so repeating their creation cannot
+        # duplicate them. Creating a PR or ref is not repeated: a response lost
+        # after the server created it would make the retry fail as a conflict.
+        retry = method != "POST" or path.endswith(("/git/commits", "/git/trees"))
+        for attempt in range(1, RETRIES + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    payload = resp.read().decode()
+                break
+            except urllib.error.HTTPError as err:
+                if allow_missing and err.code in (403, 404, 409):
+                    return None
+                if retry and err.code in TRANSIENT_STATUS and attempt < RETRIES:
+                    time.sleep(RETRY_DELAY * attempt)
+                    continue
+                detail = err.read().decode(errors="replace")[:300]
+                if err.code == 403 and "rate limit" not in detail:
+                    detail = f"{detail} (the token may not be scoped to this repository)"
+                elif err.code == 422 and method == "POST" and path.endswith("/git/refs"):
+                    detail = f"{detail} (a branch ruleset may forbid creating the branch)"
+                raise RuntimeError(f"{method} {path}: HTTP {err.code} {detail}") from err
         if raw:
             return payload
         return json.loads(payload) if payload else None

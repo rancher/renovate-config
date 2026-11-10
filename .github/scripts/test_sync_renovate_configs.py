@@ -1,6 +1,9 @@
 import argparse
+import io
 import json
 import unittest
+import urllib.error
+from unittest import mock
 
 import sync_renovate_configs as s
 
@@ -560,6 +563,45 @@ class OpenSyncPrTest(unittest.TestCase):
 
     def test_changed_body_updated_without_push(self):
         self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": "old"}), ["PATCH pulls/7"])
+
+
+class RetryTest(unittest.TestCase):
+    """Transient GitHub failures are retried, permanent ones reported once."""
+
+    def request(self, method, path, *outcomes, allow_missing=False):
+        outcomes, calls = list(outcomes), []
+
+        def urlopen(req, timeout=60):
+            calls.append(req.full_url.removeprefix("https://api.test/"))
+            outcome = outcomes.pop(0)
+            if isinstance(outcome, int):
+                raise urllib.error.HTTPError(req.full_url, outcome, "err", {}, io.BytesIO(b"Server Error"))
+            return io.BytesIO(outcome.encode())
+
+        with mock.patch.object(s.urllib.request, "urlopen", urlopen), mock.patch.object(s.time, "sleep") as sleep:
+            try:
+                result = s.GitHub("t", api="https://api.test").request(method, path, {} if method != "GET" else None, allow_missing=allow_missing)
+            except RuntimeError as err:
+                result = str(err)
+        return result, len(calls), [c.args[0] for c in sleep.call_args_list]
+
+    def test_transient_failures_retried(self):
+        self.assertEqual(self.request("GET", "repos/a/b", 502, 429, '{"ok": true}'), ({"ok": True}, 3, [s.RETRY_DELAY, s.RETRY_DELAY * 2]))
+        self.assertEqual(self.request("POST", "repos/a/b/git/commits", 502, '{"sha": "c"}')[:2], ({"sha": "c"}, 2))
+
+    def test_retries_exhausted(self):
+        result, calls, _ = self.request("GET", "repos/a/b", *[503] * s.RETRIES)
+        self.assertEqual((result, calls), ("GET repos/a/b: HTTP 503 Server Error", s.RETRIES))
+
+    def test_creation_and_client_errors_not_retried(self):
+        for method, path, code in (("POST", "repos/a/b/pulls", 502), ("POST", "repos/a/b/git/refs", 502), ("GET", "repos/a/b", 401)):
+            self.assertEqual(self.request(method, path, code)[:2], (f"{method} {path}: HTTP {code} Server Error", 1))
+
+    def test_missing_allowed_without_retry(self):
+        self.assertEqual(self.request("GET", "repos/a/b", 404, allow_missing=True)[:2], (None, 1))
+
+    def test_refused_ref_mentions_rulesets(self):
+        self.assertIn("a branch ruleset may forbid creating the branch", self.request("POST", "repos/a/b/git/refs", 422)[0])
 
 
 if __name__ == "__main__":
