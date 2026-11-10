@@ -565,6 +565,25 @@ class OpenSyncPrTest(unittest.TestCase):
         self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": "old"}), ["PATCH pulls/7"])
 
 
+class DropBranchTest(unittest.TestCase):
+    def dropped(self, prs, branch=True):
+        gh = mock.Mock()
+        gh.request.side_effect = lambda method, path, body=None, allow_missing=False: (
+            prs if "pulls?state=all" in path else branch or None
+        )
+        note = s.drop_merged_sync_branch(gh, "rancher/foo")
+        return note, [c.args[0] for c in gh.request.call_args_list].count("DELETE")
+
+    def test_deletes_branch_of_merged_pr(self):
+        merged = {"number": 7, "merged_at": "2026-11-10T05:00:00Z"}
+        self.assertEqual(self.dropped([merged]), (f"Delete branch `{s.SYNC_BRANCH}` left behind by merged pull request #7.", 1))
+
+    def test_keeps_branch_without_merged_pr(self):
+        merged = {"number": 7, "merged_at": "2026-11-10T05:00:00Z"}
+        for prs, branch in (([{"number": 8, "merged_at": None}, merged], True), ([], True), ([merged], False)):
+            self.assertEqual(self.dropped(prs, branch), (None, 0), prs)
+
+
 class RetryTest(unittest.TestCase):
     """Transient GitHub failures are retried, permanent ones reported once."""
 

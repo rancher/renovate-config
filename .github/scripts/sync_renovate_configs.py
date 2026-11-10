@@ -1028,6 +1028,23 @@ def activity(original: dict, workflow: str | None) -> str:
     return "yes" if workflow == "active" else f"no (workflow {workflow})"
 
 
+def sync_prs(gh: GitHub, repo: str, state: str) -> list:
+    """Pull requests from the sync branch, newest first."""
+    head = urllib.parse.quote(f"{repo.split('/')[0]}:{SYNC_BRANCH}", safe="")
+    return gh.request("GET", f"repos/{repo}/pulls?state={state}&head={head}") or []
+
+
+def drop_merged_sync_branch(gh: GitHub, repo: str) -> str | None:
+    """Delete the sync branch when its latest pull request was merged."""
+    if not gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True):
+        return None
+    prs = sync_prs(gh, repo, "all")
+    if not prs or not prs[0].get("merged_at"):
+        return None
+    gh.request("DELETE", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}")
+    return f"Delete branch `{SYNC_BRANCH}` left behind by merged pull request #{prs[0]['number']}."
+
+
 def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None], body: str) -> str:
     """Commit the files to the sync branch through the API and open or update its PR.
 
@@ -1048,8 +1065,7 @@ def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, 
             gh.request("PATCH", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", {"sha": commit, "force": True})
         else:
             gh.request("POST", f"repos/{repo}/git/refs", {"ref": f"refs/heads/{SYNC_BRANCH}", "sha": commit})
-    head = urllib.parse.quote(f"{repo.split('/')[0]}:{SYNC_BRANCH}", safe="")
-    existing = gh.request("GET", f"repos/{repo}/pulls?state=open&head={head}") or []
+    existing = sync_prs(gh, repo, "open")
     if not existing:
         return gh.request("POST", f"repos/{repo}/pulls", {"title": PR_TITLE, "body": body, "head": SYNC_BRANCH, "base": default_branch})["html_url"]
     pr = existing[0]
@@ -1276,6 +1292,8 @@ def process_repo(gh: GitHub, info: dict, args: argparse.Namespace, shared: Share
     updates.update(approve_files)
     if not updates:
         report.status, report.pr = "unchanged", "no change"
+        if not args.dry_run and (dropped := drop_merged_sync_branch(gh, repo)):
+            report.notes.append(dropped)
         return report
     report.status = "changed"
     report.diff = "".join(unified_diff(path, originals.get(path), content) for path, content in updates.items())
