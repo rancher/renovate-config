@@ -346,10 +346,11 @@ class GitHub:
         req.add_header("X-GitHub-Api-Version", "2022-11-28")
         if self.token:
             req.add_header("Authorization", f"Bearer {self.token}")
-        # Git objects are content addressed, so repeating their creation cannot
-        # duplicate them. Creating a PR or ref is not repeated: a response lost
-        # after the server created it would make the retry fail as a conflict.
-        retry = method != "POST" or path.endswith(("/git/commits", "/git/trees"))
+        # Only requests that are safe to repeat are retried. Git objects are
+        # content addressed, GraphQL is used for reads, and DELETE is made
+        # idempotent by its callers. Creating a PR or ref is not repeated: a
+        # response lost after the server created it would surface as a conflict.
+        retry = method in ("GET", "HEAD", "PATCH", "DELETE") or path == "graphql" or path.endswith(("/git/commits", "/git/trees"))
         for attempt in range(1, RETRIES + 1):
             try:
                 with urllib.request.urlopen(req, timeout=60) as resp:
@@ -1041,7 +1042,7 @@ def drop_merged_sync_branch(gh: GitHub, repo: str) -> str | None:
     prs = sync_prs(gh, repo, "all")
     if not prs or not prs[0].get("merged_at"):
         return None
-    gh.request("DELETE", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}")
+    gh.request("DELETE", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", allow_missing=True)
     return f"Delete branch `{SYNC_BRANCH}` left behind by merged pull request #{prs[0]['number']}."
 
 

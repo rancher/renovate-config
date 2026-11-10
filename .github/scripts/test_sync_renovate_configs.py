@@ -578,6 +578,14 @@ class DropBranchTest(unittest.TestCase):
         merged = {"number": 7, "merged_at": "2026-11-10T05:00:00Z"}
         self.assertEqual(self.dropped([merged]), (f"Delete branch `{s.SYNC_BRANCH}` left behind by merged pull request #7.", 1))
 
+    def test_delete_tolerates_ref_already_gone(self):
+        gh = mock.Mock()
+        gh.request.side_effect = lambda method, path, body=None, allow_missing=False: (
+            [{"number": 7, "merged_at": "2026-11-10T05:00:00Z"}] if "pulls?state=all" in path else {"object": {"sha": "x"}}
+        )
+        s.drop_merged_sync_branch(gh, "rancher/foo")
+        self.assertTrue(gh.request.call_args.args[0] == "DELETE" and gh.request.call_args.kwargs["allow_missing"])
+
     def test_keeps_branch_without_merged_pr(self):
         merged = {"number": 7, "merged_at": "2026-11-10T05:00:00Z"}
         for prs, branch in (([{"number": 8, "merged_at": None}, merged], True), ([], True), ([merged], False)):
@@ -607,6 +615,7 @@ class RetryTest(unittest.TestCase):
     def test_transient_failures_retried(self):
         self.assertEqual(self.request("GET", "repos/a/b", 502, 429, '{"ok": true}'), ({"ok": True}, 3, [s.RETRY_DELAY, s.RETRY_DELAY * 2]))
         self.assertEqual(self.request("POST", "repos/a/b/git/commits", 502, '{"sha": "c"}')[:2], ({"sha": "c"}, 2))
+        self.assertEqual(self.request("POST", "graphql", 502, '{"data": {}}')[:2], ({"data": {}}, 2))
 
     def test_retries_exhausted(self):
         result, calls, _ = self.request("GET", "repos/a/b", *[503] * s.RETRIES)
