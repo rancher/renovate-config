@@ -237,6 +237,8 @@ To migrate, replace the caller with the current `renovate-vault.yml` as describe
 
 Renovate only bumps the pinned `uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@<sha> # <tag>` reference in consuming repositories. It does not update the contents of the workflow file itself, so the copy in a consuming repository can become outdated (for example, missing newer inputs or permissions).
 
+The `RENOVATE_VERSION` inside `renovate-vault.yml` is handled by the `renovate-bumps` rule in `default.json`. Because Renovate publishes several releases per day, that rule allows a bump only on Tuesdays and only to a release that is at least 14 days old.
+
 Verify that `.github/workflows/renovate-vault.yml` in each consuming repository is up to date, and use one of the following options:
 
 - Run the [Deploy Renovate](.github/workflows/renovate-deploy.yml) workflow against the repository. It opens a PR that replaces `renovate-vault.yml` with the current version.

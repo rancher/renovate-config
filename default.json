@@ -207,11 +207,12 @@
       "managerFilePatterns": [
         "/\\.github/workflows/renovate-vault.yml/"
       ],
+      "description": "Track RENOVATE_VERSION through GitHub releases because the docker datasource cannot report a release timestamp for the deep tag pages of renovate/renovate, which would bypass the release age",
       "matchStrings": [
         ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
       ],
-      "depNameTemplate": "renovate/renovate",
-      "datasourceTemplate": "docker"
+      "depNameTemplate": "renovatebot/renovate",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
@@ -924,12 +925,13 @@
       "minimumReleaseAge": "28 days"
     },
     {
-      "matchPackageNames": [
-        "renovate/renovate"
-      ],
-      "extractVersion": "(?<version>.*)-full$",
+      "description": "Bump Renovate once a week and only to a release that is at least 14 days old, since Renovate publishes several releases per day and an immediate bump is not worth the churn",
+      "matchPackageNames": ["renovatebot/renovate"],
       "groupName": "renovate-bumps",
-      "separateMajorMinor": false
+      "separateMajorMinor": false,
+      "minimumReleaseAge": "14 days",
+      "schedule": ["* * * * 2"],
+      "updateNotScheduled": false
     },
     {
       "description": "Let Rancher teams manage internal product updates",
