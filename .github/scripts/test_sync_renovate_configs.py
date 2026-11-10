@@ -547,6 +547,8 @@ class PrGitHub:
             return {"object": {"sha": "base"}}
         if path == f"git/ref/heads/{s.SYNC_BRANCH}":
             return self.branch is not None or None
+        if path == f"compare/main...{s.SYNC_BRANCH}":
+            return {"files": [{"filename": p} for p in self.branch if self.branch[p] != self.default.get(p)]}
         if path.startswith("pulls?state=open"):
             return [self.pr] if self.pr else []
         if path.startswith("pulls"):
@@ -562,6 +564,7 @@ class OpenSyncPrTest(unittest.TestCase):
 
     def writes(self, branch=None, pr=None):
         gh = PrGitHub(branch, pr)
+        gh.default = {}
         url = s.open_sync_pr(gh, "rancher/foo", "main", self.UPDATES, self.BODY)
         self.assertEqual(url, gh.pr["html_url"])
         return gh.writes
@@ -576,35 +579,45 @@ class OpenSyncPrTest(unittest.TestCase):
     def test_stale_branch_force_pushed(self):
         self.assertEqual(self.writes({}, self.PR), ["POST git/trees", "POST git/commits", f"PATCH git/refs/heads/{s.SYNC_BRANCH}"])
 
+    def test_branch_with_extra_file_rebuilt(self):
+        stale = {**self.UPDATES, "docs/old.md": "reverted\n"}
+        self.assertEqual(self.writes(stale, self.PR), ["POST git/trees", "POST git/commits", f"PATCH git/refs/heads/{s.SYNC_BRANCH}"])
+
     def test_changed_body_updated_without_push(self):
         self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": "old"}), ["PATCH pulls/7"])
 
+    def test_text_after_credit_line_rewrites_pr(self):
+        edited = self.BODY.replace("started by @me.", "started by @me.\n\nNeeds a release note.")
+        self.assertEqual(self.writes(self.UPDATES, {**self.PR, "body": edited}), ["PATCH pulls/7"])
+
 
 class DropBranchTest(unittest.TestCase):
-    def dropped(self, prs, branch=True):
-        gh = mock.Mock()
-        gh.request.side_effect = lambda method, path, body=None, allow_missing=False: (
-            prs if "pulls?state=all" in path else branch or None
-        )
-        note = s.drop_merged_sync_branch(gh, "rancher/foo")
-        return note, [c.args[0] for c in gh.request.call_args_list].count("DELETE")
+    MERGED = [{"number": 7, "merged_at": "2026-11-10T05:00:00Z"}]
+
+    def dropped(self, prs, branch=True, delete_error=None):
+        def request(method, path, body=None, raw=False, allow_missing=False):
+            if method != "DELETE":
+                return prs if "pulls?state=all" in path else {"object": {"sha": "x"}} if branch else None
+            if delete_error:
+                raise RuntimeError(delete_error)
+            return None
+
+        gh = mock.Mock(request=request)
+        return s.drop_merged_sync_branch(gh, "rancher/foo")
 
     def test_deletes_branch_of_merged_pr(self):
-        merged = {"number": 7, "merged_at": "2026-11-10T05:00:00Z"}
-        self.assertEqual(self.dropped([merged]), (f"Delete branch `{s.SYNC_BRANCH}` left behind by merged pull request #7.", 1))
+        self.assertEqual(self.dropped(self.MERGED), f"Delete branch `{s.SYNC_BRANCH}` left behind by merged pull request #7.")
 
-    def test_delete_tolerates_ref_already_gone(self):
-        gh = mock.Mock()
-        gh.request.side_effect = lambda method, path, body=None, allow_missing=False: (
-            [{"number": 7, "merged_at": "2026-11-10T05:00:00Z"}] if "pulls?state=all" in path else {"object": {"sha": "x"}}
-        )
-        s.drop_merged_sync_branch(gh, "rancher/foo")
-        self.assertTrue(gh.request.call_args.args[0] == "DELETE" and gh.request.call_args.kwargs["allow_missing"])
+    def test_tolerates_already_deleted_branch(self):
+        self.assertIsNotNone(self.dropped(self.MERGED, delete_error="DELETE refs: HTTP 404 Not Found"))
 
     def test_keeps_branch_without_merged_pr(self):
-        merged = {"number": 7, "merged_at": "2026-11-10T05:00:00Z"}
-        for prs, branch in (([{"number": 8, "merged_at": None}, merged], True), ([], True), ([merged], False)):
-            self.assertEqual(self.dropped(prs, branch), (None, 0), prs)
+        for prs, branch in (([{"number": 8, "merged_at": None}, *self.MERGED], True), ([], True), (self.MERGED, False)):
+            self.assertIsNone(self.dropped(prs, branch), prs)
+
+    def test_reports_failed_deletion(self):
+        with self.assertRaises(RuntimeError):
+            self.dropped(self.MERGED, delete_error="DELETE refs: HTTP 403 forbidden")
 
 
 class RetryTest(unittest.TestCase):

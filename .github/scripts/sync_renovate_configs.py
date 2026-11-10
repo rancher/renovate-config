@@ -1042,8 +1042,30 @@ def drop_merged_sync_branch(gh: GitHub, repo: str) -> str | None:
     prs = sync_prs(gh, repo, "all")
     if not prs or not prs[0].get("merged_at"):
         return None
-    gh.request("DELETE", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}", allow_missing=True)
+    try:
+        gh.request("DELETE", f"repos/{repo}/git/refs/heads/{SYNC_BRANCH}")
+    except RuntimeError as err:
+        # A deletion whose response was lost reports 404 on the retry, so a
+        # missing ref means the cleanup happened. Permission and ruleset
+        # failures must still fail the repository.
+        if "HTTP 404" not in str(err):
+            raise
     return f"Delete branch `{SYNC_BRANCH}` left behind by merged pull request #{prs[0]['number']}."
+
+
+def strip_credit(body: str) -> str:
+    """PR body without its terminal credit line, which names the run and actor."""
+    lines = body.rstrip().split("\n")
+    return "\n".join(lines[:-1]).rstrip() if lines and lines[-1].startswith("Created by the ") else body.rstrip()
+
+
+def sync_branch_current(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None]) -> bool:
+    """True when the sync branch differs from the default branch exactly by the proposal."""
+    base = urllib.parse.quote(default_branch)
+    files = gh.request("GET", f"repos/{repo}/compare/{base}...{SYNC_BRANCH}").get("files") or []
+    return {f["filename"] for f in files} == set(updates) and all(
+        gh.file(repo, path, SYNC_BRANCH) == content for path, content in updates.items()
+    )
 
 
 def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, str | None], body: str) -> str:
@@ -1053,7 +1075,7 @@ def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, 
     repeated runs neither force-push nor rewrite the PR.
     """
     sync_ref = gh.request("GET", f"repos/{repo}/git/ref/heads/{SYNC_BRANCH}", allow_missing=True)
-    if not sync_ref or any(gh.file(repo, path, SYNC_BRANCH) != content for path, content in updates.items()):
+    if not sync_ref or not sync_branch_current(gh, repo, default_branch, updates):
         base_sha = gh.request("GET", f"repos/{repo}/git/ref/heads/{urllib.parse.quote(default_branch)}")["object"]["sha"]
         base_tree = gh.request("GET", f"repos/{repo}/git/commits/{base_sha}")["tree"]["sha"]
         items = [
@@ -1070,9 +1092,7 @@ def open_sync_pr(gh: GitHub, repo: str, default_branch: str, updates: dict[str, 
     if not existing:
         return gh.request("POST", f"repos/{repo}/pulls", {"title": PR_TITLE, "body": body, "head": SYNC_BRANCH, "base": default_branch})["html_url"]
     pr = existing[0]
-    # The credit line names the run and actor, so it differs on every run.
-    credit = "\nCreated by the "
-    if pr.get("title") != PR_TITLE or (pr.get("body") or "").partition(credit)[0] != body.partition(credit)[0]:
+    if pr.get("title") != PR_TITLE or strip_credit(pr.get("body") or "") != strip_credit(body):
         pr = gh.request("PATCH", f"repos/{repo}/pulls/{pr['number']}", {"title": PR_TITLE, "body": body})
     return pr["html_url"]
 
