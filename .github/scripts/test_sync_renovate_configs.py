@@ -509,6 +509,21 @@ class AutomergeTest(unittest.TestCase):
         self.assertIn("Automerge not enabled: Renovate activity is unconfirmed (`yes (workflow state unknown)`).", report.notes)
 
 
+class ListTargetsTest(unittest.TestCase):
+    def targets(self, repos, target="rancher"):
+        gh = mock.Mock()
+        gh.request.return_value = {"type": "Organization", "full_name": target}
+        gh.paginate.return_value = repos
+        return [r["full_name"] for r in s.list_targets(gh, target)]
+
+    def test_skips_preset_repo_and_security_mirrors(self):
+        repos = [{"full_name": n, "name": n.split("/")[1]} for n in ("rancher/fleet", "rancher/fleet-security", "rancher/renovate-config")]
+        self.assertEqual(self.targets(repos), ["rancher/fleet"])
+
+    def test_skips_preset_repo_when_targeted_directly(self):
+        self.assertEqual(self.targets([], "rancher/renovate-config"), [])
+
+
 class SecurityMirrorTest(unittest.TestCase):
     def test_skips_security_repo_with_base(self):
         repos = [{"name": n} for n in ("fleet", "fleet-security", "rancher-security", "foo-security-tools")]

@@ -1310,11 +1310,14 @@ def process_repo(gh: GitHub, info: dict, args: argparse.Namespace, shared: Share
 def list_targets(gh: GitHub, target: str) -> list[dict]:
     target = target.strip().strip("/")
     if "/" in target:
-        return [gh.request("GET", f"repos/{target}")]
-    kind = gh.request("GET", f"users/{target}")["type"]
-    path = f"orgs/{target}/repos?type=all" if kind == "Organization" else f"users/{target}/repos?type=owner"
-    repos = [r for r in gh.paginate(path) if not r.get("archived") and not r.get("disabled")]
-    return sorted(skip_security_mirrors(repos), key=lambda r: r["full_name"].lower())
+        repos = [gh.request("GET", f"repos/{target}")]
+    else:
+        kind = gh.request("GET", f"users/{target}")["type"]
+        path = f"orgs/{target}/repos?type=all" if kind == "Organization" else f"users/{target}/repos?type=owner"
+        repos = skip_security_mirrors([r for r in gh.paginate(path) if not r.get("archived") and not r.get("disabled")])
+    # This repository holds the presets and the workflow templates deployed to
+    # consumers, so it is the source of the sync rather than a target.
+    return sorted((r for r in repos if r["full_name"].lower() != PRESET_REPO), key=lambda r: r["full_name"].lower())
 
 
 def skip_security_mirrors(repos: list[dict]) -> list[dict]:
