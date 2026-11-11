@@ -1,0 +1,118 @@
+name: Sync Renovate configs
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Organization (rancher) or repository (rancher/fleet) to sync"
+        required: true
+        default: "rancher"
+        type: string
+      dryRun:
+        description: "Only report the proposed changes, do not open pull requests"
+        required: false
+        default: true
+        type: boolean
+      populate:
+        description: "Add Rancher release presets to configs that do not use any yet"
+        required: false
+        default: true
+        type: boolean
+      updateWorkflow:
+        description: "Replace the Renovate workflow (and obsolete renovate.yml) with files/renovate-vault.yml"
+        required: false
+        default: true
+        type: boolean
+      automerge:
+        description: "Enable automerge and add the auto-approve workflow where auto-merge is allowed and all base branches require checks"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set owner and repositories values
+        id: set_values
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          target="${TARGET%/}"
+          owner="${target%%/*}"
+          repositories=""
+          if [[ "$target" == */* ]]; then
+            # The action expects repository names relative to `owner`. The token
+            # still reads the public catalog and oracle repos, as an installation
+            # token has read access to every public repository.
+            repositories="${target#*/}"
+          fi
+          {
+            echo "owner=$owner"
+            echo "repositories=$repositories"
+            echo "target=$target"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Load Secrets from Vault
+        uses: rancher-eio/read-vault-secrets@0da85151ad1f19ed7986c41587e45aac1ace74b6 # v3
+        with:
+          secrets: |
+            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
+            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
+
+      # Only permissions granted to the `renovate-rancher` app can be requested.
+      # `actions` is not granted, so the Renovate workflow state stays unknown for
+      # non-public repositories and their automerge setup is skipped.
+      - name: Get token
+        id: get_token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+        with:
+          app-id: ${{ env.APP_ID }}
+          private-key: ${{ env.PRIVATE_KEY }}
+          owner: ${{ steps.set_values.outputs.owner }}
+          repositories: ${{ steps.set_values.outputs.repositories }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Sync configs
+        env:
+          GH_TOKEN: ${{ steps.get_token.outputs.token }}
+          TARGET: ${{ steps.set_values.outputs.target }}
+          DRY_RUN: ${{ inputs.dryRun }}
+          POPULATE: ${{ inputs.populate }}
+          UPDATE_WORKFLOW: ${{ inputs.updateWorkflow }}
+          AUTOMERGE: ${{ inputs.automerge }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          args=(--target "$TARGET" --summary "$GITHUB_STEP_SUMMARY" --out report --run-url "$RUN_URL")
+          if [[ "$DRY_RUN" != "true" ]]; then
+            args+=(--apply)
+          fi
+          if [[ "$POPULATE" != "true" ]]; then
+            args+=(--no-populate)
+          fi
+          if [[ "$UPDATE_WORKFLOW" != "true" ]]; then
+            args+=(--no-update-workflow)
+          fi
+          if [[ "$AUTOMERGE" == "true" ]]; then
+            args+=(--automerge)
+          fi
+          python3 .github/scripts/sync_renovate_configs.py "${args[@]}"
+
+      - name: Upload proposed configs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: renovate-config-sync
+          path: report
+          if-no-files-found: ignore

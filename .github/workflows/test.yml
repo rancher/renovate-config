@@ -24,6 +24,17 @@ jobs:
           echo "Renovate tag: ${RENOVATE_TAG}" >> "$GITHUB_STEP_SUMMARY"
           make validate
 
+  scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Run script unit tests
+        run: make test-scripts
+
   renovate-dry-run:
     permissions:
       contents: read

@@ -151,10 +151,10 @@
       "description": "Track BCI workflow images with version comments",
       "matchStrings": [
         "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base)@sha256:[a-f0-9]{64}[ \\t]*#\\s*(?<currentValue>\\d+\\.\\d+)",
-        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)(?:[ \\t]*#\\s*zizmor: ignore\\[unpinned-images\\][^\\r\\n]*)?"
+        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)"
       ],
       "versioningTemplate": "docker",
-      "autoReplaceStringTemplate": "container: {{{depName}}}:{{{newValue}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
+      "autoReplaceStringTemplate": "container: {{{depName}}}:{{{newValue}}}",
       "datasourceTemplate": "docker"
     },
     {
@@ -216,26 +216,15 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/\\.github/workflows/.*\\.ya?ml/"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=github-tags depName=rancherlabs/slsactl\\n\\s*version:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
-      ],
-      "depNameTemplate": "rancherlabs/slsactl",
-      "datasourceTemplate": "github-tags"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track Rancher CI Go image families with Go toolchain versions",
+      "description": "Track Rancher CI Go images in container fields with Go toolchain versions",
       "matchStrings": [
-        "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+        "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
-      "depTypeTemplate": "go-workflow-minor",
+      "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -244,13 +233,13 @@
       "managerFilePatterns": [
         "/(^|/)\\.github/workflows/.*\\.ya?ml$/"
       ],
-      "description": "Track Rancher CI Go image families in image fields",
+      "description": "Track Rancher CI Go images in image fields with Go toolchain versions",
       "matchStrings": [
-        "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentValue>\\d+\\.\\d+)(?::[^@\\s]+)?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
+        "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
-      "currentValueTemplate": "{{{currentValue}}}.0",
-      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}} # zizmor: ignore[unpinned-images] -- internal image is exempt from this rule",
-      "depTypeTemplate": "go-workflow-minor",
+      "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
+      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
     },
@@ -800,6 +789,13 @@
       "enabled": true
     },
     {
+      "description": "Never update the deprecated YAML module replace aliases: Go rejects one version for two module paths, so the alias must trail the maintained requirement",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["replace"],
+      "matchPackageNames": ["go.yaml.in/yaml/v2", "go.yaml.in/yaml/v3"],
+      "enabled": false
+    },
+    {
       "description": "Bump the go directive with minor or major Go updates",
       "matchManagers": [
         "gomod"
@@ -901,6 +897,13 @@
       "pinDigests": true
     },
     {
+      "description": "Track Rancher CI Go image tags through the golang-version datasource so they move with the go.mod toolchain",
+      "matchManagers": ["custom.regex", "github-actions"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
+      "enabled": false
+    },
+    {
       "description": "Update BCI workflow images with version tags",
       "matchManagers": [
         "github-actions"
@@ -975,14 +978,6 @@
       "minimumReleaseAge": "0 days"
     },
     {
-      "description": "Exempt slsactl from minimumReleaseAge to allow immediate pickup",
-      "matchPackageNames": [
-        "rancherlabs/slsactl",
-        "rancherlabs/slsactl/**"
-      ],
-      "minimumReleaseAge": "0 days"
-    },
-    {
       "description": "Restrict helm/chart-testing-action below 2.8.0",
       "matchPackageNames": [
         "helm/chart-testing-action"
@@ -1017,10 +1012,8 @@
       "enabled": false
     },
     {
-      "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs",
-      "matchManagers": [
-        "gomod"
-      ],
+      "description": "Group Wrangler, lasso, and Kubernetes updates while allowing standalone PRs. Internal products use a one day release age",
+      "matchManagers": ["gomod"],
       "groupName": "Kubernetes dependencies",
       "matchPackageNames": [
         "github.com/rancher/wrangler/v3",
@@ -1030,7 +1023,7 @@
       "prPriority": 50,
       "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
-      "minimumReleaseAge": "3 days"
+      "minimumReleaseAge": "1 day"
     },
     {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
@@ -1368,25 +1361,6 @@
       ]
     },
     {
-      "description": "Group and restrict rancherlabs/slsactl (GitHub tag and version parameter)",
-      "matchPackageNames": [
-        "rancherlabs/slsactl"
-      ],
-      "groupName": "slsactl",
-      "minimumGroupSize": 2
-    },
-    {
-      "description": "Group slsactl GitHub Action (with digest)",
-      "matchPackageNames": [
-        "rancherlabs/slsactl/**"
-      ],
-      "groupName": "slsactl",
-      "matchUpdateTypes": [
-        "pinDigest"
-      ],
-      "minimumGroupSize": 2
-    },
-    {
       "description": "Group ginkgo and gomega together as ginkgo bumps gomega",
       "matchManagers": [
         "gomod"
@@ -1453,16 +1427,6 @@
       ],
       "groupName": "golang.org/x dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
-    },
-    {
-      "description": "Skip digest-only updates for slsactl GitHub Action",
-      "matchPackageNames": [
-        "rancherlabs/slsactl/**"
-      ],
-      "matchUpdateTypes": [
-        "digest"
-      ],
-      "enabled": false
     },
     {
       "description": "Ignore group-size requirements for security updates",
