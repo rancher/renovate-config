@@ -884,6 +884,11 @@
       "minimumReleaseAge": "2 days"
     },
     {
+      "description": "Accept any release of the packages selected for a one-time manual run, see the minimumReleaseAgePackages input of renovate-vault.yml",
+      "matchJsonata": ["$contains(description, ',renovate-minimum-release-age-packages:' & depName & ',')"],
+      "minimumReleaseAge": "0 days"
+    },
+    {
       "description": "Group GitHub Actions updates and require at least two actions",
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions",

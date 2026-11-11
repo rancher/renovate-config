@@ -244,6 +244,17 @@ Verify that `.github/workflows/renovate-vault.yml` in each consuming repository 
 - Run the [Deploy Renovate](.github/workflows/renovate-deploy.yml) workflow against the repository. It opens a PR that replaces `renovate-vault.yml` with the current version.
 - If the deploy workflow cannot be used, copy the file from an up-to-date consumer such as [rancher/rancher](https://github.com/rancher/rancher/blob/main/.github/workflows/renovate-vault.yml).
 
+## Overriding `minimumReleaseAge` for a single run
+
+The `Renovate` workflow of a consuming repository takes two optional inputs for a manual run:
+
+- `minimumReleaseAge` sets the release age for that run, for example `0 days` to accept releases that the presets would still delay. Without `minimumReleaseAgePackages` it applies to every dependency.
+- `minimumReleaseAgePackages` limits the override to the listed package names, for example `go,golang`. It only supports `0 days`, because the presets only declare the rule that accepts any release.
+
+Scheduled runs ignore both inputs.
+
+The unscoped value is passed as `RENOVATE_FORCE.minimumReleaseAge`, so it wins over every rule of the repository config and of its presets. A scoped override cannot use that field: `force` replaces the resolved `packageRules` instead of extending them, so a rule placed there would drop the constraints the presets and the repository define. The workflow therefore passes `force.description` holding a `renovate-minimum-release-age-packages:<depName>` marker per package, and `default.json` matches that marker in a rule that accepts any release. Only the selected packages are affected and every other rule keeps applying. The repository config is not modified.
+
 ## Keeping consumer `renovate.json` presets up to date
 
 The [Sync Renovate configs](.github/workflows/renovate-sync.yml) workflow brings `.github/renovate.json` in consuming repositories up to the current Rancher presets while keeping their local customizations, and opens the result as a `renovate-config-sync` PR per changed repository. Repeated runs are idempotent: a sync branch that already holds the proposal and its up-to-date PR are left alone, and the branch of a merged sync PR is deleted. Run it manually with an organization (`rancher`) or a single repository (`rancher/fleet`) as `target`; `dryRun` (the default) only writes the report to the job summary and uploads the proposed files as the `renovate-config-sync` artifact. The rules it applies are documented on the functions in [sync_renovate_configs.py](.github/scripts/sync_renovate_configs.py) and covered by [test_sync_renovate_configs.py](.github/scripts/test_sync_renovate_configs.py); to run it locally use `GH_TOKEN=$(gh auth token) python3 .github/scripts/sync_renovate_configs.py --target rancher/fleet --out report`, as only `--apply` opens PRs.
