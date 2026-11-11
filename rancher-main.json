@@ -185,14 +185,6 @@
       ],
       "ignoreUnstable": false,
       "respectLatest": false
-    },
-    {
-      "matchPackageNames": [
-        "rancherlabs/slsactl",
-        "rancherlabs/slsactl/**"
-      ],
-      "groupName": "slsactl",
-      "minimumGroupSize": 2
     }
   ]
 }

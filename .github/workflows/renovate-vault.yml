@@ -53,7 +53,7 @@ concurrency: renovate
 
 env:
   # Specify what Renovate version to use (this is separate from the github-action version)
-  RENOVATE_VERSION: "44.190.1"
+  RENOVATE_VERSION: "44.216.5"
   RENOVATE_ALLOWED_UNSAFE_EXECUTIONS: '["goGenerate"]'
   RENOVATE_CACHE_DIR: /tmp/renovate/cache
   # Repository taken from variable to keep configuration file generic
@@ -111,7 +111,7 @@ jobs:
 
       - name: Load Secrets from Vault
         if: steps.override.outputs.use-gh-app == 'true'
-        uses: rancher-eio/read-vault-secrets@7282bf97898cd1c16c89f837e0bb442e6d384c89 # main
+        uses: rancher-eio/read-vault-secrets@0da85151ad1f19ed7986c41587e45aac1ace74b6 # v3
         with:
           secrets: |
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
