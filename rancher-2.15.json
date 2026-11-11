@@ -3,7 +3,7 @@
   "packageRules": [
     {
       "description": "Apply Go package version cap to all updates",
-      "matchPackageNames": ["golang", "go", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.suse.com/rancher/appco-go", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["golang", "go", "rancher/hardened-build-base", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang"],
       "allowedVersions": "<1.27"
     },
     {
@@ -30,13 +30,13 @@
     {
       "description": "Apply Kubernetes version caps to all updates",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version", "kubernetes/kubernetes", "k8s.io/kubernetes", "rancher/k3s", "k3s-io/k3s"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kubectl$/", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version", "kubernetes/kubernetes", "k8s.io/kubernetes", "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/", "k3s-io/k3s"],
       "allowedVersions": "<1.37"
     },
     {
       "description": "Keep Rancher K3s image tags on the 1.36 Kubernetes line",
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["rancher/k3s"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/"],
       "allowedVersions": "/^v?1\\.36\\.\\d+-k3s\\d+$/"
     },
     {
@@ -49,8 +49,8 @@
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<15.8",
       "matchPackageNames": [
-        "/^registry\\.suse\\.com\\/bci\\//",
-        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\//",
+        "/^registry\\.(?:suse|rancher)\\.com\\/suse\\/sle15\\//"
       ]
     },
     {
@@ -78,8 +78,8 @@
         "golang",
         "go",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
@@ -103,7 +103,7 @@
     {
       "description": "Group all Go toolchain update types on release branches",
       "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
-      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.suse.com/rancher/appco-go", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
       "groupName": "Go toolchain",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "separateMajorMinor": false,
@@ -120,7 +120,7 @@
     {
       "description": "Keep release Go patch updates independent of linter updates",
       "matchUpdateTypes": ["patch"],
-      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "registry.suse.com/bci/golang", "registry.suse.com/rancher/appco-go", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang"],
       "groupName": "Go patch updates",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "minimumGroupSize": 1
@@ -144,7 +144,7 @@
     {
       "description": "Enable patch updates for kubectl",
       "matchManagers": ["gomod", "custom.regex", "dockerfile"],
-      "matchPackageNames": ["rancher/kubectl", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kubectl$/", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version"],
       "enabled": true,
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
@@ -158,7 +158,7 @@
     {
       "description": "Enable patch updates for Rancher K3s",
       "matchManagers": ["gomod", "custom.regex"],
-      "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/", "k3s-io/k3s"],
       "enabled": true,
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"]
     },
@@ -180,14 +180,14 @@
     },
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
-      "matchPackageNames": ["rancher/kuberlr-kubectl"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kuberlr-kubectl$/"],
       "matchUpdateTypes": ["minor","patch"],
       "enabled": true
     },
     {
       "description": "Restrict Rancher dependency updates to patches on release branches",
       "matchManagers": ["gomod", "custom.regex"],
-      "matchPackageNames": ["rancher/k3s", "k3s-io/k3s"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/", "k3s-io/k3s"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
