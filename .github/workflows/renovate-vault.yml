@@ -35,17 +35,12 @@ on:
         default: "null"
         type: string
       minimumReleaseAge:
-        description: "Override minimumReleaseAge for a one-time run (e.g., '0 days' to disable delay). Applies to every dependency unless minimumReleaseAgePackages is set"
+        description: "Deprecated: use refreshGroup. Override minimumReleaseAge for a one-time run, kept for callers that still set it"
         required: false
         default: "null"
         type: string
-      minimumReleaseAgePackages:
-        description: "Comma separated package names to accept any release for during this run (e.g., 'go,golang'). Requires minimumReleaseAge '0 days'. Empty applies the override to every dependency"
-        required: false
-        default: ""
-        type: string
       refreshGroup:
-        description: "Accept any release for a whole update group instead of listing package names: go, kubernetes, security or github-actions. Go covers the toolchain, go.mod directives, Dockerfile and workflow Go images, golangci-lint and hardened-build-base"
+        description: "Accept any release for the selected scope of a one-time run: all, go, kubernetes, security or github-actions. Go covers the toolchain, go.mod directives, Dockerfile and workflow Go images, golangci-lint and hardened-build-base"
         required: false
         default: ""
         type: string
@@ -143,7 +138,6 @@ jobs:
         env:
           OVERRIDE_SCHEDULE: ${{ inputs.overrideSchedule }}
           MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge }}
-          MINIMUM_RELEASE_AGE_PACKAGES: ${{ inputs.minimumReleaseAgePackages }}
           REFRESH_GROUP: ${{ inputs.refreshGroup }}
         run: |
           # An unset input arrives as the literal string null.
@@ -152,34 +146,29 @@ jobs:
           if [[ "$OVERRIDE_SCHEDULE" == 'true' ]]; then
             FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"schedule": null}')
           fi
-          # The presets match every group by its own rule, so the selection only needs the group marker.
-          GROUP_MARKER=''
           case "$REFRESH_GROUP" in
-            '') ;;
-            go | kubernetes | security | github-actions)
-              GROUP_MARKER=",renovate-minimum-release-age-group:${REFRESH_GROUP},"
+            '')
+              # Without a selection the configured release ages apply unless a caller still sets the deprecated input.
+              if [[ -n "$MINIMUM_RELEASE_AGE" ]]; then
+                FORCE=$(printf '%s' "$FORCE" | jq -c --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
+              fi
+              ;;
+            all | go | kubernetes | security | github-actions)
+              if [[ -n "$MINIMUM_RELEASE_AGE" ]]; then
+                echo "refreshGroup '${REFRESH_GROUP}' accepts any release, ignoring the deprecated minimumReleaseAge '${MINIMUM_RELEASE_AGE}'" >&2
+              fi
+              if [[ "$REFRESH_GROUP" == 'all' ]]; then
+                FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"minimumReleaseAge": "0 days"}')
+              else
+                # A scoped override cannot use force.packageRules, because force replaces the resolved packageRules instead of extending them. The presets read the selection from this description marker instead, which accepts any release.
+                FORCE=$(printf '%s' "$FORCE" | jq -c --arg marker ",renovate-minimum-release-age-group:${REFRESH_GROUP}," '. + {"description": $marker}')
+              fi
               ;;
             *)
-              echo "Unknown refreshGroup '${REFRESH_GROUP}', expected one of: go, kubernetes, security, github-actions" >&2
+              echo "Unknown refreshGroup '${REFRESH_GROUP}', expected one of: all, go, kubernetes, security, github-actions" >&2
               exit 1
               ;;
           esac
-          PACKAGES="$MINIMUM_RELEASE_AGE_PACKAGES"
-          if [[ -n "$PACKAGES" || -n "$GROUP_MARKER" ]]; then
-            # A scoped override cannot use force.packageRules, because force replaces the resolved packageRules instead of extending them. The presets read the selection from this description marker instead, which accepts any release.
-            if [[ "$(printf '%s' "${MINIMUM_RELEASE_AGE:-0 days}" | jq -Rr 'gsub("\\s"; "") | if test("^0(d|days)?$") then "zero" else "other" end')" != 'zero' ]]; then
-              echo "A package or group scoped override only accepts '0 days', got '${MINIMUM_RELEASE_AGE}'" >&2
-              exit 1
-            fi
-            MARKER=$(printf '%s' "$PACKAGES" | jq -Rr 'split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0)) | map("renovate-minimum-release-age-packages:\(.)") | join(",")')
-            # The surrounding commas let a package name end the marker, so `go` does not match `renovate-minimum-release-age-packages:golang`.
-            [[ -n "$MARKER" ]] && MARKER=",${MARKER},"
-            MARKER="${MARKER}${GROUP_MARKER}"
-            MARKER=$(printf '%s' "$MARKER" | sed -E 's/,+/,/g')
-            FORCE=$(printf '%s' "$FORCE" | jq -c --arg marker "$MARKER" '. + {"description": $marker}')
-          elif [[ -n "$MINIMUM_RELEASE_AGE" && "$MINIMUM_RELEASE_AGE" != 'null' ]]; then
-            FORCE=$(printf '%s' "$FORCE" | jq -c --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
-          fi
           if [[ "$FORCE" != '{}' ]]; then
             echo "RENOVATE_FORCE=$FORCE" >> "$GITHUB_ENV"
           fi
