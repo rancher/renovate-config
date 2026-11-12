@@ -224,7 +224,7 @@
         "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
       "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
-      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if newPatch}}:{{{newValue}}}{{/if}}",
       "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -239,7 +239,7 @@
         "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
       "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
-      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if newPatch}}:{{{newValue}}}{{/if}}",
       "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -884,9 +884,29 @@
       "minimumReleaseAge": "2 days"
     },
     {
-      "description": "Accept any release of the packages selected for a one-time manual run, see the minimumReleaseAgePackages input of renovate-vault.yml",
-      "matchJsonata": ["$contains(description, ',renovate-minimum-release-age-packages:' & depName & ',')"],
-      "minimumReleaseAge": "0 days"
+      "description": "Accept any release of the packages selected for a one-time manual run, see the minimumReleaseAgePackages input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-packages:' & depName & ',')"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any Kubernetes related release for a whole update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:kubernetes,') and ($startsWith(depName, 'k8s.io/') or $startsWith(depName, 'sigs.k8s.io/') or $startsWith(depName, 'github.com/rancher/') or $startsWith(depName, 'rancher/') or depName in ['kubernetes/kubernetes', 'k3s-io/k3s'])"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any release of the GitHub Actions update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:github-actions,')"],
+      "matchManagers": ["github-actions"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any release of the security updates during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:security,') and ($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
     },
     {
       "description": "Group GitHub Actions updates and require at least two actions",

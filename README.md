@@ -246,14 +246,17 @@ Verify that `.github/workflows/renovate-vault.yml` in each consuming repository 
 
 ## Overriding `minimumReleaseAge` for a single run
 
-The `Renovate` workflow of a consuming repository takes two optional inputs for a manual run:
+The `Renovate` workflow of a consuming repository takes three optional inputs for a manual run:
 
-- `minimumReleaseAge` sets the release age for that run, for example `0 days` to accept releases that the presets would still delay. Without `minimumReleaseAgePackages` it applies to every dependency.
-- `minimumReleaseAgePackages` limits the override to the listed package names, for example `go,golang`. It only supports `0 days`, because the presets only declare the rule that accepts any release.
+- `refreshGroup` accepts any release for a whole update group: `go`, `kubernetes`, `security` or `github-actions`. Prefer it over listing package names, because a group spans every place its packages appear.
+- `minimumReleaseAgePackages` accepts any release for the listed package names instead, for example `go,golang`. It is the fallback for a package that belongs to no group.
+- `minimumReleaseAge` sets the release age for that run, for example `0 days`. On its own it applies to every dependency.
 
-Scheduled runs ignore both inputs.
+A package or group scoped override only supports `0 days`, because the presets only declare the rule that accepts any release; the workflow fails the run for any other value instead of ignoring it. Scheduled runs ignore all three inputs.
 
-The unscoped value is passed as `RENOVATE_FORCE.minimumReleaseAge`, so it wins over every rule of the repository config and of its presets. A scoped override cannot use that field: `force` replaces the resolved `packageRules` instead of extending them, so a rule placed there would drop the constraints the presets and the repository define. The workflow therefore passes `force.description` holding a `renovate-minimum-release-age-packages:<depName>` marker per package, and `default.json` matches that marker in a rule that accepts any release. Only the selected packages are affected and every other rule keeps applying. The repository config is not modified.
+`go` covers the `go.mod` and `toolchain` directives, the `SETUP_GO_VERSION`, `GOLANG_VERSION` and `GOTOOLCHAIN` workflow values, the `ghcr.io/rancher/ci-image/go*` workflow images, `Dockerfile` Go images, `golangci-lint`, and `rancher/hardened-build-base`. The toolchain and the images usually need the same version, so selecting `go` keeps them on one branch.
+
+The unscoped value is passed as `RENOVATE_FORCE.minimumReleaseAge`, so it wins over every rule of the repository config and of its presets. A scoped override cannot use that field: `force` replaces the resolved `packageRules` instead of extending them, so a rule placed there would drop the constraints the presets and the repository define. The workflow therefore passes `force.description` holding a `renovate-minimum-release-age-packages:<depName>` or `renovate-minimum-release-age-group:<group>` marker, and `default.json` matches those markers in rules that accept any release. Those rules also set a nested `force`, because the vulnerability alert configuration carries its own `force` that would otherwise restore the configured release age for exactly the security bumps these runs are usually about. The repository config is not modified.
 
 ## Keeping consumer `renovate.json` presets up to date
 
