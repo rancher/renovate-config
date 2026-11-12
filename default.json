@@ -762,6 +762,7 @@
       "allowedVersions": "<16.1",
       "matchPackageNames": [
         "/^registry\\.(?:suse|rancher)\\.com\\/bci\\//",
+        "!/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
         "/^registry\\.(?:suse|rancher)\\.com\\/suse\\/sle15\\//"
       ]
     },
