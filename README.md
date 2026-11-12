@@ -246,12 +246,9 @@ Verify that `.github/workflows/renovate-vault.yml` in each consuming repository 
 
 ## Overriding `minimumReleaseAge` for a single run
 
-The `Renovate` workflow of a consuming repository takes one optional input for a manual run, `refreshGroup`, which accepts any release for the selected scope:
+The `Renovate` workflow of a consuming repository takes one optional input for a manual run, `refreshGroup`, which ignores `minimumReleaseAge` for the selected scope in that run: `all` for every dependency, or `go`, `kubernetes`, `security` and `github-actions` for one update group.
 
-- `all` accepts any release for every dependency.
-- `go`, `kubernetes`, `security` and `github-actions` accept any release for that update group. A group is the better choice than a single dependency, because it spans every place its packages appear.
-
-Every selection accepts any release, which means `minimumReleaseAge: "0 days"`, because the presets only declare the rule that accepts any release; the workflow fails the run for an unknown group instead of ignoring it. An empty selection applies the configured release ages. Scheduled runs ignore the input. The reusable `renovate-vault.yml` still accepts the deprecated `minimumReleaseAge` input for callers that set it; a selection wins over it and the run logs that it is ignored.
+A selection accepts any release, which the presets express as `minimumReleaseAge: "0 days"`; the workflow fails the run for an unknown group instead of ignoring it. An empty selection applies the configured release ages. Scheduled runs ignore the input. The reusable `renovate-vault.yml` still accepts the deprecated `minimumReleaseAge` input for callers that set it; a selection wins over it and the run logs that it is ignored.
 
 `go` covers the `go.mod` and `toolchain` directives, the `SETUP_GO_VERSION`, `GOLANG_VERSION` and `GOTOOLCHAIN` workflow values, the `ghcr.io/rancher/ci-image/go*` workflow images, `Dockerfile` Go images including the BCI and AppCo Go images, `golangci-lint` and its module paths, and `rancher/hardened-build-base`. It applies the same package list as the Go toolchain preset. The toolchain and the images usually need the same version, so selecting `go` keeps them on one branch. `kubernetes` covers the `k8s.io/` and `sigs.k8s.io/` modules, the `wrangler` and `lasso` modules, `rancher/kubectl` and `rancher/k3s`, `kubernetes/kubernetes` with its architecture specific checksum entries, and `k3s-io/k3s`. `security` covers dependencies that carry a vulnerability fix. `github-actions` covers the Actions manager.
 
