@@ -78,8 +78,10 @@
       ],
       "description": "Track patch-level Go Docker images with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "FROM\\s+--platform=\\$BUILDPLATFORM\\s+(?<packageName>registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)(?:@sha256:[a-f0-9]{64})?",
+        "FROM\\s+(?<packageName>registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)(?:@sha256:[a-f0-9]{64})?"
       ],
+      "autoReplaceStringTemplate": "{{#if (containsString replaceString '--platform=')}}FROM --platform=$BUILDPLATFORM {{{packageName}}}:{{{newValue}}}{{else}}FROM {{{packageName}}}:{{{newValue}}}{{/if}}",
       "versioningTemplate": "semver-coerced",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -92,8 +94,8 @@
       ],
       "description": "Track minor Go Docker images in FROM lines and ARG GOLANG declarations with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.]|$)",
-        "(?m)^[ \\t]*ARG[ \\t]+GOLANG=(?:registry\\.suse\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)\\r?$"
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.@]|$)",
+        "(?m)^[ \\t]*ARG[ \\t]+GOLANG=(?:registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)\\r?$"
       ],
       "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)\\.\\d+$",
       "versioningTemplate": "semver-coerced",
@@ -150,8 +152,8 @@
       ],
       "description": "Track BCI workflow images with version comments",
       "matchStrings": [
-        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base)@sha256:[a-f0-9]{64}[ \\t]*#\\s*(?<currentValue>\\d+\\.\\d+)",
-        "container:\\s+(?<depName>registry\\.suse\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)"
+        "container:\\s+(?<depName>registry\\.(?:suse|rancher)\\.com/bci/bci-base)@sha256:[a-f0-9]{64}[ \\t]*#\\s*(?<currentValue>\\d+\\.\\d+)",
+        "container:\\s+(?<depName>registry\\.(?:suse|rancher)\\.com/bci/bci-base):(?<currentValue>\\d+\\.\\d+)"
       ],
       "versioningTemplate": "docker",
       "autoReplaceStringTemplate": "container: {{{depName}}}:{{{newValue}}}",
@@ -207,11 +209,12 @@
       "managerFilePatterns": [
         "/\\.github/workflows/renovate-vault.yml/"
       ],
+      "description": "Track RENOVATE_VERSION through GitHub releases because the docker datasource cannot report a release timestamp for the deep tag pages of renovate/renovate, which would bypass the release age",
       "matchStrings": [
         ".*?RENOVATE_VERSION:\\s\\\"(?<currentValue>.*?)\\\"\\n"
       ],
-      "depNameTemplate": "renovate/renovate",
-      "datasourceTemplate": "docker"
+      "depNameTemplate": "renovatebot/renovate",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
@@ -223,7 +226,7 @@
         "container:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
       "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
-      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "autoReplaceStringTemplate": "container: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if newPatch}}:{{{newValue}}}{{/if}}",
       "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -238,7 +241,7 @@
         "image:\\s+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?:@sha256:[a-f0-9]{64})?(?:[ \\t]*#[^\\r\\n]*)?"
       ],
       "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
-      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{/if}}",
+      "autoReplaceStringTemplate": "image: ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if newPatch}}:{{{newValue}}}{{/if}}",
       "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -448,7 +451,7 @@
       ],
       "description": "Track Rancher K3s image versions in Dockerfiles",
       "matchStrings": [
-        "COPY[\\s\\t]+--from=rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?-k3s\\d+)"
+        "COPY[\\s\\t]+--from=(?:registry\\.(?:suse|rancher)\\.com/)?rancher/k3s:(?<currentValue>v\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?-k3s\\d+)"
       ],
       "depNameTemplate": "rancher/k3s",
       "datasourceTemplate": "docker",
@@ -758,8 +761,9 @@
       "description": "Restrict BCI images to maintained versions only (16.1 had no development marking)",
       "allowedVersions": "<16.1",
       "matchPackageNames": [
-        "/^registry\\.suse\\.com\\/bci\\//",
-        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\//",
+        "!/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/suse\\/sle15\\//"
       ]
     },
     {
@@ -905,15 +909,9 @@
     },
     {
       "description": "Update BCI workflow images with version tags",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "registry.suse.com/bci/bci-base"
-      ],
+      "matchManagers": ["github-actions"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^registry\\.(?:suse|rancher)\\.com\\/bci\\/bci-base$/"],
       "enabled": false
     },
     {
@@ -933,9 +931,9 @@
         "docker"
       ],
       "matchPackageNames": [
-        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\//",
         "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//",
-        "!registry.suse.com/bci/golang",
+        "!/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
         "!registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "BCI images",
@@ -944,8 +942,40 @@
     {
       "description": "Keep Go updates, including security bumps, on a two day release age on every branch",
       "matchDatasources": ["golang-version", "docker"],
-      "matchPackageNames": ["go", "golang", "registry.suse.com/bci/golang", "registry.suse.com/rancher/appco-go", "registry.opensuse.org/opensuse/bci/golang"],
+      "matchPackageNames": ["go", "golang", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang"],
       "minimumReleaseAge": "2 days"
+    },
+    {
+      "description": "Accept any Go related release for the whole Go update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:go,')"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any release of the packages selected for a one-time manual run, see the minimumReleaseAgePackages input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-packages:' & depName & ',')"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any Kubernetes related release for a whole update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:kubernetes,') and ($match(depName, /^(?:k8s\\.io|sigs\\.k8s\\.io)\\//) or $match(depName, /^github\\.com\\/rancher\\/(?:wrangler|lasso)(?:\\/|$)/) or depName in ['kubernetes/kubernetes', 'kubernetes/kubernetes-amd64', 'kubernetes/kubernetes-arm64', 'k3s-io/k3s', 'kubectl-amd64', 'kubectl-arm64', 'kubectl-amd64-checksum', 'kubectl-arm64-checksum', 'kubectl-version'] or $match(depName, /^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/(?:kubectl|k3s)$/))"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any release of the GitHub Actions update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:github-actions,')"],
+      "matchManagers": ["github-actions"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
+    },
+    {
+      "description": "Accept any release of the security updates during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:security,') and ($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
+      "minimumReleaseAge": "0 days",
+      "force": { "minimumReleaseAge": "0 days" }
     },
     {
       "description": "Group GitHub Actions updates and require at least two actions",
@@ -966,7 +996,7 @@
       "description": "Exempt BCI base images from minimumReleaseAge since security fixes must ship immediately. BCI Go images are extracted as depName go on the golang-version datasource, so they stay under the two day Go rule above",
       "matchDatasources": ["docker"],
       "matchPackageNames": [
-        "/^registry\\.suse\\.com\\/bci\\//",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\//",
         "/^registry\\.opensuse\\.org\\/opensuse\\/bci\\//"
       ],
       "minimumReleaseAge": "0 days"
@@ -989,12 +1019,13 @@
       "minimumReleaseAge": "28 days"
     },
     {
-      "matchPackageNames": [
-        "renovate/renovate"
-      ],
-      "extractVersion": "(?<version>.*)-full$",
+      "description": "Bump Renovate once a week and only to a release that is at least 14 days old, since Renovate publishes several releases per day and an immediate bump is not worth the churn",
+      "matchPackageNames": ["renovatebot/renovate"],
       "groupName": "renovate-bumps",
-      "separateMajorMinor": false
+      "separateMajorMinor": false,
+      "minimumReleaseAge": "14 days",
+      "schedule": ["* * * * 2"],
+      "updateNotScheduled": false
     },
     {
       "description": "Let Rancher teams manage internal product updates",
@@ -1027,21 +1058,8 @@
     },
     {
       "description": "Group kubectl version and checksum dependencies with kubernetes/kubernetes and k8s.io/kubernetes",
-      "matchManagers": [
-        "gomod",
-        "custom.regex",
-        "dockerfile"
-      ],
-      "matchPackageNames": [
-        "rancher/kubectl",
-        "kubernetes/kubernetes",
-        "k8s.io/kubernetes",
-        "kubectl-amd64",
-        "kubectl-arm64",
-        "kubectl-amd64-checksum",
-        "kubectl-arm64-checksum",
-        "kubectl-version"
-      ],
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kubectl$/", "kubernetes/kubernetes", "k8s.io/kubernetes", "kubectl-amd64", "kubectl-arm64", "kubectl-amd64-checksum", "kubectl-arm64-checksum", "kubectl-version"],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 1,
       "prPriority": 50,
@@ -1132,8 +1150,8 @@
         "golang",
         "go",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang",
         "golangci/golangci-lint",
         "golangci/golangci-lint-action",
@@ -1155,8 +1173,8 @@
         "golang",
         "go",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "Go toolchain",
@@ -1171,8 +1189,8 @@
         "docker"
       ],
       "matchPackageNames": [
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchUpdateTypes": [
@@ -1198,15 +1216,9 @@
     },
     {
       "description": "Group Go workflow toolchain updates with Go updates",
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchDatasources": [
-        "golang-version"
-      ],
-      "matchPackageNames": [
-        "go"
-      ],
+      "matchManagers": ["custom.regex"],
+      "matchDatasources": ["golang-version"],
+      "matchPackageNames": ["go", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang"],
       "groupName": "Go toolchain",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
@@ -1222,51 +1234,28 @@
     },
     {
       "description": "Let custom regex manager exclusively track Rancher K3s image versions",
-      "matchManagers": [
-        "dockerfile"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "rancher/k3s"
-      ],
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/"],
       "enabled": false
     },
     {
       "description": "Restrict Rancher K3s image tags to final k3s releases",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "rancher/k3s"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/"],
       "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+-k3s\\d+$/",
       "ignoreUnstable": false
     },
     {
       "description": "Keep the K3s environment version and image tag in sync",
-      "matchDatasources": [
-        "docker",
-        "github-releases"
-      ],
-      "matchPackageNames": [
-        "rancher/k3s",
-        "k3s-io/k3s"
-      ],
+      "matchDatasources": ["docker", "github-releases"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/", "k3s-io/k3s"],
       "minimumReleaseAge": "0 days"
     },
     {
       "description": "Group K3s updates with Kubernetes dependencies",
-      "matchManagers": [
-        "gomod",
-        "custom.regex",
-        "dockerfile"
-      ],
-      "matchPackageNames": [
-        "rancher/k3s",
-        "k3s-io/k3s"
-      ],
+      "matchManagers": ["gomod", "custom.regex", "dockerfile"],
+      "matchPackageNames": ["/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/", "k3s-io/k3s"],
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 1,
       "prPriority": 50,
@@ -1313,7 +1302,7 @@
     },
     {
       "matchPackageNames": [
-        "registry.suse.com/**",
+        "/^registry\\.(?:suse|rancher)\\.com\\//",
         "registry.opensuse.org/**"
       ],
       "matchCurrentValue": "latest",
@@ -1324,8 +1313,8 @@
         "github-actions"
       ],
       "matchPackageNames": [
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchCurrentValue": "1.26",
@@ -1353,7 +1342,7 @@
     {
       "description": "Disable major bumps",
       "matchPackageNames": [
-        "rancher/kuberlr-kubectl"
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kuberlr-kubectl$/"
       ],
       "matchUpdateTypes": [
         "minor",

@@ -8,8 +8,8 @@
         "golang",
         "go",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "allowedVersions": "<1.27"
@@ -55,7 +55,7 @@
         "dockerfile"
       ],
       "matchPackageNames": [
-        "rancher/kubectl",
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kubectl$/",
         "kubectl-amd64",
         "kubectl-arm64",
         "kubectl-amd64-checksum",
@@ -63,7 +63,7 @@
         "kubectl-version",
         "kubernetes/kubernetes",
         "k8s.io/kubernetes",
-        "rancher/k3s",
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/",
         "k3s-io/k3s"
       ],
       "allowedVersions": "<1.36"
@@ -74,7 +74,7 @@
         "docker"
       ],
       "matchPackageNames": [
-        "rancher/k3s"
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/"
       ],
       "allowedVersions": "/^v?1\\.35\\.\\d+-k3s\\d+$/"
     },
@@ -99,8 +99,9 @@
       "description": "Restrict BCI images to maintained versions only",
       "allowedVersions": "<15.8",
       "matchPackageNames": [
-        "/^registry\\.suse\\.com\\/bci\\//",
-        "/^registry\\.suse\\.com\\/suse\\/sle15\\//"
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\//",
+        "!/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/suse\\/sle15\\//"
       ]
     },
     {
@@ -154,8 +155,8 @@
         "golang",
         "go",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "matchJsonata": [
@@ -208,8 +209,8 @@
         "go",
         "golang",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang",
         "golangci/golangci-lint",
         "golangci/golangci-lint-action",
@@ -246,8 +247,8 @@
         "go",
         "golang",
         "rancher/hardened-build-base",
-        "registry.suse.com/bci/golang",
-        "registry.suse.com/rancher/appco-go",
+        "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/",
+        "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/",
         "registry.opensuse.org/opensuse/bci/golang"
       ],
       "groupName": "Go patch updates",
@@ -294,7 +295,7 @@
         "dockerfile"
       ],
       "matchPackageNames": [
-        "rancher/kubectl",
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kubectl$/",
         "kubectl-amd64",
         "kubectl-arm64",
         "kubectl-amd64-checksum",
@@ -332,7 +333,7 @@
         "custom.regex"
       ],
       "matchPackageNames": [
-        "rancher/k3s",
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/",
         "k3s-io/k3s"
       ],
       "enabled": true,
@@ -366,10 +367,7 @@
     {
       "description": "Enable minor and patch updates for rancher/kuberlr-kubectl",
       "matchPackageNames": [
-        "rancher/kuberlr-kubectl"
-      ],
-      "matchDepTypes": [
-        "!indirect"
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/kuberlr-kubectl$/"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -384,7 +382,7 @@
         "custom.regex"
       ],
       "matchPackageNames": [
-        "rancher/k3s",
+        "/^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/k3s$/",
         "k3s-io/k3s"
       ],
       "matchUpdateTypes": [
