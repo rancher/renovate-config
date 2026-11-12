@@ -49,6 +49,12 @@
       "minimumGroupSize": 1
     },
     {
+      "description": "Keep Go branches unlimited so image and toolchain bumps are not dropped by the hourly PR limit",
+      "matchManagers": ["gomod", "custom.regex", "dockerfile", "github-actions"],
+      "matchPackageNames": ["go", "golang", "rancher/hardened-build-base", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang", "golangci/golangci-lint", "golangci/golangci-lint-action", "github.com/golangci/golangci-lint", "github.com/golangci/golangci-lint/v2"],
+      "prHourlyLimit": 0
+    },
+    {
       "description": "Let the go directive open a PR on its own without a toolchain directive",
       "matchManagers": ["gomod"],
       "matchDepTypes": ["golang"],
