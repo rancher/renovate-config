@@ -40,7 +40,7 @@ on:
         default: "null"
         type: string
       refreshGroup:
-        description: "Accept any release for the selected scope of a one-time run: all, go, kubernetes, security or github-actions. Go covers the toolchain, go.mod directives, Dockerfile and workflow Go images, golangci-lint and hardened-build-base"
+        description: "Ignore minimumReleaseAge for the selected scope in this run only: all, go, kubernetes, security or github-actions. Empty keeps the configured release ages. Scheduled runs are unaffected"
         required: false
         default: ""
         type: string
