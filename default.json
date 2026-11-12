@@ -78,8 +78,10 @@
       ],
       "description": "Track patch-level Go Docker images with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "FROM\\s+--platform=\\$BUILDPLATFORM\\s+(?<packageName>registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)(?:@sha256:[a-f0-9]{64})?",
+        "FROM\\s+(?<packageName>registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+\\.\\d+)(?:@sha256:[a-f0-9]{64})?"
       ],
+      "autoReplaceStringTemplate": "{{#if (containsString replaceString '--platform=')}}FROM --platform=$BUILDPLATFORM {{{packageName}}}:{{{newValue}}}{{else}}FROM {{{packageName}}}:{{{newValue}}}{{/if}}",
       "versioningTemplate": "semver-coerced",
       "depNameTemplate": "go",
       "datasourceTemplate": "golang-version"
@@ -92,7 +94,7 @@
       ],
       "description": "Track minor Go Docker images in FROM lines and ARG GOLANG declarations with Go toolchain versions",
       "matchStrings": [
-        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.]|$)",
+        "FROM\\s+(?:--platform=\\$BUILDPLATFORM\\s+)?(?:registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)(?:[^\\d.@]|$)",
         "(?m)^[ \\t]*ARG[ \\t]+GOLANG=(?:registry\\.(?:suse|rancher)\\.com/(?:bci/golang|rancher/appco-go)|registry\\.opensuse\\.org/opensuse/bci/golang):(?<currentValue>\\d+\\.\\d+)\\r?$"
       ],
       "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)\\.\\d+$",
@@ -1108,7 +1110,7 @@
       "description": "Group Go workflow toolchain updates with Go updates",
       "matchManagers": ["custom.regex"],
       "matchDatasources": ["golang-version"],
-      "matchPackageNames": ["go"],
+      "matchPackageNames": ["go", "/^registry\\.(?:suse|rancher)\\.com\\/bci\\/golang$/", "/^registry\\.(?:suse|rancher)\\.com\\/rancher\\/appco-go$/", "registry.opensuse.org/opensuse/bci/golang"],
       "groupName": "Go toolchain",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
