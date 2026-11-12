@@ -894,12 +894,6 @@
       "force": { "minimumReleaseAge": "0 days" }
     },
     {
-      "description": "Accept any release of the packages selected for a one-time manual run, see the minimumReleaseAgePackages input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
-      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-packages:' & depName & ',')"],
-      "minimumReleaseAge": "0 days",
-      "force": { "minimumReleaseAge": "0 days" }
-    },
-    {
       "description": "Accept any Kubernetes related release for a whole update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
       "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:kubernetes,') and ($match(depName, /^(?:k8s\\.io|sigs\\.k8s\\.io)\\//) or $match(depName, /^github\\.com\\/rancher\\/(?:wrangler|lasso)(?:\\/|$)/) or depName in ['kubernetes/kubernetes', 'kubernetes/kubernetes-amd64', 'kubernetes/kubernetes-arm64', 'k3s-io/k3s', 'kubectl-amd64', 'kubectl-arm64', 'kubectl-amd64-checksum', 'kubectl-arm64-checksum', 'kubectl-version'] or $match(depName, /^(?:registry\\.(?:suse|rancher)\\.com\\/)?rancher\\/(?:kubectl|k3s)$/))"],
       "minimumReleaseAge": "0 days",
