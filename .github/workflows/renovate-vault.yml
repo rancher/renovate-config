@@ -45,16 +45,10 @@ on:
         default: ""
         type: string
       refreshGroup:
-        description: "Accept any release for a whole update group instead of listing package names. Go covers the toolchain, go.mod directives, Dockerfile and workflow Go images, golangci-lint and hardened-build-base"
+        description: "Accept any release for a whole update group instead of listing package names: go, kubernetes, security or github-actions. Go covers the toolchain, go.mod directives, Dockerfile and workflow Go images, golangci-lint and hardened-build-base"
         required: false
         default: ""
-        type: choice
-        options:
-          - ""
-          - go
-          - kubernetes
-          - security
-          - github-actions
+        type: string
       extendsPreset:
         description: "Deprecated: no longer used. Kept for backward compatibility with older deployed workflows."
         required: false
@@ -152,6 +146,8 @@ jobs:
           MINIMUM_RELEASE_AGE_PACKAGES: ${{ inputs.minimumReleaseAgePackages }}
           REFRESH_GROUP: ${{ inputs.refreshGroup }}
         run: |
+          # An unset input arrives as the literal string null.
+          [[ "$MINIMUM_RELEASE_AGE" == 'null' ]] && MINIMUM_RELEASE_AGE=''
           FORCE='{}'
           if [[ "$OVERRIDE_SCHEDULE" == 'true' ]]; then
             FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"schedule": null}')
@@ -160,11 +156,16 @@ jobs:
           GROUP_PACKAGES=''
           GROUP_MARKER=''
           case "$REFRESH_GROUP" in
+            '') ;;
             go)
-              GROUP_PACKAGES='go,golang,rancher/hardened-build-base,golangci/golangci-lint,golangci/golangci-lint-action'
+              GROUP_PACKAGES='go,golang,rancher/hardened-build-base,golangci/golangci-lint,golangci/golangci-lint-action,github.com/golangci/golangci-lint,github.com/golangci/golangci-lint/v2'
               ;;
             kubernetes | security | github-actions)
               GROUP_MARKER=",renovate-minimum-release-age-group:${REFRESH_GROUP},"
+              ;;
+            *)
+              echo "Unknown refreshGroup '${REFRESH_GROUP}', expected one of: go, kubernetes, security, github-actions" >&2
+              exit 1
               ;;
           esac
           PACKAGES="$MINIMUM_RELEASE_AGE_PACKAGES"

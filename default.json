@@ -891,7 +891,7 @@
     },
     {
       "description": "Accept any Kubernetes related release for a whole update group during a one-time manual run, see the refreshGroup input of renovate-vault.yml. The nested force wins over the vulnerability alert force, which otherwise restores the configured release age",
-      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:kubernetes,') and ($startsWith(depName, 'k8s.io/') or $startsWith(depName, 'sigs.k8s.io/') or $startsWith(depName, 'github.com/rancher/') or $startsWith(depName, 'rancher/') or depName in ['kubernetes/kubernetes', 'k3s-io/k3s'])"],
+      "matchJsonata": ["$contains($string(description), ',renovate-minimum-release-age-group:kubernetes,') and ($startsWith(depName, 'k8s.io/') or $startsWith(depName, 'sigs.k8s.io/') or $startsWith(depName, 'github.com/rancher/') or $startsWith(depName, 'rancher/') or depName in ['kubernetes/kubernetes', 'kubernetes/kubernetes-amd64', 'kubernetes/kubernetes-arm64', 'k3s-io/k3s'])"],
       "minimumReleaseAge": "0 days",
       "force": { "minimumReleaseAge": "0 days" }
     },
