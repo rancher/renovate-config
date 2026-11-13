@@ -239,6 +239,8 @@ Renovate only bumps the pinned `uses: rancher/renovate-config/.github/workflows/
 
 The `RENOVATE_VERSION` inside `renovate-vault.yml` is handled by the `renovate-bumps` rule in `default.json`. Because Renovate publishes several releases per day, that rule allows a bump only on Tuesdays and only to a release that is at least 14 days old.
 
+Every change of the reusable workflow needs a `v1.0.x` tag, because the deploy and sync workflows render pins from the highest tag, and a pin comment is only truthful while that tag points at the pinned commit. The [Tag release](.github/workflows/tag-release.yml) workflow creates the next patch tag on any push to `main` that touches `.github/workflows/renovate-vault.yml`, and skips the tag when that file is unchanged since the last one. A daily scheduled run retries a tag push that a failed run left behind. Consumers then pick the tag up through Renovate, which tracks `rancher/renovate-config` with zero release age and a priority boost. A direct edit of `renovate-vault.yml` on `release` gets no tag, as `release` only receives promoted `main` commits for that file.
+
 Verify that `.github/workflows/renovate-vault.yml` in each consuming repository is up to date, and use one of the following options:
 
 - Run the [Deploy Renovate](.github/workflows/renovate-deploy.yml) workflow against the repository. It opens a PR that replaces `renovate-vault.yml` with the current version.
