@@ -217,6 +217,15 @@
       "matchUpdateTypes": ["patch"],
       "matchJsonata": ["$not($exists(vulnerabilityFixVersion) or $exists(isVulnerabilityAlert))"],
       "enabled": true
+    },
+    {
+      "description": "Update Wrangler development versions to the matching final release",
+      "matchManagers": ["gomod"],
+      "matchDatasources": ["go"],
+      "matchPackageNames": ["github.com/rancher/wrangler/v3"],
+      "matchCurrentValue": "/^v?\\d+\\.\\d+\\.\\d+-[A-Za-z]/",
+      "allowedVersions": "/^v?{{{major}}}\\.{{{minor}}}\\.{{{patch}}}$/",
+      "enabled": true
     }
   ]
 }
