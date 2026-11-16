@@ -985,7 +985,6 @@
       ],
       "minimumGroupSize": 1,
       "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}",
       "minimumReleaseAge": "1 day"
     },
@@ -996,7 +995,6 @@
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 1,
       "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
@@ -1041,7 +1039,6 @@
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 5,
       "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
@@ -1142,7 +1139,6 @@
       "groupName": "Kubernetes dependencies",
       "minimumGroupSize": 1,
       "prPriority": 50,
-      "commitMessageTopic": "Kubernetes dependencies",
       "commitMessageExtra": "{{#if upgrades.0.newVersion}}to v{{upgrades.0.newVersion}}{{/if}}"
     },
     {
