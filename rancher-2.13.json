@@ -225,7 +225,8 @@
       "matchPackageNames": ["github.com/rancher/wrangler/v3"],
       "matchCurrentValue": "/^v?\\d+\\.\\d+\\.\\d+-[A-Za-z]/",
       "allowedVersions": "/^v?{{{major}}}\\.{{{minor}}}\\.{{{patch}}}$/",
-      "enabled": true
+      "enabled": true,
+      "prHourlyLimit": 0
     }
   ]
 }
