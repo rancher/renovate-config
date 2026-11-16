@@ -227,135 +227,61 @@ When the generation step cannot be made self-contained, turn the option off. Set
 }
 ```
 
-## Callers of the removed `renovate.yml`
+## Keeping consuming repositories up to date
 
-The deprecated reusable workflow `.github/workflows/renovate.yml` was deleted. Callers that still reference `rancher/renovate-config/.github/workflows/renovate.yml@<ref>` fail at workflow startup (`error parsing called workflow` / workflow file issue), and because the failure is a parse error no job starts, so Renovate stops for that repository until the caller is updated. Callers pinned to a commit SHA that contained the file keep working until they move the pin.
+Renovate only bumps the pinned `uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@<sha> # <tag>` reference in consuming repositories. The workflow file and `.github/renovate.json` themselves are not updated, so both can become outdated. Two workflows fix that and open a PR per repository:
 
-To migrate, replace the caller with the current `renovate-vault.yml` as described in [Keeping `renovate-vault.yml` up to date in consuming repositories](#keeping-renovate-vaultyml-up-to-date-in-consuming-repositories), run it once manually to verify the token flow, and then delete the old caller. Note the differences: `renovate-vault.yml` needs `id-token: write` and reads its token from Vault instead of the `RENOVATE_APP_ID`/`RENOVATE_PRIVATE_KEY` secrets, and its `logLevel` input is unused because logging is always at `debug` level.
+- [Deploy Renovate](.github/workflows/renovate-deploy.yml) replaces `renovate-vault.yml` with the current version. Alternatively copy the file from an up-to-date consumer such as [rancher/rancher](https://github.com/rancher/rancher/blob/main/.github/workflows/renovate-vault.yml).
+- [Sync Renovate configs](.github/workflows/renovate-sync.yml) brings `.github/renovate.json` up to the current presets while keeping local customizations, as a `renovate-config-sync` PR. Run it with an organization (`rancher`) or a single repository (`rancher/fleet`) as `target`. `dryRun` (the default) only writes the report to the job summary and uploads the proposed files as the `renovate-config-sync` artifact. The rules are documented in [sync_renovate_configs.py](.github/scripts/sync_renovate_configs.py). Locally: `GH_TOKEN=$(gh auth token) python3 .github/scripts/sync_renovate_configs.py --target rancher/fleet --out report`; only `--apply` opens PRs.
 
-## Keeping `renovate-vault.yml` up to date in consuming repositories
-
-Renovate only bumps the pinned `uses: rancher/renovate-config/.github/workflows/renovate-vault.yml@<sha> # <tag>` reference in consuming repositories. It does not update the contents of the workflow file itself, so the copy in a consuming repository can become outdated (for example, missing newer inputs or permissions).
-
-The `RENOVATE_VERSION` inside `renovate-vault.yml` is handled by the `renovate-bumps` rule in `default.json`. Because Renovate publishes several releases per day, that rule allows a bump only on Tuesdays and only to a release that is at least 14 days old.
-
-Every change of the reusable workflow needs a `v1.0.x` tag, because the deploy and sync workflows render pins from the highest tag, and a pin comment is only truthful while that tag points at the pinned commit. The [Tag release](.github/workflows/tag-release.yml) workflow creates the next patch tag on any push to `main` that touches `.github/workflows/renovate-vault.yml`, and skips the tag when that file is unchanged since the last one. A daily scheduled run retries a tag push that a failed run left behind. Consumers then pick the tag up through Renovate, which tracks `rancher/renovate-config` with zero release age and a priority boost. A direct edit of `renovate-vault.yml` on `release` gets no tag, as `release` only receives promoted `main` commits for that file.
-
-Verify that `.github/workflows/renovate-vault.yml` in each consuming repository is up to date, and use one of the following options:
-
-- Run the [Deploy Renovate](.github/workflows/renovate-deploy.yml) workflow against the repository. It opens a PR that replaces `renovate-vault.yml` with the current version.
-- If the deploy workflow cannot be used, copy the file from an up-to-date consumer such as [rancher/rancher](https://github.com/rancher/rancher/blob/main/.github/workflows/renovate-vault.yml).
+Every change of `renovate-vault.yml` gets a `v1.0.x` tag from the [Tag release](.github/workflows/tag-release.yml) workflow on push to `main`, and consumers pick it up through Renovate. `RENOVATE_VERSION` inside the workflow is bumped by the `renovate-bumps` rule in `default.json`, only on Tuesdays and only to releases at least 14 days old.
 
 ## Overriding `minimumReleaseAge` for a single run
 
-The `Renovate` workflow of a consuming repository takes one optional input for a manual run, `refreshGroup`, which ignores `minimumReleaseAge` for the selected scope in that run: `all` for every dependency, or `go`, `kubernetes`, `security` and `github-actions` for one update group.
+The `Renovate` workflow of a consuming repository takes the optional manual input `refreshGroup`, which ignores `minimumReleaseAge` for the selected scope in that run. Scheduled runs ignore it, an empty value keeps the configured ages, and an unknown value fails the run.
 
-A selection accepts any release, which the presets express as `minimumReleaseAge: "0 days"`; the workflow fails the run for an unknown group instead of ignoring it. An empty selection applies the configured release ages. Scheduled runs ignore the input. The reusable `renovate-vault.yml` still accepts the deprecated `minimumReleaseAge` input for callers that set it; a selection wins over it and the run logs that it is ignored.
+- `all`: every dependency
+- `go`: Go toolchain, `golangci-lint`, Go images (including BCI and AppCo) and `rancher/hardened-build-base`
+- `kubernetes`: `k8s.io/`, `sigs.k8s.io/`, `wrangler`, `lasso`, `rancher/kubectl`, `rancher/k3s`, `kubernetes/kubernetes` and `k3s-io/k3s`
+- `security`: dependencies carrying a vulnerability fix
+- `github-actions`: the Actions manager
 
-`go` covers the `go.mod` and `toolchain` directives, the `SETUP_GO_VERSION`, `GOLANG_VERSION` and `GOTOOLCHAIN` workflow values, the `ghcr.io/rancher/ci-image/go*` workflow images, `Dockerfile` Go images including the BCI and AppCo Go images, `golangci-lint` and its module paths, and `rancher/hardened-build-base`. It applies the same package list as the Go toolchain preset. The toolchain and the images usually need the same version, so selecting `go` keeps them on one branch. `kubernetes` covers the `k8s.io/` and `sigs.k8s.io/` modules, the `wrangler` and `lasso` modules, `rancher/kubectl` and `rancher/k3s`, `kubernetes/kubernetes` with its architecture specific checksum entries, and `k3s-io/k3s`. `security` covers dependencies that carry a vulnerability fix. `github-actions` covers the Actions manager.
-
-`all` is passed as `RENOVATE_FORCE.minimumReleaseAge`, so it wins over every rule of the repository config and of its presets. A scoped override cannot use that field: `force` replaces the resolved `packageRules` instead of extending them, so a rule placed there would drop the constraints the presets and the repository define. The workflow therefore passes `force.description` holding a `renovate-minimum-release-age-group:<group>` marker, and `default.json` matches that marker in rules that accept any release. Those rules also set a nested `force`, because the vulnerability alert configuration carries its own `force` that would otherwise restore the configured release age for exactly the security bumps these runs are usually about. The repository config is not modified.
-
-## Keeping consumer `renovate.json` presets up to date
-
-The [Sync Renovate configs](.github/workflows/renovate-sync.yml) workflow brings `.github/renovate.json` in consuming repositories up to the current Rancher presets while keeping their local customizations, and opens the result as a `renovate-config-sync` PR per changed repository. Repeated runs are idempotent: a sync branch that already holds the proposal and its up-to-date PR are left alone, and the branch of a merged sync PR is deleted. Run it manually with an organization (`rancher`) or a single repository (`rancher/fleet`) as `target`; `dryRun` (the default) only writes the report to the job summary and uploads the proposed files as the `renovate-config-sync` artifact. The rules it applies are documented on the functions in [sync_renovate_configs.py](.github/scripts/sync_renovate_configs.py) and covered by [test_sync_renovate_configs.py](.github/scripts/test_sync_renovate_configs.py); to run it locally use `GH_TOKEN=$(gh auth token) python3 .github/scripts/sync_renovate_configs.py --target rancher/fleet --out report`, as only `--apply` opens PRs.
+`all` is passed as `RENOVATE_FORCE.minimumReleaseAge`. Scoped groups cannot use that field because `force` replaces the resolved `packageRules`, so the workflow passes a `renovate-minimum-release-age-group:<group>` marker in `force.description` that rules in `default.json` match (`minimumReleaseAge: "0 days"`). The repository config is not modified. The deprecated `minimumReleaseAge` input of `renovate-vault.yml` is ignored when a selection is set.
 
 ## Testing new changes
 
+### Running Renovate
+
+For non straight-forward changes, do a full Renovate run.
+
+#### Manually triggering the Renovate workflow
+
+Push changes to a branch on the target repository (not your fork). On the GitHub Actions tab, trigger Renovate via the `run workflow` button, pick the new branch and set "Override all schedules" to `true`.
+
+Manual runs are still bound by the PR limits of the configuration (by default `prHourlyLimit` 2 and `prConcurrentLimit` 10; Go updates are exempt from the hourly limit). Open Renovate PRs count against them, so expect only a few new PRs per run. Merge or close old ones, or run again later, to get the rest.
+
+Renovate may merge your branch configuration with the configuration from the `default` branch of that repository. Check the `DEBUG: Post-massage config` section of the log for the final config.
+
+#### Downloading the full log
+
+`renovate-vault.yml` always logs at `debug` level, so the `DEBUG` sections are present in every run of consumers with a current copy (see [Keeping consuming repositories up to date](#keeping-consuming-repositories-up-to-date)). To get the full log:
+
+1. Open the run on the GitHub Actions tab and click the `renovate` job.
+2. Expand the `Self-hosted Renovate` step.
+3. Click the gear icon in the top right of the log and select "Download log archive".
+
+The archive has one file per step with the complete output, including `DEBUG` sections such as `Post-massage config` that the web view cuts off. GitHub deletes logs after the retention period, so save the file when reporting a problem.
+
+#### Running on Forks
+
+Create the secret `RENOVATE_FORK_GH_TOKEN` in the fork repository, then trigger the Renovate workflow. This allows manipulating dependency versions across branches in the fork.
+
 ### Matching patterns / versions found
 
-Renovate configuration is not very unit testing friendly. Therefore, this project aims to validate all renovate files for syntax issues via `make validate` at its PR checks.
-This runs a strict check, so new formats which require migration will break.
-
-When introducing new configuration, changes can be tested manually by adding a sample target file in `/tests` and running `make test` locally. To test the impact on a `Dockerfile` for example, create a `test/Dockerfile`:
+`make validate` runs a strict syntax check of all Renovate files in the PR checks; formats that require migration break it. To test a regex or rule, add a sample target file in `/tests` and run `make test` locally. For example, `test/Dockerfile` with:
 
 ```Dockerfile
 ENV KUBECTL_VERSION v1.25.12
 ```
 
-Results in:
-
-```
-DEBUG: packageFiles with updates (repository=local)
-       "config": {
-         "regex": [
-           {
-             "deps": [
-               {
-                 "depName": "kubernetes/kubernetes",
-                 "currentValue": "v1.25.12",
-                 "datasource": "github-releases",
-                 "replaceString": "ENV KUBECTL_VERSION v1.25.12\n",
-                 "skipReason": "github-token-required",
-                 "updates": [],
-                 "packageName": "kubernetes/kubernetes"
-               },
-               {
-                 "depName": "kubernetes/kubernetes",
-                 "currentValue": "v1.25.12",
-                 "datasource": "github-releases",
-                 "replaceString": "ARG KUBECTL_VERSION=v1.25.12\n",
-                 "skipReason": "github-token-required",
-                 "updates": [],
-                 "packageName": "kubernetes/kubernetes"
-               }
-             ],
-             "matchStrings": [
-               "ENV KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n",
-               "ARG KUBECTL_VERSION(\\=|\\s)(?<currentValue>.*?)\\n"
-             ],
-             "depNameTemplate": "kubernetes/kubernetes",
-             "datasourceTemplate": "github-releases",
-             "packageFile": "Dockerfile"
-           }
-         ]
-       }
-```
-
-Some specific data sources will require a token (as per example above) which can be provided via the `GITHUB_COM_TOKEN` environment variable. This token requires read-only access to public repositories and it is used to fetch [changelogs] without being constraint by GH's API rate-limits.
-
-### E2E testing
-For non straight-forward changes, an effective way to confirm the
-configuration is working as expected is to do a full renovate run.
-
-#### Manually triggering the Renovate workflow
-Push changes to a branch on the target repository (not your fork). On
-the GitHub Actions tab, manually trigger renovate via the `run workflow`
-button. Ensure that you pick the new branch and that "Override all
-schedules" is set to `true`.
-
-Note that Renovate may at times merge your branch configuration
-with the configuration from the `default` branch of that repository, which
-may result in your settings not working as expected.
-To understand the final config, check the section `DEBUG: Post-massage config`
-of the logs. The latest `renovate-vault.yml` runs Renovate at `debug` level
-by default, so this section is present in every run.
-
-#### Downloading the full log
-
-The latest `renovate-vault.yml` always logs at `debug` level, so the `DEBUG`
-sections are present in every run. Consuming repositories get debug logs once
-they pin a release that includes this change. Their copy of `renovate-vault.yml`
-should be current too, see
-[Keeping `renovate-vault.yml` up to date](#keeping-renovate-vaultyml-up-to-date-in-consuming-repositories).
-
-To get the full log of a run:
-
-1. Open the run on the GitHub Actions tab and click the `renovate` job.
-2. Expand the `Self-hosted Renovate` step.
-3. Click the gear icon in the top right of the log and select
-   "Download log archive".
-
-The archive has one file per step with the complete output, including the
-`DEBUG` sections such as `Post-massage config` that the web view cuts off.
-GitHub deletes logs after the retention period, so save the file when
-reporting a problem.
-
-#### Running on Forks
-The execution in forks is possible by creating the secret `RENOVATE_FORK_GH_TOKEN`
-in the fork repository, then triggering the Renovate workflow.
-This provides the best way to test E2E scenarios, so that you can
-manipulate dependency versions across the different branches in
-the fork.
-
-[changelogs]: https://docs.renovatebot.com/getting-started/running/#githubcom-token-for-changelogs
+lists the detected dependency (`depName: kubernetes/kubernetes`, `currentValue: v1.25.12`) under `DEBUG: packageFiles with updates`. Datasources that need a token, as here, read it from `GITHUB_COM_TOKEN` (read-only access to public repositories is enough).
