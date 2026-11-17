@@ -1,15 +1,24 @@
-name: Monthly tag
+name: Tag release
 
+# Consumers pin `.github/workflows/renovate-vault.yml@<sha> # <tag>`, so every
+# change of that reusable workflow on main needs a tag. The scheduled run is a
+# backstop for a tag push that a failed run left behind; the diff guard keeps it
+# from tagging a main tip that holds no workflow change.
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/renovate-vault.yml
   schedule:
-    - cron: "0 0 1 * *"
+    - cron: "0 3 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: monthly-tag
+  group: tag-release
 
 jobs:
   tag:
@@ -40,11 +49,13 @@ jobs:
           minor=${BASH_REMATCH[2]}
           patch=${BASH_REMATCH[3]}
 
-          next_tag="v${major}.${minor}.$((patch + 1))"
-          if git rev-parse --verify --quiet "refs/tags/${next_tag}" >/dev/null; then
-            echo "${next_tag} already exists"
-            exit 0
-          fi
+          # A run that lost the race to push the next tag must not be dropped,
+          # because the change it tags would then stay untagged until the
+          # scheduled backstop.
+          while git rev-parse --verify --quiet "refs/tags/v${major}.${minor}.${patch}" >/dev/null; do
+            patch=$((patch + 1))
+          done
+          next_tag="v${major}.${minor}.${patch}"
 
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
