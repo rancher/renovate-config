@@ -3,6 +3,7 @@ import io
 import json
 import unittest
 import urllib.error
+from pathlib import Path
 from unittest import mock
 
 import sync_renovate_configs as s
@@ -469,6 +470,7 @@ class AutomergeTest(unittest.TestCase):
         "baseBranchPatterns": ["main", "release/v1.1"],
         "packageRules": [rule("main", "rancher-main"), rule("release/v1.1", "rancher-2.15")],
     })
+    TEMPLATE_PATH = Path(__file__).resolve().parents[2] / "files" / "auto-approve-bot-prs.yml"
     APPROVE = "name: Renovate Auto-Approve\n"
 
     def run_repo(self, auto_merge=True, files=None, config=None, known=True):
@@ -489,6 +491,30 @@ class AutomergeTest(unittest.TestCase):
         report = self.run_repo(files={".github/workflows/auto-approve-bot-prs.yml": "create-github-app-token\n"})
         self.assertEqual(report.automerge, "preset (`automerge.json`); approve: App credentials")
         self.assertNotIn("auto-approve-bot-prs.yml", report.diff)
+
+    def test_deployed_approve_workflow_uses_repository_token(self):
+        report = run_process(
+            {s.CONFIG_PATH: self.CONFIG, s.WORKFLOW_PATH: WORKFLOW},
+            True,
+            known=True,
+            approve=self.TEMPLATE_PATH.read_text(),
+        )
+        self.assertEqual(report.automerge, "preset (`automerge.json`); approve: repository token (added)")
+        deployed = report.diff.split("+++ b/.github/workflows/auto-approve-bot-prs.yml\n", 1)[1].split("\n---\n", 1)[0]
+        self.assertIn("pull-requests: write", deployed)
+        self.assertIn("GH_TOKEN: ${{ github.token }}", deployed)
+        self.assertNotIn("read-vault-secrets", deployed)
+        self.assertNotIn("id-token", deployed)
+        self.assertNotIn("OWNER--REPOSITORY", deployed)
+
+    def test_existing_repository_token_workflow_reported(self):
+        report = self.run_repo(files={".github/workflows/auto-approve-bot-prs.yml": self.TEMPLATE_PATH.read_text()})
+        self.assertTrue(report.automerge.endswith("approve: repository token"), report.automerge)
+        self.assertNotIn("auto-approve-bot-prs.yml", report.diff)
+
+    def test_existing_vault_workflow_reported(self):
+        report = self.run_repo(files={".github/workflows/auto-approve-bot-prs.yml": "github/token/x token | T\n"})
+        self.assertEqual(report.automerge, "preset (`automerge.json`); approve: Vault token")
 
     def test_blockers(self):
         report = self.run_repo(auto_merge=False)
