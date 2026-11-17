@@ -469,7 +469,7 @@ class AutomergeTest(unittest.TestCase):
         "baseBranchPatterns": ["main", "release/v1.1"],
         "packageRules": [rule("main", "rancher-main"), rule("release/v1.1", "rancher-2.15")],
     })
-    APPROVE = "token OWNER--REPOSITORY--auto-approve\n"
+    APPROVE = "name: Renovate Auto-Approve\n"
 
     def run_repo(self, auto_merge=True, files=None, config=None, known=True):
         return run_process(
@@ -481,10 +481,9 @@ class AutomergeTest(unittest.TestCase):
 
     def test_enables_automerge_and_approve_workflow(self):
         report = self.run_repo()
-        self.assertEqual(report.automerge, "preset (`automerge.json`); approve: Vault token (added)")
+        self.assertEqual(report.automerge, "preset (`automerge.json`); approve: repository token (added)")
         self.assertIn('+      "extends": ["github>rancher/renovate-config//automerge#release"]', report.diff)
-        self.assertIn("+++ b/.github/workflows/auto-approve-bot-prs.yml\n@@ -0,0 +1 @@\n+token rancher--foo--auto-approve\n", report.diff)
-        self.assertTrue(any("github/token/rancher--foo--auto-approve--pull_requests--write" in n for n in report.notes))
+        self.assertIn("+++ b/.github/workflows/auto-approve-bot-prs.yml\n@@ -0,0 +1 @@\n+name: Renovate Auto-Approve\n", report.diff)
 
     def test_existing_approve_workflow_kept(self):
         report = self.run_repo(files={".github/workflows/auto-approve-bot-prs.yml": "create-github-app-token\n"})

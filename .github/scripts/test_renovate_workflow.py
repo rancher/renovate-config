@@ -26,10 +26,6 @@ class RenderTest(unittest.TestCase):
         old = w.render_renovate_workflow(TEMPLATE, "a" * 40, "v1.2.3")
         self.assertIn(f"@{'b' * 40} # v1.3.0\n", w.render_renovate_workflow(old, "b" * 40, "v1.3.0"))
 
-    def test_auto_approve_repository(self):
-        out = w.render_auto_approve("github/token/OWNER--REPOSITORY--auto-approve token\n", "rancher/fleet")
-        self.assertEqual(out, "github/token/rancher--fleet--auto-approve token\n")
-
 
 class ReleaseTest(unittest.TestCase):
     def test_highest_version_tag(self):

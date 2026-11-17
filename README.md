@@ -128,7 +128,7 @@ waits for CI to complete successfully before merging.
 - Add the `renovate-rancher` app user to `Restrict who can push to matching branches` in `Branch protection rules` for the main and release branches.
 - Require an approving review, either from the [auto-approve workflow](files/auto-approve-bot-prs.yml) or by not requiring approvals.
 
-The [auto-approve workflow](files/auto-approve-bot-prs.yml) approves a pull request only when it has an auto-merge request enabled by the configured Renovate bot, comes from that bot in the same repository, uses a `renovate/*` head branch, has met the configured minimum working-day age (`RENOVATE_AUTO_APPROVE_MIN_WORKING_DAYS`, default 1), and all checks pass or are skipped. Copy it to `.github/workflows/auto-approve-bot-prs.yml` and replace `OWNER--REPOSITORY` with the repository, for example `rancher--fleet-helm-charts`. The approval token is read from Vault at `github/token/<owner>--<repository>--auto-approve--pull_requests--write`; that role has to be provisioned for the repository before the workflow can approve.
+The [auto-approve workflow](files/auto-approve-bot-prs.yml) approves a pull request only when it has an auto-merge request enabled by the configured Renovate bot, comes from that bot in the same repository, uses a `renovate/*` head branch, has met the configured minimum working-day age (`RENOVATE_AUTO_APPROVE_MIN_WORKING_DAYS`, default 1), and all checks pass or are skipped. Copy it to `.github/workflows/auto-approve-bot-prs.yml`. It approves with the repository `GITHUB_TOKEN`, so the job needs `pull-requests: write` and no per-repository Vault role.
 
 ### Fine-grained automerge configuration
 

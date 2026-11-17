@@ -31,7 +31,6 @@ from renovate_workflow import (
     PRESET_REPO,
     WORKFLOW_PATH,
     latest_release,
-    render_auto_approve,
     render_renovate_workflow,
 )
 
@@ -1205,6 +1204,8 @@ def approve_variant(content: str | None) -> str:
         return "unknown"
     if "github/token/" in content:
         return "Vault token"
+    if "github.token" in content:
+        return "repository token"
     if "create-github-app-token" in content:
         return "App credentials"
     return "custom"
@@ -1223,17 +1224,12 @@ def enable_automerge(cfg: dict, branches: list[str], result: SyncResult) -> None
     result.changes.append(f"Enable automerge with the `automerge` preset for {', '.join(f'`{b}`' for b in branches)}.")
 
 
-def approve_updates(repo: str, workflows: set[str], shared: Shared, result: SyncResult) -> dict[str, str | None]:
+def approve_updates(workflows: set[str], shared: Shared, result: SyncResult) -> dict[str, str | None]:
     """Add the auto-approve workflow unless an approve workflow already exists."""
     if any("approve" in name for name in workflows):
         return {}
-    owner, name = repo.split("/", 1)
     result.changes.append(f"Add `{APPROVE_PATH}` to approve Renovate PRs that have auto-merge enabled.")
-    result.notes.append(
-        f"The auto-approve workflow needs the Vault role `github/token/{owner}--{name}--auto-approve--pull_requests--write`; "
-        "request it before merging, otherwise approvals fail."
-    )
-    return {APPROVE_PATH: render_auto_approve(shared.approve or "", repo)}
+    return {APPROVE_PATH: shared.approve}
 
 
 def setup_automerge(gh: GitHub, info: dict, cfg: dict, workflows: set[str], active: str, shared: Shared, result: SyncResult) -> dict[str, str | None]:
@@ -1255,13 +1251,13 @@ def setup_automerge(gh: GitHub, info: dict, cfg: dict, workflows: set[str], acti
         result.notes.append(f"Automerge not enabled: {'; '.join(blockers)}.")
         return {}
     enable_automerge(cfg, branches, result)
-    return approve_updates(repo, workflows, shared, result)
+    return approve_updates(workflows, shared, result)
 
 
 def automerge_label(gh: GitHub, info: dict, cfg: dict, workflows: set[str], approve_added: bool) -> str:
     label = automerge_mode(cfg)
     if approve_added:
-        return f"{label}; approve: Vault token (added)"
+        return f"{label}; approve: repository token (added)"
     approvers = sorted(n for n in workflows if "approve" in n)
     if approvers and label != "no":
         content = gh.file(info["full_name"], f".github/workflows/{approvers[0]}", info["default_branch"])

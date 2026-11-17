@@ -23,8 +23,7 @@ jobs:
     name: Approve Renovate PRs
     permissions:
       checks: read # Read CI conclusions before approval.
-      id-token: write # Allow Vault action to authenticate with GitHub OIDC.
-      pull-requests: read # Read PR restrictions and review state.
+      pull-requests: write # Approve eligible PRs with the repository token.
     runs-on: ubuntu-latest
     steps:
     - name: Validate PR eligibility
@@ -103,17 +102,10 @@ jobs:
 
         printf 'eligible_prs=%s\n' "${eligible_prs[*]}" >> "$GITHUB_OUTPUT"
 
-    - name: Read Vault Token
-      if: steps.eligibility.outputs.eligible_prs != ''
-      uses: rancher-eio/read-vault-secrets@0da85151ad1f19ed7986c41587e45aac1ace74b6 # v3
-      with:
-        secrets: |
-          github/token/OWNER--REPOSITORY--auto-approve--pull_requests--write token | APPROVE_TOKEN
-
     - name: Approve PR
       if: steps.eligibility.outputs.eligible_prs != ''
       env:
-        GH_TOKEN: ${{ env.APPROVE_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
         PR_NUMBERS: ${{ steps.eligibility.outputs.eligible_prs }}
         REPO: ${{ github.repository }}
       run: |
