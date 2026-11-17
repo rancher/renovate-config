@@ -86,103 +86,103 @@ jobs:
       id-token: write # Required for Vault OIDC authentication.
     runs-on: ${{fromJSON(inputs.runner)}}
     steps:
-      - name: Checkout
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
-          persist-credentials: false
-      - name: Validate and printout config
-        run: jq -e . "${RENOVATE_CONFIG_FILE}"
-      - name: Restore Renovate cache
-        id: renovate-cache-restore
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        with:
-          path: ${{ env.RENOVATE_CACHE_DIR }}
-          key: renovate-cache-v1-${{ env.RENOVATE_VERSION }}-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            renovate-cache-v1-${{ env.RENOVATE_VERSION }}-
-      - name: Fix Renovate cache ownership
-        if: steps.renovate-cache-restore.outputs.cache-matched-key != ''
-        run: sudo chown -R 12021:0 "$(dirname "$RENOVATE_CACHE_DIR")"
-      - name: Check token
-        id: override
-        run: |
-          if [[ -n "${{ secrets.override-token }}" ]]; then
-            echo "Override token will be used"
-            echo "use-gh-app=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "GitHub App will be used"
-            echo "use-gh-app=true" >> "$GITHUB_OUTPUT"
-          fi
+    - name: Checkout
+      uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      with:
+        persist-credentials: false
+    - name: Validate and printout config
+      run: jq -e . "${RENOVATE_CONFIG_FILE}"
+    - name: Restore Renovate cache
+      id: renovate-cache-restore
+      uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+      with:
+        path: ${{ env.RENOVATE_CACHE_DIR }}
+        key: renovate-cache-v1-${{ env.RENOVATE_VERSION }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
+          renovate-cache-v1-${{ env.RENOVATE_VERSION }}-
+    - name: Fix Renovate cache ownership
+      if: steps.renovate-cache-restore.outputs.cache-matched-key != ''
+      run: sudo chown -R 12021:0 "$(dirname "$RENOVATE_CACHE_DIR")"
+    - name: Check token
+      id: override
+      run: |
+        if [[ -n "${{ secrets.override-token }}" ]]; then
+          echo "Override token will be used"
+          echo "use-gh-app=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "GitHub App will be used"
+          echo "use-gh-app=true" >> "$GITHUB_OUTPUT"
+        fi
 
-      - name: Load Secrets from Vault
-        if: steps.override.outputs.use-gh-app == 'true'
-        uses: rancher-eio/read-vault-secrets@0da85151ad1f19ed7986c41587e45aac1ace74b6 # v3
-        with:
-          secrets: |
-            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
-            secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
-      - name: Get token
-        if: steps.override.outputs.use-gh-app == 'true'
-        id: get_token
-        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
-        with:
-          app-id: ${{ env.APP_ID }}
-          private-key: ${{ env.PRIVATE_KEY }}
-          permission-contents: write
-          permission-issues: read
-          permission-pull-requests: write
-          permission-statuses: write
-          permission-vulnerability-alerts: read
-          permission-workflows: write
-      - name: Assemble RENOVATE_FORCE
-        env:
-          OVERRIDE_SCHEDULE: ${{ inputs.overrideSchedule }}
-          MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge }}
-          REFRESH_GROUP: ${{ inputs.refreshGroup }}
-        run: |
-          # An unset input arrives as the literal string null.
-          [[ "$MINIMUM_RELEASE_AGE" == 'null' ]] && MINIMUM_RELEASE_AGE=''
-          FORCE='{}'
-          if [[ "$OVERRIDE_SCHEDULE" == 'true' ]]; then
-            FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"schedule": null}')
-          fi
-          case "$REFRESH_GROUP" in
-            '')
-              # Without a selection the configured release ages apply unless a caller still sets the deprecated input.
-              if [[ -n "$MINIMUM_RELEASE_AGE" ]]; then
-                FORCE=$(printf '%s' "$FORCE" | jq -c --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
-              fi
-              ;;
-            all | go | kubernetes | security | github-actions)
-              if [[ -n "$MINIMUM_RELEASE_AGE" ]]; then
-                echo "refreshGroup '${REFRESH_GROUP}' accepts any release, ignoring the deprecated minimumReleaseAge '${MINIMUM_RELEASE_AGE}'" >&2
-              fi
-              if [[ "$REFRESH_GROUP" == 'all' ]]; then
-                FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"minimumReleaseAge": "0 days"}')
-              else
-                # A scoped override cannot use force.packageRules, because force replaces the resolved packageRules instead of extending them. The presets read the selection from this description marker instead, which accepts any release.
-                FORCE=$(printf '%s' "$FORCE" | jq -c --arg marker ",renovate-minimum-release-age-group:${REFRESH_GROUP}," '. + {"description": $marker}')
-              fi
-              ;;
-            *)
-              echo "Unknown refreshGroup '${REFRESH_GROUP}', expected one of: all, go, kubernetes, security, github-actions" >&2
-              exit 1
-              ;;
-          esac
-          if [[ "$FORCE" != '{}' ]]; then
-            echo "RENOVATE_FORCE=$FORCE" >> "$GITHUB_ENV"
-          fi
-      - name: Self-hosted Renovate
-        uses: renovatebot/github-action@316d7cd859606d6039a2182b7d69199e9b036835 # v46.2.1
-        with:
-          renovate-version: ${{ env.RENOVATE_VERSION }}
-          configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
-          token: "${{ steps.override.outputs.use-gh-app == 'false' && secrets.override-token || steps.get_token.outputs.token }}"
-        env:
-          RENOVATE_REPOSITORY_CACHE: enabled
-      - name: Save Renovate cache
-        if: success()
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-        with:
-          path: ${{ env.RENOVATE_CACHE_DIR }}
-          key: renovate-cache-v1-${{ env.RENOVATE_VERSION }}-${{ github.run_id }}-${{ github.run_attempt }}
+    - name: Load Secrets from Vault
+      if: steps.override.outputs.use-gh-app == 'true'
+      uses: rancher-eio/read-vault-secrets@0da85151ad1f19ed7986c41587e45aac1ace74b6 # v3
+      with:
+        secrets: |
+          secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
+          secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher privateKey | PRIVATE_KEY
+    - name: Get token
+      if: steps.override.outputs.use-gh-app == 'true'
+      id: get_token
+      uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+      with:
+        app-id: ${{ env.APP_ID }}
+        private-key: ${{ env.PRIVATE_KEY }}
+        permission-contents: write
+        permission-issues: read
+        permission-pull-requests: write
+        permission-statuses: write
+        permission-vulnerability-alerts: read
+        permission-workflows: write
+    - name: Assemble RENOVATE_FORCE
+      env:
+        OVERRIDE_SCHEDULE: ${{ inputs.overrideSchedule }}
+        MINIMUM_RELEASE_AGE: ${{ inputs.minimumReleaseAge }}
+        REFRESH_GROUP: ${{ inputs.refreshGroup }}
+      run: |
+        # An unset input arrives as the literal string null.
+        [[ "$MINIMUM_RELEASE_AGE" == 'null' ]] && MINIMUM_RELEASE_AGE=''
+        FORCE='{}'
+        if [[ "$OVERRIDE_SCHEDULE" == 'true' ]]; then
+          FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"schedule": null}')
+        fi
+        case "$REFRESH_GROUP" in
+          '')
+            # Without a selection the configured release ages apply unless a caller still sets the deprecated input.
+            if [[ -n "$MINIMUM_RELEASE_AGE" ]]; then
+              FORCE=$(printf '%s' "$FORCE" | jq -c --arg age "$MINIMUM_RELEASE_AGE" '. + {"minimumReleaseAge": $age}')
+            fi
+            ;;
+          all | go | kubernetes | security | github-actions)
+            if [[ -n "$MINIMUM_RELEASE_AGE" ]]; then
+              echo "refreshGroup '${REFRESH_GROUP}' accepts any release, ignoring the deprecated minimumReleaseAge '${MINIMUM_RELEASE_AGE}'" >&2
+            fi
+            if [[ "$REFRESH_GROUP" == 'all' ]]; then
+              FORCE=$(printf '%s' "$FORCE" | jq -c '. + {"minimumReleaseAge": "0 days"}')
+            else
+              # A scoped override cannot use force.packageRules, because force replaces the resolved packageRules instead of extending them. The presets read the selection from this description marker instead, which accepts any release.
+              FORCE=$(printf '%s' "$FORCE" | jq -c --arg marker ",renovate-minimum-release-age-group:${REFRESH_GROUP}," '. + {"description": $marker}')
+            fi
+            ;;
+          *)
+            echo "Unknown refreshGroup '${REFRESH_GROUP}', expected one of: all, go, kubernetes, security, github-actions" >&2
+            exit 1
+            ;;
+        esac
+        if [[ "$FORCE" != '{}' ]]; then
+          echo "RENOVATE_FORCE=$FORCE" >> "$GITHUB_ENV"
+        fi
+    - name: Self-hosted Renovate
+      uses: renovatebot/github-action@316d7cd859606d6039a2182b7d69199e9b036835 # v46.2.1
+      with:
+        renovate-version: ${{ env.RENOVATE_VERSION }}
+        configurationFile: ${{ env.RENOVATE_CONFIG_FILE }}
+        token: "${{ steps.override.outputs.use-gh-app == 'false' && secrets.override-token || steps.get_token.outputs.token }}"
+      env:
+        RENOVATE_REPOSITORY_CACHE: enabled
+    - name: Save Renovate cache
+      if: success()
+      uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+      with:
+        path: ${{ env.RENOVATE_CACHE_DIR }}
+        key: renovate-cache-v1-${{ env.RENOVATE_VERSION }}-${{ github.run_id }}-${{ github.run_attempt }}
