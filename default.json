@@ -249,6 +249,22 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile[^/]*$/"
+      ],
+      "description": "Track Rancher CI Go images in Dockerfile FROM lines with Go toolchain versions",
+      "matchStrings": [
+        "(?m)^(?<indentation>[ \\t]*)(?<fromKeyword>[Ff][Rr][Oo][Mm])(?<platformPrefix>[ \\t]+--platform=\\S+)?[ \\t]+ghcr\\.io/rancher/ci-image/go(?<currentMajorMinor>\\d+\\.\\d+)(?::(?<currentTag>\\d+\\.\\d+\\.\\d+))?(?<floatingTag>:[A-Za-z][\\w.-]*)?(?:@sha256:[a-f0-9]{64})?(?<stageSuffix>(?:[ \\t]+[Aa][Ss][ \\t]+\\S+)?[ \\t]*\\r?)$"
+      ],
+      "currentValueTemplate": "{{#if currentTag}}{{{currentTag}}}{{else}}{{{currentMajorMinor}}}.0{{/if}}",
+      "autoReplaceStringTemplate": "{{{indentation}}}{{{fromKeyword}}}{{{platformPrefix}}} ghcr.io/rancher/ci-image/go{{{newMajor}}}.{{{newMinor}}}{{#if currentTag}}:{{{newValue}}}{{else}}{{{floatingTag}}}{{/if}}{{{stageSuffix}}}",
+      "depTypeTemplate": "{{#if currentTag}}go-workflow-tag{{else}}go-workflow-minor{{/if}}",
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/\\.github/workflows/.*\\.ya?ml$/"
       ],
       "description": "Track tagged Rancher CI container images in GitHub Actions workflows",
@@ -902,9 +918,9 @@
     },
     {
       "description": "Track Rancher CI Go image tags through the golang-version datasource so they move with the go.mod toolchain",
-      "matchManagers": ["custom.regex", "github-actions"],
+      "matchManagers": ["custom.regex", "dockerfile", "github-actions"],
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go1\\.\\d+$/"],
+      "matchPackageNames": ["/^ghcr\\.io\\/rancher\\/ci-image\\/go\\d+\\.\\d+$/"],
       "enabled": false
     },
     {
