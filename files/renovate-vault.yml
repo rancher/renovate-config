@@ -8,16 +8,16 @@ on:
         default: "false"
         type: choice
         options:
-          - "false"
-          - "true"
+        - "false"
+        - "true"
       configMigration:
         description: "Toggle PRs for config migration"
         required: false
         default: "true"
         type: choice
         options:
-          - "false"
-          - "true"
+        - "false"
+        - "true"
       renovateConfig:
         description: "Define a custom renovate config file"
         required: false
@@ -29,15 +29,15 @@ on:
         default: ""
         type: choice
         options:
-          - ""
-          - all
-          - go
-          - kubernetes
-          - security
-          - github-actions
+        - ""
+        - all
+        - go
+        - kubernetes
+        - security
+        - github-actions
 
   schedule:
-    - cron: '30 6 * * 1-5'
+  - cron: '30 6 * * 1-5'
 
 permissions: {}
 

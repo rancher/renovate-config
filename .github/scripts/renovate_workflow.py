@@ -21,7 +21,6 @@ PRESET_REPO = "rancher/renovate-config"
 WORKFLOW_PATH = ".github/workflows/renovate-vault.yml"
 OBSOLETE_WORKFLOWS = (".github/workflows/renovate.yml",)
 APPROVE_PATH = ".github/workflows/auto-approve-bot-prs.yml"
-APPROVE_PLACEHOLDER = "OWNER--REPOSITORY"
 # Used when no release tag can be read, e.g. without API access.
 FALLBACK_RELEASE = ("f62bbe9fec9bef07a9f15addc2f9c6ea278ac736", "v1.0.0")
 
@@ -46,11 +45,6 @@ def render_renovate_workflow(template: str, sha: str, tag: str) -> str:
     text = TRAILING_SPACE_RE.sub("", template)
     text = ZIZMOR_IGNORE_RE.sub("", text)
     return PIN_RE.sub(lambda m: f"{m.group(1)}@{sha} # {tag}", text)
-
-
-def render_auto_approve(template: str, repo: str) -> str:
-    owner, name = repo.split("/", 1)
-    return template.replace(APPROVE_PLACEHOLDER, f"{owner}--{name}")
 
 
 def api_get(path: str) -> object:
